@@ -82,6 +82,29 @@ struct MushafPage: Identifiable {
     }
 }
 
+// MARK: - Unified Navigation Item (Surah or Juz row in the merged index list)
+
+/// A single item in the interleaved Surah + Juz navigation list.
+/// Items are sorted by `pageNumber`; Juz entries come before Surah entries on the same page.
+enum QuranNavigationItem: Identifiable {
+    case surah(QuranSuraInfo)
+    case juz(number: Int, page: Int)
+
+    var id: String {
+        switch self {
+        case .surah(let s):      return "s\(s.number)"
+        case .juz(let n, _):     return "j\(n)"
+        }
+    }
+
+    var pageNumber: Int {
+        switch self {
+        case .surah(let s):      return s.pageNumber
+        case .juz(_, let p):     return p
+        }
+    }
+}
+
 /// Eine Ayah mit Übersetzungstext (für die Übersetzungs-Bottom-Sheet)
 struct TranslationAyah: Identifiable {
     let id: Int          // globale Ayah-Nummer

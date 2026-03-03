@@ -121,12 +121,32 @@ struct QuranIndexView: View {
     private var suraList: some View {
         List {
             weiterlesenSection
-            juzGroupedSections
+            ForEach(mergedNavigationItems) { item in
+                switch item {
+                case .surah(let sura): surahRow(sura)
+                case .juz(let num, let page): juzRow(number: num, page: page)
+                }
+            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Theme.background)
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
+    }
+
+    /// Surahs and Juz entries merged and sorted by page number.
+    /// On equal page numbers, the Juz marker comes first (matches how a Juz opens before the Surah text).
+    private var mergedNavigationItems: [QuranNavigationItem] {
+        var items: [QuranNavigationItem] = store.suraList.map { .surah($0) }
+        for juz in 1...30 {
+            let page = QuranStore.juzFirstPage[juz] ?? 1
+            items.append(.juz(number: juz, page: page))
+        }
+        return items.sorted { a, b in
+            if a.pageNumber != b.pageNumber { return a.pageNumber < b.pageNumber }
+            if case .juz = a, case .surah = b { return true }
+            return false
+        }
     }
 
     // MARK: - Weiterlesen Card
@@ -186,34 +206,36 @@ struct QuranIndexView: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Juz-grouped Sections
+    // MARK: - Juz Row
 
-    @ViewBuilder
-    private var juzGroupedSections: some View {
-        ForEach(1...30, id: \.self) { juz in
-            let surahsInJuz = store.suraList.filter { QuranStore.juzForSurah($0.number) == juz }
-            if !surahsInJuz.isEmpty {
-                Section {
-                    ForEach(surahsInJuz) { sura in
-                        surahRow(sura)
-                    }
-                } header: {
-                    HStack(spacing: 0) {
-                        Text(L10n.quranJuz(language))
-                            .font(.caption.weight(.semibold))
-                            .foregroundColor(Theme.accent)
-                        Text(" \(juz)")
-                            .font(.caption.weight(.bold).monospacedDigit())
-                            .foregroundColor(Theme.accent)
-                        Spacer()
-                        Text("\(surahsInJuz.count) \(L10n.quranSurahs(language))")
-                            .font(.caption2)
-                            .foregroundColor(Theme.textSecondary)
-                    }
-                    .padding(.horizontal, 4)
+    private func juzRow(number: Int, page: Int) -> some View {
+        Button(action: { onNavigate(.mushafPage(page)) }) {
+            HStack(spacing: 12) {
+                // Juz number badge — accent-tinted to distinguish from surah rows
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(Theme.accent.opacity(0.15))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                .strokeBorder(Theme.accent.opacity(0.45), lineWidth: 0.75)
+                        )
+                        .frame(width: 36, height: 36)
+                    Text("\(number)")
+                        .font(.caption2.weight(.bold).monospacedDigit())
+                        .foregroundColor(Theme.accent)
                 }
+
+                Text("\(number). \(L10n.quranJuz(language)) · S.\(page)")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(Theme.textSecondary)
+
+                Spacer()
             }
+            .padding(.vertical, 2)
         }
+        .buttonStyle(.plain)
+        .listRowBackground(Theme.accent.opacity(0.04))
+        .listRowSeparatorTint(Theme.accent.opacity(0.25))
     }
 
     // MARK: - Shared Surah Row
@@ -253,10 +275,15 @@ struct QuranIndexView: View {
                         .font(.title3.weight(.medium))
                         .foregroundColor(Theme.textPrimary)
                         .environment(\.layoutDirection, .rightToLeft)
-                    Text("\(sura.numberOfAyahs) آية")
-                        .font(.caption2)
-                        .foregroundColor(Theme.textSecondary)
-                        .environment(\.layoutDirection, .rightToLeft)
+                    HStack(spacing: 6) {
+                        Text("S.\(sura.pageNumber)")
+                            .font(.caption2.weight(.medium).monospacedDigit())
+                            .foregroundColor(Theme.textSecondary.opacity(0.7))
+                        Text("\(sura.numberOfAyahs) آية")
+                            .font(.caption2)
+                            .foregroundColor(Theme.textSecondary)
+                            .environment(\.layoutDirection, .rightToLeft)
+                    }
                 }
             }
             .padding(.vertical, 4)
@@ -404,21 +431,12 @@ struct QuranMushafPageView: View {
                     store.currentMushafPageNumber = page
                     sliderPage = Double(page)
                     appState.incrementDailyPages()
-                    Task {
-                        await store.preloadMushafPages(around: page)
-                        if appState.isTajweedEnabled {
-                            await store.preloadMushafTajweedPages(around: page)
-                        }
-                    }
+                    Task { await store.preloadMushafPages(around: page) }
                 }
                 .onChange(of: store.currentMushafPageNumber) { _, newPage in
                     guard pageScrollID != newPage else { return }
                     sliderPage = Double(newPage)
                     withAnimation(.easeInOut(duration: 0.25)) { pageScrollID = newPage }
-                }
-                .onChange(of: appState.isTajweedEnabled) { _, enabled in
-                    guard enabled else { return }
-                    Task { await store.preloadMushafTajweedPages(around: store.currentMushafPageNumber) }
                 }
 
                 pageSlider
@@ -428,12 +446,7 @@ struct QuranMushafPageView: View {
         .onAppear {
             pageScrollID = store.currentMushafPageNumber
             sliderPage = Double(store.currentMushafPageNumber)
-            Task {
-                await store.preloadMushafPages(around: store.currentMushafPageNumber)
-                if appState.isTajweedEnabled {
-                    await store.preloadMushafTajweedPages(around: store.currentMushafPageNumber)
-                }
-            }
+            Task { await store.preloadMushafPages(around: store.currentMushafPageNumber) }
         }
     }
 

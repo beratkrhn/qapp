@@ -18,6 +18,7 @@ private enum UserDefaultsKeys {
     static let dailyGoalPages = "dailydee.dailyGoalPages"
     static let lastReadDate = "dailydee.lastReadDate"
     static let isTajweedEnabled = "dailydee.isTajweedEnabled"
+    static let accentTheme = "dailydee.accentTheme"
 }
 
 final class AppState: ObservableObject {
@@ -31,6 +32,13 @@ final class AppState: ObservableObject {
     // MARK: - Tajweed
     @Published var isTajweedEnabled: Bool {
         didSet { UserDefaults.standard.set(isTajweedEnabled, forKey: UserDefaultsKeys.isTajweedEnabled) }
+    }
+
+    // MARK: - Accent Theme
+    /// Writing this triggers a view rebuild in any observer, at which point
+    /// `Theme.accent` (a computed var reading UserDefaults) returns the new color.
+    @Published var accentTheme: ThemeColor {
+        didSet { UserDefaults.standard.set(accentTheme.rawValue, forKey: UserDefaultsKeys.accentTheme) }
     }
 
     // MARK: - Daily Reading Tracker
@@ -67,6 +75,10 @@ final class AppState: ObservableObject {
         } else {
             self.isTajweedEnabled = true
         }
+
+        // Accent theme: defaults to Emerald Green
+        let rawTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme)
+        self.accentTheme = rawTheme.flatMap(ThemeColor.init(rawValue:)) ?? .emeraldGreen
 
         // Daily reading: reset if last read was not today
         let savedGoal = UserDefaults.standard.integer(forKey: UserDefaultsKeys.dailyGoalPages)
@@ -125,6 +137,10 @@ final class AppState: ObservableObject {
     func updateCalculationMethod(_ method: CalculationMethod) {
         calculationMethod = method
         UserDefaults.standard.set(method.rawValue, forKey: UserDefaultsKeys.calculationMethod)
+    }
+
+    func updateAccentTheme(_ theme: ThemeColor) {
+        accentTheme = theme
     }
 }
 

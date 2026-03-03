@@ -6,27 +6,35 @@
 //
 
 import SwiftUI
+import UIKit
 
 enum Theme {
 
-    // MARK: - Background
+    // MARK: - Background (dynamic — hue follows the selected accent theme)
 
-    /// Haupt-Hintergrund (dunkles, desaturiertes Grün-Grau) ~ #121C19
-    static let background = Color(hex: "121C19")
+    /// Haupt-Hintergrund: very dark shade of the current accent hue.
+    static var background: Color {
+        Color(uiColor: ThemeColor.current.darkShade(brightness: 0.11, saturation: 0.28))
+    }
 
-    /// Karten-Hintergrund (etwas heller) ~ #1B2A26
-    static let cardBackground = Color(hex: "1B2A26")
+    /// Karten-Hintergrund: slightly lighter shade of the accent hue.
+    static var cardBackground: Color {
+        Color(uiColor: ThemeColor.current.darkShade(brightness: 0.16, saturation: 0.32))
+    }
 
-    /// Nächste-Gebet-Karte (subtil heller/glow) ~ #1E2E2A
-    static let cardHighlightBackground = Color(hex: "1E2E2A")
+    /// Nächste-Gebet-Karte: subtly lighter than cardBackground.
+    static var cardHighlightBackground: Color {
+        Color(uiColor: ThemeColor.current.darkShade(brightness: 0.18, saturation: 0.34))
+    }
 
-    // MARK: - Accent & Primary
+    // MARK: - Accent & Primary (dynamic — reads from ThemeColor.current)
 
-    /// Akzent Grün (Countdown, aktives Tab, hervorgehobener Text) ~ #36D080
-    static let accent = Color(hex: "36D080")
+    /// User-selected accent color. Resolves via ThemeColor.current so all
+    /// views re-render automatically when AppState.accentTheme changes.
+    static var accent: Color { ThemeColor.current.color }
 
     /// Leicht abgetönter Akzent für Glow
-    static let accentMuted = Color(hex: "36D080").opacity(0.85)
+    static var accentMuted: Color { ThemeColor.current.color.opacity(0.85) }
 
     // MARK: - Text
 
@@ -67,6 +75,63 @@ enum Theme {
     static let cardCornerRadius: CGFloat = 16
     static let cardPadding: CGFloat = 20
     static let sectionSpacing: CGFloat = 24
+}
+
+// MARK: - ThemeColor
+
+/// The seven user-selectable accent colors.
+/// The selection is persisted to UserDefaults so `Theme.accent` (a computed var)
+/// always returns the correct value at render time without any singleton dependency.
+enum ThemeColor: String, CaseIterable, Identifiable {
+    case seaBlue      = "sea_blue"
+    case darkPurple   = "dark_purple"
+    case softGray     = "soft_gray"
+    case beige        = "beige"
+    case emeraldGreen = "emerald_green"
+    case slateBlue    = "slate_blue"
+    case warmGold     = "warm_gold"
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .seaBlue:      return "Sea Blue"
+        case .darkPurple:   return "Dark Purple"
+        case .softGray:     return "Soft Gray"
+        case .beige:        return "Beige"
+        case .emeraldGreen: return "Emerald Green"
+        case .slateBlue:    return "Slate Blue"
+        case .warmGold:     return "Warm Gold"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .seaBlue:      return Color(hex: "1E88E5")
+        case .darkPurple:   return Color(hex: "7B2FBE")
+        case .softGray:     return Color(hex: "9E9E9E")
+        case .beige:        return Color(hex: "D4A574")
+        case .emeraldGreen: return Color(hex: "36D080")
+        case .slateBlue:    return Color(hex: "5C7AEA")
+        case .warmGold:     return Color(hex: "FFC107")
+        }
+    }
+
+    /// Reads the persisted selection from UserDefaults.
+    /// Used by `Theme.accent` to stay stateless while remaining reactive.
+    static var current: ThemeColor {
+        let raw = UserDefaults.standard.string(forKey: "dailydee.accentTheme") ?? ""
+        return ThemeColor(rawValue: raw) ?? .emeraldGreen
+    }
+
+    /// Produces a dark `UIColor` that shares the hue of this accent color
+    /// but with fixed low saturation and brightness — used to generate
+    /// theme-matched background shades for `Theme.background` etc.
+    fileprivate func darkShade(brightness: CGFloat, saturation: CGFloat) -> UIColor {
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        UIColor(color).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return UIColor(hue: h, saturation: saturation, brightness: brightness, alpha: 1)
+    }
 }
 
 // MARK: - Color+Hex

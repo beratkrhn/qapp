@@ -15,14 +15,14 @@ import UIKit
 enum GreetingFontCycle {
 
     /// Interval between font swaps in the greeting animation (seconds).
-    static let interval: TimeInterval = 0.3
+    static let interval: TimeInterval = 0.15
 
     // MARK: - Candidate Names (PostScript names preferred over family names)
 
     private static let candidateFontNames: [String] = [
         "Alkalami-Regular",
-        "Almarai-Bold",
-        "Amiri-Bold",
+        "Almarai-Regular",
+        "Amiri-Regular",
         "KFGQPCUthmanicScriptHAFS",   // PostScript name — more reliable than the file/family name
         "Handjet-Regular",
         "Kufam-Regular",

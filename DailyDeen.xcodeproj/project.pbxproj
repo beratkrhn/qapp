@@ -83,6 +83,15 @@
 		0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "DailyDee" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Alkalami/Alkalami-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Almarai/Almarai-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Amiri/Amiri-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Handjet/static/Handjet-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Kufam/Kufam-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Mirza/Mirza-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Parastoo/static/Parastoo-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Reem_Kufi/static/ReemKufi-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Ruwudu/Ruwudu-Regular.ttf",
 				"KFGQPC Uthmanic Script HAFS Regular.otf",
 			);
 			target = 0EEA12112F510DB8006DB819 /* DailyDee */;

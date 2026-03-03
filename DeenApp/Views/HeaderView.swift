@@ -13,10 +13,13 @@ struct HeaderView: View {
     let userName: String
     let cityName: String
 
-    // MARK: - Font animation state
+    /// Observing appState ensures the header re-renders instantly when the user
+    /// changes the accent theme in Settings (Theme.accent is a computed var).
+    @EnvironmentObject var appState: AppState
+
+    // MARK: - Font cycle state (no animation — strict instant swap)
     @State private var fontIndex: Int = 0
-    @State private var animationDone: Bool = false
-    @State private var greetingOpacity: Double = 1.0
+    @State private var cycleDone: Bool = false
 
     private let fontCycleTimer = Timer.publish(
         every: GreetingFontCycle.interval,
@@ -29,14 +32,19 @@ struct HeaderView: View {
     var body: some View {
         VStack(spacing: 6) {
 
-            // Arabic greeting — font cycles through 10 styles with reliable fade animation
-            Text(L10n.greetingArabic)
-                .font(GreetingFontCycle.font(at: fontIndex))
-                .foregroundColor(Theme.accent)
-                .multilineTextAlignment(.center)
-                // .id forces a full view replacement so SwiftUI loads the new font correctly
-                .id(GreetingFontCycle.fontName(at: fontIndex))
-                .opacity(greetingOpacity)
+            // Arabic greeting — fixed-height container prevents layout shift
+            // when fonts with different intrinsic heights cycle through.
+            ZStack {
+                Text(L10n.greetingArabic)
+                    .font(GreetingFontCycle.font(at: fontIndex))
+                    .foregroundColor(Theme.accent)
+                    .multilineTextAlignment(.center)
+                    .id(GreetingFontCycle.fontName(at: fontIndex))
+                    .animation(nil, value: fontIndex)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(height: 50)
+            .clipped()
 
             // User name — large, bold
             Text(userName)
@@ -59,27 +67,17 @@ struct HeaderView: View {
         .padding(.vertical, 12)
         .onAppear {
             fontIndex = 0
-            animationDone = false
-            greetingOpacity = 1.0
+            cycleDone = false
             #if DEBUG
             GreetingFontCycle.dumpAllFontNames()
             #endif
         }
         .onReceive(fontCycleTimer) { _ in
-            guard !animationDone else { return }
-            // Fade out → swap font → fade in
-            withAnimation(.easeOut(duration: 0.15)) {
-                greetingOpacity = 0
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) {
-                if fontIndex < GreetingFontCycle.count - 1 {
-                    fontIndex += 1
-                } else {
-                    animationDone = true
-                }
-                withAnimation(.easeIn(duration: 0.2)) {
-                    greetingOpacity = 1
-                }
+            guard !cycleDone else { return }
+            if fontIndex < GreetingFontCycle.count - 1 {
+                fontIndex += 1
+            } else {
+                cycleDone = true
             }
         }
     }

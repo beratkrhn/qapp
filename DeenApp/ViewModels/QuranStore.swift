@@ -31,7 +31,7 @@ final class QuranStore: ObservableObject {
     @Published private(set) var isMushafLoading = false
 
     /// Tajweed HTML keyed by **global Quran ayah number** (same as MushafAyah.id).
-    /// Populated on-demand when the user enables Tajweed in the Mushaf view.
+    /// Populated automatically inside loadMushafPage — no separate load step needed.
     @Published private(set) var mushafTajweedCache: [Int: String] = [:]
 
     // MARK: - Sura-Übersetzungstexte (numberInSurah → übersetzter Text)
@@ -67,6 +67,18 @@ final class QuranStore: ObservableObject {
         91: 595, 92: 595, 93: 596, 94: 596, 95: 597, 96: 597, 97: 598, 98: 598, 99: 599,100: 599,
        101: 600,102: 600,103: 601,104: 601,105: 601,106: 602,107: 602,108: 602,109: 603,110: 603,
        111: 603,112: 604,113: 604,114: 604
+    ]
+
+    // MARK: - Juz starting pages (standard Hafs 15-line Mushaf layout)
+
+    /// First page of each Juz (1–30) in the standard KFGQPC 604-page Mushaf.
+    static let juzFirstPage: [Int: Int] = [
+         1:   1,  2:  22,  3:  42,  4:  62,  5:  82,
+         6: 102,  7: 121,  8: 142,  9: 162, 10: 182,
+        11: 201, 12: 221, 13: 242, 14: 262, 15: 282,
+        16: 302, 17: 322, 18: 342, 19: 362, 20: 382,
+        21: 402, 22: 422, 23: 442, 24: 462, 25: 482,
+        26: 502, 27: 522, 28: 542, 29: 562, 30: 582,
     ]
 
     /// Nur für Abwärtskompatibilität (pages/allVerses aus aktueller Sura)
@@ -236,13 +248,26 @@ final class QuranStore: ObservableObject {
         isMushafLoading = true
         defer { isMushafLoading = false }
 
-        guard let url = URL(string: "\(baseURL)/page/\(pageNumber)/quran-uthmani") else { return }
+        // Use the tajweed edition as the single source of truth.
+        // The raw HTML is cached for coloured rendering; tags are stripped for plain display.
+        guard let url = URL(string: "\(baseURL)/page/\(pageNumber)/\(Self.tajweedEdition)") else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranPageResponse.self, from: data)
             guard res.code == 200 else { return }
-            let ayahs = res.data.ayahs.map { a in
-                let rawText = sanitizeArabicText(a.text.trimmingCharacters(in: .whitespacesAndNewlines))
+            #if DEBUG
+            if let first = res.data.ayahs.first {
+                print("┌─ [quran-tajweed] page \(pageNumber), ayah \(first.number) raw text:")
+                print("│  \(first.text)")
+                print("└─────────────────────────────────────────")
+            }
+            #endif
+            let ayahs = res.data.ayahs.map { a -> MushafAyah in
+                // Store raw tajweed HTML for JustifiedArabicText coloured rendering
+                mushafTajweedCache[a.number] = a.text
+                // Strip tags → sanitize → remove Bismillah prefix for plain-text display
+                let stripped = TajweedParser.stripAllTags(a.text)
+                let rawText  = sanitizeArabicText(stripped.trimmingCharacters(in: .whitespacesAndNewlines))
                 let cleanText = stripBismillahIfNeeded(from: rawText, suraNumber: a.surah.number)
                 return MushafAyah(
                     id: a.number,
@@ -255,7 +280,7 @@ final class QuranStore: ObservableObject {
                 )
             }
             mushafPageCache[pageNumber] = MushafPage(id: pageNumber, ayahs: ayahs)
-        } catch { /* Fehler still behandelt; View kann Retry anbieten */ }
+        } catch { }
     }
 
     func preloadMushafPages(around page: Int) async {
@@ -273,38 +298,6 @@ final class QuranStore: ObservableObject {
         Task { await preloadMushafPages(around: clamped) }
     }
 
-    // MARK: - Mushaf Tajweed (quran-tajweed edition, per page)
-
-    /// Fetches the tajweed-tagged HTML for every ayah on `pageNumber` and
-    /// merges the results into `mushafTajweedCache` keyed by global ayah number.
-    func loadMushafPageTajweed(_ pageNumber: Int) async {
-        guard pageNumber >= 1, pageNumber <= QuranStore.totalPages else { return }
-        guard let url = URL(string: "\(baseURL)/page/\(pageNumber)/\(Self.tajweedEdition)") else { return }
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let res = try JSONDecoder().decode(AlquranPageResponse.self, from: data)
-            guard res.code == 200 else { return }
-            for ayah in res.data.ayahs {
-                mushafTajweedCache[ayah.number] = ayah.text
-            }
-        } catch { }
-    }
-
-    /// Preloads tajweed HTML for the page window [page-1 … page+1],
-    /// skipping pages whose ayahs are already cached.
-    func preloadMushafTajweedPages(around page: Int) async {
-        let candidates = [page - 1, page, page + 1].filter {
-            $0 >= 1 && $0 <= QuranStore.totalPages
-        }
-        for p in candidates {
-            // Skip if the regular page cache indicates all ayahs are already present
-            if let knownPage = mushafPageCache[p],
-               knownPage.ayahs.allSatisfy({ mushafTajweedCache[$0.id] != nil }) {
-                continue
-            }
-            await loadMushafPageTajweed(p)
-        }
-    }
 
     // MARK: - Seiten-Übersetzungen (Bottom-Sheet)
 

@@ -87,6 +87,50 @@ struct SettingsView: View {
                             }
                         }
 
+                        // MARK: - App Theme
+                        settingsCard {
+                            VStack(alignment: .leading, spacing: 16) {
+                                Label {
+                                    Text("App Theme")
+                                        .font(.headline)
+                                        .foregroundColor(Theme.textPrimary)
+                                } icon: {
+                                    Image(systemName: "paintpalette.fill")
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                LazyVGrid(
+                                    columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 7),
+                                    spacing: 10
+                                ) {
+                                    ForEach(ThemeColor.allCases) { theme in
+                                        Button(action: { appState.updateAccentTheme(theme) }) {
+                                            ZStack {
+                                                Circle()
+                                                    .fill(theme.color)
+                                                    .frame(width: 38, height: 38)
+                                                if appState.accentTheme == theme {
+                                                    Circle()
+                                                        .strokeBorder(Color.white, lineWidth: 2.5)
+                                                        .frame(width: 38, height: 38)
+                                                    Image(systemName: "checkmark")
+                                                        .font(.system(size: 11, weight: .bold))
+                                                        .foregroundColor(.white)
+                                                }
+                                            }
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityLabel(theme.displayName)
+                                    }
+                                }
+
+                                Text(appState.accentTheme.displayName)
+                                    .font(.caption.weight(.medium))
+                                    .foregroundColor(Theme.accent)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                        }
+
                         // MARK: - Standort
                         settingsCard {
                             VStack(alignment: .leading, spacing: 12) {
