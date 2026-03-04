@@ -38,38 +38,63 @@ struct TajweedParser {
         }
     }
 
-    // MARK: - Quranic Annotation Mark Filter
+    // MARK: - Strict Unicode Whitelist
 
-    /// Scalar ranges that produce visible artifacts (orange/gold circles, phantom glyphs)
-    /// when the KFGQPC Hafs COLR font renders them inside a coloured attributed-string span.
+    /// Whitelist of every scalar that is safe to display with the KFGQPC Hafs COLR font.
+    /// Anything outside this set is silently dropped — this is intentionally aggressive.
     ///
-    /// Stripped ranges:
-    ///   U+0600–U+0605   Arabic number sign / footnote marker / poetic verse sign
-    ///   U+0610–U+061A   Arabic Extended signs (small high marks)
-    ///   U+06D6–U+06ED   Quranic Annotation Signs (Waqf marks, end-of-ayah ۝, rounded zero ۟, etc.)
-    ///   U+08D3–U+08FF   Arabic Extended-A supplement (small high marks that render as circles)
-    ///   U+FD3E–U+FD3F   Ornate Arabic parentheses
-    ///   U+200B–U+200F   Zero-width / directional control characters
-    ///   U+200C/200D     Zero-width non-joiner / joiner
-    ///   U+FEFF          BOM / Zero Width No-Break Space
-    private static let annotationMarkSet: CharacterSet = {
+    /// Permitted scalars:
+    ///   U+0020          Space
+    ///   U+0621–U+063A   Core Arabic letters  (ء … غ)
+    ///   U+0640          Arabic tatweel  (ـ)
+    ///   U+0641–U+064A   More Arabic letters  (ف … ي)
+    ///   U+064B–U+0652   Standard tashkeel / harakat  (tanwin, fatha, damma, kasra, shadda, sukun)
+    ///   U+0653          Maddah above  (ٓ)
+    ///   U+0654          Hamza above  (ٔ)
+    ///   U+0655          Hamza below  (ٕ)
+    ///   U+0656          Subscript alef  (ٖ)
+    ///   U+0670          Dagger alif / superscript alef  (ٰ) — critical for Quran
+    ///   U+0671          Alef wasla  (ٱ) — critical for Uthmanic Hafs
+    ///
+    /// Everything else — annotation signs (U+06D6–U+06ED), Arabic Extended-A (U+08D3–U+08FF),
+    /// zero-width joiners, BOM, format controls, etc. — is excluded and will not render.
+    private static let allowedScalarSet: CharacterSet = {
         var cs = CharacterSet()
-        cs.insert(charactersIn: Unicode.Scalar(0x0600)!...Unicode.Scalar(0x0605)!)
-        cs.insert(charactersIn: Unicode.Scalar(0x0610)!...Unicode.Scalar(0x061A)!)
-        cs.insert(charactersIn: Unicode.Scalar(0x06D6)!...Unicode.Scalar(0x06ED)!)
-        cs.insert(charactersIn: Unicode.Scalar(0x08D3)!...Unicode.Scalar(0x08FF)!)
-        cs.insert(charactersIn: Unicode.Scalar(0xFD3E)!...Unicode.Scalar(0xFD3F)!)
-        cs.insert(charactersIn: Unicode.Scalar(0x200B)!...Unicode.Scalar(0x200F)!)
-        cs.insert(Unicode.Scalar(0x200C)!)
-        cs.insert(Unicode.Scalar(0x200D)!)
-        cs.insert(Unicode.Scalar(0xFEFF)!)
+        cs.insert(Unicode.Scalar(0x0020)!)                                            // space
+        cs.insert(charactersIn: Unicode.Scalar(0x0621)!...Unicode.Scalar(0x063A)!)   // ء–غ
+        cs.insert(Unicode.Scalar(0x0640)!)                                            // tatweel ـ
+        cs.insert(charactersIn: Unicode.Scalar(0x0641)!...Unicode.Scalar(0x064A)!)   // ف–ي
+        cs.insert(charactersIn: Unicode.Scalar(0x064B)!...Unicode.Scalar(0x0652)!)   // harakat
+        cs.insert(Unicode.Scalar(0x0653)!)                                            // maddah ٓ
+        cs.insert(Unicode.Scalar(0x0654)!)                                            // hamza above ٔ
+        cs.insert(Unicode.Scalar(0x0655)!)                                            // hamza below ٕ
+        cs.insert(Unicode.Scalar(0x0656)!)                                            // subscript alef ٖ
+        cs.insert(Unicode.Scalar(0x0670)!)                                            // dagger alif ٰ
+        cs.insert(Unicode.Scalar(0x0671)!)                                            // alef wasla ٱ
         return cs
     }()
 
-    /// Strips Quranic annotation marks from a string that is about to receive a tajweed colour.
+    /// Strict whitelist filter: retains only scalars in `allowedScalarSet`.
+    /// Replaces the old blacklist approach — any scalar not explicitly permitted is dropped.
     private static func sanitize(_ text: String) -> String {
-        String(text.unicodeScalars.filter { !annotationMarkSet.contains($0) })
+        String(text.unicodeScalars.filter { allowedScalarSet.contains($0) })
     }
+
+    // MARK: - Debug Scalar Logger
+
+#if DEBUG
+    /// Logs every Unicode scalar value inside a tajweed segment so you can identify
+    /// exactly which hidden codepoints the API is embedding (run once, then remove).
+    ///
+    /// Example output:
+    ///   [TajweedParser] rule 'm' content: U+0645 U+0640 U+06DF  "مـ۟"
+    private static func debugLogScalars(_ text: String, rule: String) {
+        let hexList = text.unicodeScalars
+            .map { String(format: "U+%04X", $0.value) }
+            .joined(separator: " ")
+        print("[TajweedParser] rule '\(rule)' scalars: \(hexList)  text: \"\(text)\"")
+    }
+#endif
 
     // MARK: - Tag Stripper
 
@@ -142,8 +167,12 @@ struct TajweedParser {
                 result.append(seg)
             }
 
-            let letter = ns.substring(with: match.range(at: 1))
-            let inner  = sanitize(ns.substring(with: match.range(at: 2)))
+            let letter  = ns.substring(with: match.range(at: 1))
+            let rawInner = ns.substring(with: match.range(at: 2))
+#if DEBUG
+            if ["m", "n", "o", "p"].contains(letter) { debugLogScalars(rawInner, rule: letter) }
+#endif
+            let inner  = sanitize(rawInner)
             var seg = AttributedString(inner)
             seg.font = hafsFont
             seg.foregroundColor = color(forLetter: letter)
@@ -214,8 +243,12 @@ struct TajweedParser {
                 result.append(NSAttributedString(string: before, attributes: defaultAttrs))
             }
 
-            let letter  = ns.substring(with: match.range(at: 1))
-            let content = sanitize(ns.substring(with: match.range(at: 2)))
+            let letter     = ns.substring(with: match.range(at: 1))
+            let rawContent = ns.substring(with: match.range(at: 2))
+#if DEBUG
+            if ["m", "n", "o", "p"].contains(letter) { debugLogScalars(rawContent, rule: letter) }
+#endif
+            let content = sanitize(rawContent)
             var attrs   = defaultAttrs
             attrs[.foregroundColor] = uiColor(forLetter: letter)
             result.append(NSAttributedString(string: content, attributes: attrs))
