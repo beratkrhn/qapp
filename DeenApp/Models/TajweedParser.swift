@@ -38,6 +38,27 @@ struct TajweedParser {
         }
     }
 
+    // MARK: - Quranic Annotation Mark Filter
+
+    /// Unicode range U+06D6–U+06ED contains Quranic annotation signs
+    /// (e.g. the Rounded Zero ۟ U+06DF, Rectangular Zero ۠ U+06E0, high stops, etc.).
+    /// When these appear inside a coloured span they render as isolated orange/red circles.
+    /// They must be stripped from coloured segments; they are left intact in default-colour runs.
+    private static let annotationMarkSet: CharacterSet = {
+        var cs = CharacterSet()
+        // Arabic Quranic Annotation Signs block
+        cs.insert(charactersIn: Unicode.Scalar(0x06D6)!...Unicode.Scalar(0x06ED)!)
+        // Zero-width joiners that can produce phantom glyphs when coloured
+        cs.insert(Unicode.Scalar(0x200C)!)
+        cs.insert(Unicode.Scalar(0x200D)!)
+        return cs
+    }()
+
+    /// Strips Quranic annotation marks from a string that is about to receive a tajweed colour.
+    private static func sanitize(_ text: String) -> String {
+        String(text.unicodeScalars.filter { !annotationMarkSet.contains($0) })
+    }
+
     // MARK: - Tag Stripper
 
     /// Removes all bracket-format tajweed markers from `text`,
@@ -98,8 +119,11 @@ struct TajweedParser {
 
         for match in matches {
             if match.range.location > cursor {
-                let rawSegment = ns.substring(with: NSRange(location: cursor,
-                                                            length: match.range.location - cursor))
+                // Sanitize plain runs too: the KFGQPC Hafs COLR font renders annotation
+                // marks (U+06D6–U+06ED) with built-in orange glyphs that override any
+                // foreground colour we set — strip them here before building the segment.
+                let rawSegment = sanitize(ns.substring(with: NSRange(location: cursor,
+                                                                     length: match.range.location - cursor)))
                 var seg = AttributedString(rawSegment)
                 seg.font = hafsFont
                 seg.foregroundColor = Theme.tajweedDefault
@@ -107,7 +131,7 @@ struct TajweedParser {
             }
 
             let letter = ns.substring(with: match.range(at: 1))
-            let inner  = ns.substring(with: match.range(at: 2))
+            let inner  = sanitize(ns.substring(with: match.range(at: 2)))
             var seg = AttributedString(inner)
             seg.font = hafsFont
             seg.foregroundColor = color(forLetter: letter)
@@ -117,7 +141,7 @@ struct TajweedParser {
         }
 
         if cursor < ns.length {
-            var seg = AttributedString(ns.substring(from: cursor))
+            var seg = AttributedString(sanitize(ns.substring(from: cursor)))
             seg.font = hafsFont
             seg.foregroundColor = Theme.tajweedDefault
             result.append(seg)
@@ -171,13 +195,15 @@ struct TajweedParser {
 
         for match in matches {
             if match.range.location > cursor {
-                let before = ns.substring(with: NSRange(location: cursor,
-                                                        length: match.range.location - cursor))
+                // Sanitize plain runs: the KFGQPC Hafs COLR font overrides foreground
+                // colour for annotation marks, so strip them from every segment.
+                let before = sanitize(ns.substring(with: NSRange(location: cursor,
+                                                                  length: match.range.location - cursor)))
                 result.append(NSAttributedString(string: before, attributes: defaultAttrs))
             }
 
             let letter  = ns.substring(with: match.range(at: 1))
-            let content = ns.substring(with: match.range(at: 2))
+            let content = sanitize(ns.substring(with: match.range(at: 2)))
             var attrs   = defaultAttrs
             attrs[.foregroundColor] = uiColor(forLetter: letter)
             result.append(NSAttributedString(string: content, attributes: attrs))
@@ -186,7 +212,7 @@ struct TajweedParser {
         }
 
         if cursor < ns.length {
-            result.append(NSAttributedString(string: ns.substring(from: cursor),
+            result.append(NSAttributedString(string: sanitize(ns.substring(from: cursor)),
                                              attributes: defaultAttrs))
         }
 

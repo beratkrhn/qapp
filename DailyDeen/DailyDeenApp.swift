@@ -1,6 +1,6 @@
 //
 //  DailyDeeApp.swift
-//  DailyDee
+//  DailyDeen
 //
 //  Created by Berat Karahan on 27.02.26.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct DailyDeeApp: App {
+struct DailyDeenApp: App {
     @StateObject private var prayerTimeManager = PrayerTimeManager()
     @StateObject private var appState = AppState()
 

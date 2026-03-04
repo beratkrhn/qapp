@@ -399,7 +399,6 @@ struct QuranMushafPageView: View {
 
     @State private var pageInput: String = ""
     @State private var showPageJump = false
-    @State private var showTranslationSheet = false
     @State private var pageScrollID: Int? = nil
     @State private var sliderPage: Double = 1
 
@@ -476,36 +475,18 @@ struct QuranMushafPageView: View {
     @ViewBuilder
     private func mushafPageContent(_ pageNum: Int) -> some View {
         if let page = store.mushafPageCache[pageNum] {
-            ZStack(alignment: .bottomTrailing) {
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 0) {
-                        pageHeaderView(page: page)
-                        ornamentalDivider
-                        pageBodyView(page: page)
-                        pageFooterView(pageNum: pageNum)
-                    }
-                    .padding(.horizontal, 22)
-                    .padding(.top, 10)
-                    .padding(.bottom, 16)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    pageHeaderView(page: page)
+                    ornamentalDivider
+                    pageBodyView(page: page)
+                    pageFooterView(pageNum: pageNum)
                 }
-                .background(Theme.background)
-
-                translationFAB
-                    .environment(\.layoutDirection, .leftToRight)
-                    .padding(.trailing, 16)
-                    .padding(.bottom, 12)
+                .padding(.horizontal, 22)
+                .padding(.top, 10)
+                .padding(.bottom, 16)
             }
-            .sheet(isPresented: $showTranslationSheet) {
-                TranslationBottomSheet(
-                    pageNumber: store.currentMushafPageNumber,
-                    store: store,
-                    translationOption: translationOption,
-                    language: language
-                )
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
-                .presentationBackground(Theme.background)
-            }
+            .background(Theme.background)
         } else {
             VStack(spacing: 10) {
                 ProgressView().tint(Theme.accent)
@@ -524,11 +505,11 @@ struct QuranMushafPageView: View {
         HStack(alignment: .center) {
             Text(page.suraArabicNames.first ?? "")
                 .font(.caption.weight(.semibold))
-                .foregroundColor(Theme.iconFajr)
+                .foregroundColor(Theme.accent)
             Spacer()
             Text("الجزء \(toEasternArabic(page.juzNumber))")
                 .font(.caption.weight(.medium))
-                .foregroundColor(Theme.iconFajr)
+                .foregroundColor(Theme.accent)
         }
         .environment(\.layoutDirection, .rightToLeft)
         .padding(.horizontal, 4)
@@ -537,9 +518,9 @@ struct QuranMushafPageView: View {
 
     private var ornamentalDivider: some View {
         HStack(spacing: 6) {
-            Rectangle().frame(height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.5))
-            Image(systemName: "diamond.fill").font(.system(size: 5)).foregroundColor(Theme.iconFajr.opacity(0.8))
-            Rectangle().frame(height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.5))
+            Rectangle().frame(height: 0.5).foregroundColor(Theme.accent.opacity(0.5))
+            Image(systemName: "diamond.fill").font(.system(size: 5)).foregroundColor(Theme.accent.opacity(0.8))
+            Rectangle().frame(height: 0.5).foregroundColor(Theme.accent.opacity(0.5))
         }
         .padding(.bottom, 10)
         .environment(\.layoutDirection, .leftToRight)
@@ -563,7 +544,7 @@ struct QuranMushafPageView: View {
             VStack(spacing: 3) {
                 Text(segment.suraName)
                     .font(kArabicFont.font(size: arabicFontSize * 0.85))
-                    .foregroundColor(Theme.iconFajr)
+                    .foregroundColor(Theme.accent)
                     .multilineTextAlignment(.center)
                     .environment(\.layoutDirection, .rightToLeft)
                 Text(segment.suraEnglishName)
@@ -578,7 +559,7 @@ struct QuranMushafPageView: View {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .fill(Theme.cardBackground)
                     .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .strokeBorder(Theme.iconFajr.opacity(0.25), lineWidth: 0.5))
+                        .strokeBorder(Theme.accent.opacity(0.25), lineWidth: 0.5))
             )
             ornamentalRule
         }
@@ -588,11 +569,11 @@ struct QuranMushafPageView: View {
 
     private var ornamentalRule: some View {
         HStack(spacing: 4) {
-            Rectangle().frame(height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.4))
-            Circle().frame(width: 4, height: 4).foregroundColor(Theme.iconFajr.opacity(0.6))
-            Circle().frame(width: 3, height: 3).foregroundColor(Theme.iconFajr.opacity(0.4))
-            Circle().frame(width: 4, height: 4).foregroundColor(Theme.iconFajr.opacity(0.6))
-            Rectangle().frame(height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.4))
+            Rectangle().frame(height: 0.5).foregroundColor(Theme.accent.opacity(0.4))
+            Circle().frame(width: 4, height: 4).foregroundColor(Theme.accent.opacity(0.6))
+            Circle().frame(width: 3, height: 3).foregroundColor(Theme.accent.opacity(0.4))
+            Circle().frame(width: 4, height: 4).foregroundColor(Theme.accent.opacity(0.6))
+            Rectangle().frame(height: 0.5).foregroundColor(Theme.accent.opacity(0.4))
         }
         .environment(\.layoutDirection, .leftToRight)
     }
@@ -628,26 +609,13 @@ struct QuranMushafPageView: View {
 
     private func pageFooterView(pageNum: Int) -> some View {
         HStack(spacing: 8) {
-            Rectangle().frame(width: 24, height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.4))
+            Rectangle().frame(width: 24, height: 0.5).foregroundColor(Theme.accent.opacity(0.4))
             Text(toEasternArabic(pageNum)).font(.caption.weight(.medium)).foregroundColor(Theme.textSecondary)
-            Rectangle().frame(width: 24, height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.4))
+            Rectangle().frame(width: 24, height: 0.5).foregroundColor(Theme.accent.opacity(0.4))
         }
         .frame(maxWidth: .infinity)
         .padding(.top, 14)
         .environment(\.layoutDirection, .leftToRight)
-    }
-
-    private var translationFAB: some View {
-        Button(action: { showTranslationSheet = true }) {
-            Image(systemName: "text.book.closed.fill")
-                .font(.callout)
-                .foregroundColor(Theme.background)
-                .frame(width: 40, height: 40)
-                .background(Circle().fill(
-                    LinearGradient(colors: [Theme.iconFajr, Theme.accent], startPoint: .topLeading, endPoint: .bottomTrailing)
-                ))
-                .shadow(color: Theme.shadowColor, radius: 6, y: 3)
-        }
     }
 
     // MARK: - Bottom Navigation Bar

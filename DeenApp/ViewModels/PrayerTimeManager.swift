@@ -178,6 +178,25 @@ final class PrayerTimeManager: ObservableObject {
         }
     }
 
+    // MARK: - Kerahat (Makruh) Start Times
+
+    /// Returns the kerahat (disliked) period start time string for prayers that have one.
+    /// Currently Dhuhr and Maghrib each have a 45-minute kerahat window before them.
+    /// e.g. Maghrib at 17:30 → kerahat start "16:45"
+    var kerahatStartTimes: [PrayerKind: String] {
+        var result: [PrayerKind: String] = [:]
+        let fmt = DateFormatter()
+        fmt.dateFormat = "HH:mm"
+        let kerahatPrayers: [PrayerKind] = [.dhuhr, .maghrib]
+        for kind in kerahatPrayers {
+            guard let prayer = prayerTimes.first(where: { $0.kind == kind }),
+                  let start = Calendar.current.date(byAdding: .minute, value: -45, to: prayer.time)
+            else { continue }
+            result[kind] = fmt.string(from: start)
+        }
+        return result
+    }
+
     deinit {
         countdownTimer?.invalidate()
     }

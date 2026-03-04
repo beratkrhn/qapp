@@ -77,6 +77,8 @@ struct HeaderView: View {
             if fontIndex < GreetingFontCycle.count - 1 {
                 fontIndex += 1
             } else {
+                // Pick a random font from the valid set so each launch settles on a different face.
+                fontIndex = Int.random(in: 0..<max(GreetingFontCycle.count, 1))
                 cycleDone = true
             }
         }

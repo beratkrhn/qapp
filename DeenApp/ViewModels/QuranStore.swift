@@ -255,13 +255,6 @@ final class QuranStore: ObservableObject {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranPageResponse.self, from: data)
             guard res.code == 200 else { return }
-            #if DEBUG
-            if let first = res.data.ayahs.first {
-                print("┌─ [quran-tajweed] page \(pageNumber), ayah \(first.number) raw text:")
-                print("│  \(first.text)")
-                print("└─────────────────────────────────────────")
-            }
-            #endif
             let ayahs = res.data.ayahs.map { a -> MushafAyah in
                 // Store raw tajweed HTML for JustifiedArabicText coloured rendering
                 mushafTajweedCache[a.number] = a.text

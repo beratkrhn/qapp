@@ -47,6 +47,7 @@ struct DashboardView: View {
                     PrayerTimesCardView(
                         prayers: prayerTimeManager.prayerTimes,
                         nextPrayer: prayerTimeManager.nextPrayer,
+                        kerahatTimes: prayerTimeManager.kerahatStartTimes,
                         language: appState.appLanguage
                     )
                 }

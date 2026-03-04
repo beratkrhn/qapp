@@ -8,8 +8,12 @@ import SwiftUI
 struct PrayerTimesCardView: View {
     let prayers: [PrayerTime]
     let nextPrayer: PrayerTime?
+    var kerahatTimes: [PrayerKind: String] = [:]
     var language: AppLanguage = .german
 
+    /// Subscribing to AppState ensures this card re-renders whenever the accent
+    /// theme changes, so Theme.cardBackground (a computed var) is re-evaluated.
+    @EnvironmentObject var appState: AppState
     @State private var isExpanded: Bool = false
 
     // MARK: - Computed Kerahat (Makruh) times
@@ -100,7 +104,8 @@ struct PrayerTimesCardView: View {
                         PrayerRowView(
                             prayer: prayer,
                             isNext: nextPrayer?.id == prayer.id,
-                            language: language
+                            language: language,
+                            kerahatTimeString: kerahatTimes[prayer.kind]
                         )
                         if index < prayers.count - 1 {
                             Divider()
@@ -221,6 +226,9 @@ struct PrayerRowView: View {
     let prayer: PrayerTime
     let isNext: Bool
     var language: AppLanguage = .german
+    /// Kerahat (disliked) period start time for prayers that have one (Dhuhr, Maghrib).
+    /// Displayed in small red text immediately before the prayer time.
+    var kerahatTimeString: String? = nil
 
     var body: some View {
         HStack(spacing: 12) {
@@ -234,6 +242,13 @@ struct PrayerRowView: View {
                 .foregroundColor(Theme.textPrimary)
 
             Spacer()
+
+            if let kerahat = kerahatTimeString {
+                Text(kerahat)
+                    .font(.caption2.weight(.medium).monospacedDigit())
+                    .foregroundColor(Color(hex: "FF5252"))
+                    .padding(.trailing, 4)
+            }
 
             Text(prayer.timeString)
                 .font(.subheadline.monospacedDigit())
@@ -284,8 +299,10 @@ private struct SpecialTimeRow: View {
     PrayerTimesCardView(
         prayers: PrayerKind.allCases.map { PrayerTime(kind: $0, timeString: "00:00", referenceDate: Date()) },
         nextPrayer: PrayerTime(kind: .fajr, timeString: "05:22", referenceDate: Date()),
+        kerahatTimes: [.dhuhr: "11:45", .maghrib: "16:45"],
         language: .german
     )
+    .environmentObject(AppState())
     .padding()
     .background(Theme.background)
 }
