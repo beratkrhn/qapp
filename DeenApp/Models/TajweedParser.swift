@@ -27,13 +27,18 @@ struct TajweedParser {
 
     private static func color(forLetter letter: String) -> Color {
         switch letter {
-        case "n", "o", "p", "m": return Theme.tajweedMadd      // Madd (prolongation)
-        case "f":                 return Theme.tajweedIkhfa     // Ikhfa (concealment)
-        case "g":                 return Theme.tajweedGhunna    // Ghunna (nasalisation)
-        case "a", "w", "i":      return Theme.tajweedIdgham    // Idgham (merging)
-        case "q":                 return Theme.tajweedQalqala   // Qalqala (bouncing)
-        case "c":                 return Theme.tajweedIkhfa     // Iqlab — mapped to Ikhfa color
-        case "h", "l", "s":      return Theme.tajweedLam       // Hamza Wasl / Lam / Silent
+        case "a", "w", "n", "g": return Theme.tajweedIdghamGhunna   // İdgham Meal/Bila Günne + Ghunna
+        case "i":                 return Theme.tajweedIdghamMutmath  // İdgham Mütecaniseyn etc.
+        case "f":                 return Theme.tajweedIkhfa          // İhfa Hakiki
+        case "m":                 return Theme.tajweedIkhfaShafawi   // Dudak İhfası (Mim + Ba)
+        case "q":                 return Theme.tajweedQalqala        // Kalkale
+        case "c":                 return Theme.tajweedIqlab          // İklab
+        case "o":                 return Theme.tajweedIzhar          // İzhar
+        case "p", "b":            return Theme.tajweedMaddLin        // Medd-i Lin
+        case "h", "l", "s":      return Theme.tajweedSilent         // Sessiz / Hamza Vasl / Lam
+        case "k", "t":            return Theme.tajweedMaddQasr       // Medd-i Muttasıl / Munfasıl
+        case "u":                 return Theme.tajweedMaddLazim      // Medd-i Lazım
+        case "j", "r", "v", "x": return Theme.tajweedIqlab          // Medd-i Arız / Tabii / Sıla
         default:                  return Theme.tajweedDefault
         }
     }
@@ -270,20 +275,28 @@ struct TajweedParser {
 
     private static func uiColor(forLetter letter: String) -> UIColor {
         switch letter {
-        case "n", "o", "p", "m":
-            return UIColor(red: 0xFF/255, green: 0x98/255, blue: 0x00/255, alpha: 1) // orange – Madd
+        case "a", "w", "n", "g":
+            return UIColor(red: 0xF0/255, green: 0x62/255, blue: 0x92/255, alpha: 1) // pink   – İdgham Meal/Bila Günne + Ghunna
+        case "i":
+            return UIColor(red: 0xA1/255, green: 0x88/255, blue: 0x7F/255, alpha: 1) // brown  – İdgham Mütecaniseyn etc.
         case "f":
-            return UIColor(red: 0x42/255, green: 0xA5/255, blue: 0xF5/255, alpha: 1) // blue   – Ikhfa
-        case "g":
-            return UIColor(red: 0x4C/255, green: 0xAF/255, blue: 0x50/255, alpha: 1) // green  – Ghunna
-        case "a", "w", "i":
-            return UIColor(red: 0xB0/255, green: 0xBE/255, blue: 0xC5/255, alpha: 1) // gray   – Idgham
+            return UIColor(red: 0x66/255, green: 0xBB/255, blue: 0x6A/255, alpha: 1) // dark green – İhfa Hakiki
+        case "m":
+            return UIColor(red: 0xA5/255, green: 0xD6/255, blue: 0xA7/255, alpha: 1) // light green – Dudak İhfası
         case "q":
-            return UIColor(red: 0xEF/255, green: 0x53/255, blue: 0x50/255, alpha: 1) // red    – Qalqala
-        case "c":
-            return UIColor(red: 0x42/255, green: 0xA5/255, blue: 0xF5/255, alpha: 1) // blue   – Iqlab (≈ Ikhfa)
+            return UIColor(red: 0xD4/255, green: 0xAC/255, blue: 0x7A/255, alpha: 1) // beige  – Kalkale
+        case "c", "j", "r", "v", "x":
+            return UIColor(red: 0x42/255, green: 0xA5/255, blue: 0xF5/255, alpha: 1) // blue   – İklab + Medd Arız/Tabii/Sıla
+        case "o":
+            return UIColor(red: 0x38/255, green: 0x8E/255, blue: 0x3C/255, alpha: 1) // forest green – İzhar
+        case "p", "b":
+            return UIColor(red: 0xFF/255, green: 0xD5/255, blue: 0x4F/255, alpha: 1) // gold   – Medd-i Lin
         case "h", "l", "s":
-            return UIColor(red: 0xAB/255, green: 0x47/255, blue: 0xBC/255, alpha: 1) // purple – Lam / Hamza Wasl / Silent
+            return UIColor(red: 0x90/255, green: 0xA4/255, blue: 0xAE/255, alpha: 1) // gray   – Sessiz / Hamza Vasl / Lam
+        case "k", "t":
+            return UIColor(red: 0xEF/255, green: 0x53/255, blue: 0x50/255, alpha: 1) // red    – Medd-i Muttasıl / Munfasıl
+        case "u":
+            return UIColor(red: 0xFF/255, green: 0x98/255, blue: 0x00/255, alpha: 1) // orange – Medd-i Lazım
         default:
             return .white
         }

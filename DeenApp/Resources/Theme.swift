@@ -55,14 +55,32 @@ enum Theme {
     /// Vokabeln Brain-Icon (Pink) ~ #E91E63
     static let iconBrain = Color(hex: "E91E63")
 
-    // MARK: - Tajweed Colors (Quranic recitation rules)
-    static let tajweedGhunna  = Color(hex: "4CAF50")   // Green – nasalisation
-    static let tajweedIkhfa   = Color(hex: "42A5F5")   // Blue  – concealment
-    static let tajweedQalqala  = Color(hex: "EF5350")   // Red   – echoing/bouncing
-    static let tajweedIdgham   = Color(hex: "B0BEC5")   // Gray  – merging/assimilation
-    static let tajweedMadd     = Color(hex: "FF9800")   // Orange – prolongation
-    static let tajweedLam      = Color(hex: "AB47BC")   // Purple – Lam Shamsiyya
-    static let tajweedDefault  = Color.white
+    // MARK: - Tajweed Colors (Turkish Tajweed rule set)
+
+    /// Pink — İdgham Meal Günne (a/w) + Ghunna/Mushaddad (n/g)
+    static let tajweedIdghamGhunna  = Color(hex: "F06292")
+    /// Brown — İdgham Mütecaniseyn / Mütekaribeyn / Müteşabihteyn (i)
+    static let tajweedIdghamMutmath = Color(hex: "A1887F")
+    /// Dark Green — İhfa Hakiki (f)
+    static let tajweedIkhfa         = Color(hex: "66BB6A")
+    /// Light Green — Dudak İhfası / İhfa Şefevi (m)
+    static let tajweedIkhfaShafawi  = Color(hex: "A5D6A7")
+    /// Beige — Kalkale (q)
+    static let tajweedQalqala       = Color(hex: "D4AC7A")
+    /// Blue — İklab (c) + Medd-i Arız / Tabii / Sıla (j/r/v)
+    static let tajweedIqlab         = Color(hex: "42A5F5")
+    /// Forest Green — İzhar (o)  — noticeably darker than İhfa
+    static let tajweedIzhar         = Color(hex: "388E3C")
+    /// Gold — Medd-i Lin (p/b)
+    static let tajweedMaddLin       = Color(hex: "FFD54F")
+    /// Gray — Okunmayan Harfler / Hamza Vasl / Sessiz Lam (h/l/s)
+    static let tajweedSilent        = Color(hex: "90A4AE")
+    /// Red — Medd-i Muttasıl + Medd-i Munfasıl (k/t)
+    static let tajweedMaddQasr      = Color(hex: "EF5350")
+    /// Orange — Medd-i Lazım (u)
+    static let tajweedMaddLazim     = Color(hex: "FF9800")
+    /// White — untagged Arabic text
+    static let tajweedDefault       = Color.white
 
     // MARK: - Shadows
 

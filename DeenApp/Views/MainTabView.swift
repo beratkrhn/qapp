@@ -7,6 +7,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState
+    @State private var srsViewModel = SRSViewModel()
     @State private var showSettings = false
 
     var body: some View {
@@ -21,7 +22,8 @@ struct MainTabView: View {
                 case .quran:
                     QuranView()
                 case .lernen:
-                    FlashcardView()
+                    LearningDashboardView()
+                        .environment(srsViewModel)
                 case .gebet:
                     PlaceholderView(title: "Gebet", subtitle: "Gebetszeiten & Qibla")
                 }

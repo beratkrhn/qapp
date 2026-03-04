@@ -39,6 +39,10 @@
 		0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12812F510DEB006DB819 /* AppCity.swift */; };
 		0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12832F510DEB006DB819 /* SettingsView.swift */; };
 		C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */; };
+		DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00012F510DEB006DB81900 /* FlashcardCard.swift */; };
+		DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00032F510DEB006DB81900 /* SRSViewModel.swift */; };
+		DD00052F510DEB006DB81901 /* LearningDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00052F510DEB006DB81900 /* LearningDashboardView.swift */; };
+		DD00072F510DEB006DB81901 /* FlashcardSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00072F510DEB006DB81900 /* FlashcardSessionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +81,10 @@
 		0EEA12812F510DEB006DB819 /* AppCity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCity.swift; sourceTree = "<group>"; };
 		0EEA12832F510DEB006DB819 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TajweedParser.swift; sourceTree = "<group>"; };
+		DD00012F510DEB006DB81900 /* FlashcardCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardCard.swift; sourceTree = "<group>"; };
+		DD00032F510DEB006DB81900 /* SRSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSViewModel.swift; sourceTree = "<group>"; };
+		DD00052F510DEB006DB81900 /* LearningDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningDashboardView.swift; sourceTree = "<group>"; };
+		DD00072F510DEB006DB81900 /* FlashcardSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardSessionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -157,6 +165,7 @@
 				EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */,
 				0EEA126A2F510DEB006DB819 /* QuranTranslation.swift */,
 				0EEA12752F510DEB006DB819 /* QuranWord.swift */,
+				DD00012F510DEB006DB81900 /* FlashcardCard.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -180,6 +189,7 @@
 			children = (
 				0EEA12282F510DEB006DB819 /* PrayerTimeManager.swift */,
 				0EEA12622F510DEB006DB819 /* QuranStore.swift */,
+				DD00032F510DEB006DB81900 /* SRSViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -205,6 +215,8 @@
 				0EEA125E2F510DEB006DB819 /* OnboardingView.swift */,
 				0EEA12602F510DEB006DB819 /* QuranView.swift */,
 				0EEA12772F510DEB006DB819 /* FlashcardView.swift */,
+				DD00052F510DEB006DB81900 /* LearningDashboardView.swift */,
+				DD00072F510DEB006DB81900 /* FlashcardSessionView.swift */,
 				0EEA12832F510DEB006DB819 /* SettingsView.swift */,
 				0EEA12322F510DEB006DB819 /* TabBarView.swift */,
 			);
@@ -328,6 +340,10 @@
 				0EEA12722F510DEB006DB819 /* AlquranAPI.swift in Sources */,
 				0EEA12742F510DEB006DB819 /* QuranWord.swift in Sources */,
 				0EEA12762F510DEB006DB819 /* FlashcardView.swift in Sources */,
+				DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */,
+				DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */,
+				DD00052F510DEB006DB81901 /* LearningDashboardView.swift in Sources */,
+				DD00072F510DEB006DB81901 /* FlashcardSessionView.swift in Sources */,
 				0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */,
 				0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */,
 			);
