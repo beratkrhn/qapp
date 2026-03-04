@@ -361,6 +361,22 @@ struct QuranReaderView: View {
                 displayMode = .mushaf
             }
         }
+        .onChange(of: displayMode) { oldMode, newMode in
+            switch (oldMode, newMode) {
+            case (.mushaf, .list):
+                // Derive which Surah is on the current Mushaf page and load it in the list.
+                let surah = store.surahNumberForMushafPage(store.currentMushafPageNumber)
+                store.selectSura(surah)
+            case (.list, .mushaf):
+                // Jump the Mushaf to the first page of the currently displayed Surah.
+                if let surah = store.selectedSuraNumber,
+                   let page = QuranStore.surahFirstPage[surah] {
+                    store.goToMushafPage(page)
+                }
+            default:
+                break
+            }
+        }
     }
 
     private var modePicker: some View {
@@ -716,7 +732,7 @@ struct QuranMushafPageView: View {
         }.joined()
     }
 
-    private func ayahMarker(_ number: Int) -> String { "﴿\(toEasternArabic(number))﴾" }
+    private func ayahMarker(_ number: Int) -> String { "﴿\(number)﴾" }
 }
 
 // MARK: - Translation Bottom Sheet
@@ -945,7 +961,7 @@ struct QuranListView: View {
                             // Verse reference
                             Text("﴿ \(verse.suraNumber):\(verse.verseNumber) ﴾")
                                 .font(.caption2.weight(.medium))
-                                .foregroundColor(Theme.iconFajr.opacity(0.8))
+                                .foregroundColor(Theme.accent.opacity(0.8))
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                         .padding(.vertical, 6)
@@ -1094,7 +1110,7 @@ private struct JustifiedArabicText: UIViewRepresentable {
     let tajweedEnabled: Bool
     let tajweedCache: [Int: String]
 
-    private static let markerColor = UIColor(red: 1.0, green: 0.753, blue: 0.027, alpha: 1.0)
+    private var markerColor: UIColor { UIColor(ThemeColor.current.color) }
 
     func makeUIView(context: Context) -> UITextView {
         let tv = UITextView()
@@ -1128,7 +1144,7 @@ private struct JustifiedArabicText: UIViewRepresentable {
             if seg.isMarker {
                 result.append(NSAttributedString(string: seg.text, attributes: [
                     .font:            markerFont,
-                    .foregroundColor: Self.markerColor,
+                    .foregroundColor: markerColor,
                     .paragraphStyle:  para,
                 ]))
             } else if tajweedEnabled, let html = tajweedCache[seg.ayahID] {

@@ -40,17 +40,29 @@ struct TajweedParser {
 
     // MARK: - Quranic Annotation Mark Filter
 
-    /// Unicode range U+06D6–U+06ED contains Quranic annotation signs
-    /// (e.g. the Rounded Zero ۟ U+06DF, Rectangular Zero ۠ U+06E0, high stops, etc.).
-    /// When these appear inside a coloured span they render as isolated orange/red circles.
-    /// They must be stripped from coloured segments; they are left intact in default-colour runs.
+    /// Scalar ranges that produce visible artifacts (orange/gold circles, phantom glyphs)
+    /// when the KFGQPC Hafs COLR font renders them inside a coloured attributed-string span.
+    ///
+    /// Stripped ranges:
+    ///   U+0600–U+0605   Arabic number sign / footnote marker / poetic verse sign
+    ///   U+0610–U+061A   Arabic Extended signs (small high marks)
+    ///   U+06D6–U+06ED   Quranic Annotation Signs (Waqf marks, end-of-ayah ۝, rounded zero ۟, etc.)
+    ///   U+08D3–U+08FF   Arabic Extended-A supplement (small high marks that render as circles)
+    ///   U+FD3E–U+FD3F   Ornate Arabic parentheses
+    ///   U+200B–U+200F   Zero-width / directional control characters
+    ///   U+200C/200D     Zero-width non-joiner / joiner
+    ///   U+FEFF          BOM / Zero Width No-Break Space
     private static let annotationMarkSet: CharacterSet = {
         var cs = CharacterSet()
-        // Arabic Quranic Annotation Signs block
+        cs.insert(charactersIn: Unicode.Scalar(0x0600)!...Unicode.Scalar(0x0605)!)
+        cs.insert(charactersIn: Unicode.Scalar(0x0610)!...Unicode.Scalar(0x061A)!)
         cs.insert(charactersIn: Unicode.Scalar(0x06D6)!...Unicode.Scalar(0x06ED)!)
-        // Zero-width joiners that can produce phantom glyphs when coloured
+        cs.insert(charactersIn: Unicode.Scalar(0x08D3)!...Unicode.Scalar(0x08FF)!)
+        cs.insert(charactersIn: Unicode.Scalar(0xFD3E)!...Unicode.Scalar(0xFD3F)!)
+        cs.insert(charactersIn: Unicode.Scalar(0x200B)!...Unicode.Scalar(0x200F)!)
         cs.insert(Unicode.Scalar(0x200C)!)
         cs.insert(Unicode.Scalar(0x200D)!)
+        cs.insert(Unicode.Scalar(0xFEFF)!)
         return cs
     }()
 
@@ -62,9 +74,9 @@ struct TajweedParser {
     // MARK: - Tag Stripper
 
     /// Removes all bracket-format tajweed markers from `text`,
-    /// leaving only the bare Arabic inner text nodes.
+    /// leaving only the bare Arabic inner text nodes, then sanitizes artifacts.
     static func stripAllTags(_ text: String) -> String {
-        guard let regex = try? NSRegularExpression(pattern: bracketPattern) else { return text }
+        guard let regex = try? NSRegularExpression(pattern: bracketPattern) else { return sanitize(text) }
         let ns = text as NSString
         var result = ""
         var cursor = 0
@@ -78,7 +90,7 @@ struct TajweedParser {
             cursor = match.range.location + match.range.length
         }
         if cursor < ns.length { result += ns.substring(from: cursor) }
-        return result
+        return sanitize(result)
     }
 
     // MARK: - Main Entry Point (SwiftUI AttributedString)

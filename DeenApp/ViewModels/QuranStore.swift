@@ -291,6 +291,16 @@ final class QuranStore: ObservableObject {
         Task { await preloadMushafPages(around: clamped) }
     }
 
+    /// Returns the Surah number whose text starts on or before `page`.
+    /// Prefers the live page cache (first ayah's sura); falls back to the static lookup table.
+    func surahNumberForMushafPage(_ page: Int) -> Int {
+        if let cached = mushafPageCache[page], let first = cached.ayahs.first {
+            return first.suraNumber
+        }
+        let matches = Self.surahFirstPage.filter { $0.value <= page }
+        return matches.max(by: { $0.key < $1.key })?.key ?? 1
+    }
+
 
     // MARK: - Seiten-Übersetzungen (Bottom-Sheet)
 
