@@ -98,6 +98,13 @@ final class SRSViewModel {
         sessionFinished = false
     }
 
+    /// Resets every card to its initial `.new` state and clears persisted SRS data.
+    func resetProgress() {
+        allCards = Self.mockCards
+        UserDefaults.standard.removeObject(forKey: kSRSCardsKey)
+        resetSession()
+    }
+
     // MARK: - SM-2 Core Algorithm
 
     private func applyAlgorithm(rating: SRSRating, to card: inout FlashcardCard) {

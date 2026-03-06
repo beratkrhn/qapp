@@ -87,6 +87,7 @@ struct FlashcardSessionView: View {
             Spacer(minLength: 0)
 
             // Bottom area: hint or rating buttons
+            // Extra bottom padding keeps buttons clear of the persistent tab bar.
             Group {
                 if isFlipped {
                     ratingButtons
@@ -98,7 +99,7 @@ struct FlashcardSessionView: View {
             }
             .animation(.easeOut(duration: 0.25), value: isFlipped)
             .padding(.horizontal, 20)
-            .padding(.bottom, 40)
+            .padding(.bottom, 100)
         }
     }
 

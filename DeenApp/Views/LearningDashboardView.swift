@@ -14,6 +14,7 @@ struct LearningDashboardView: View {
     @EnvironmentObject var appState: AppState
 
     @State private var activeSessionType: LearningSessionType?
+    @State private var showResetAlert = false
 
     var body: some View {
         NavigationStack {
@@ -34,6 +35,28 @@ struct LearningDashboardView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Theme.background.opacity(0.95), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showResetAlert = true
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.body.weight(.semibold))
+                            .foregroundColor(Theme.textSecondary)
+                            .padding(8)
+                            .background(Circle().fill(Theme.cardBackground))
+                    }
+                }
+            }
+            .alert("Fortschritt zurücksetzen?",
+                   isPresented: $showResetAlert) {
+                Button("Abbrechen", role: .cancel) { }
+                Button("Zurücksetzen", role: .destructive) {
+                    srsViewModel.resetProgress()
+                }
+            } message: {
+                Text("Bist du dir sicher dass du deinen Fortschritt zurücksetzen willst?")
+            }
             .navigationDestination(item: $activeSessionType) { type in
                 FlashcardSessionView(sessionType: type)
             }
@@ -155,19 +178,22 @@ struct CircularProgressRing: View {
         ZStack {
             // Track
             Circle()
-                .stroke(Theme.cardBackground, lineWidth: 14)
+                .stroke(Theme.cardBackground, lineWidth: 15)
 
-            // Fill
+            // Fill — gradient starts and ends on the same color so the ring is
+            // seamless at any trim value; the round lineCap gives a smooth endpoint.
             Circle()
                 .trim(from: 0, to: min(progress, 1))
                 .stroke(
                     AngularGradient(
-                        colors: [Theme.accent.opacity(0.65), Theme.accent],
-                        center: .center,
-                        startAngle: .degrees(-90),
-                        endAngle: .degrees(270)
+                        gradient: Gradient(stops: [
+                            .init(color: Theme.accent,              location: 0.0),
+                            .init(color: Theme.accent.opacity(0.65), location: 0.5),
+                            .init(color: Theme.accent,              location: 1.0),
+                        ]),
+                        center: .center
                     ),
-                    style: StrokeStyle(lineWidth: 14, lineCap: .round)
+                    style: StrokeStyle(lineWidth: 15, lineCap: .round, lineJoin: .round)
                 )
                 .rotationEffect(.degrees(-90))
                 .animation(.easeOut(duration: 1.0), value: progress)
