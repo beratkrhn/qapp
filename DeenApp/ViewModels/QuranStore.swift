@@ -380,9 +380,10 @@ final class QuranStore: ObservableObject {
     static func parseTajweedAttributedString(
         _ taggedHTML: String,
         fontSize: CGFloat,
-        enabled: Bool
+        enabled: Bool,
+        defaultColor: Color = Theme.tajweedDefault
     ) -> AttributedString {
-        TajweedParser.parse(taggedHTML, fontSize: fontSize, enabled: enabled)
+        TajweedParser.parse(taggedHTML, fontSize: fontSize, enabled: enabled, defaultColor: defaultColor)
     }
 
     // MARK: - Juz Boundaries (first Surah number in each of the 30 Juz)

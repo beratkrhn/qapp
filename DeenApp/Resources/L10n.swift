@@ -264,6 +264,20 @@ enum L10n {
     }
 
     // MARK: - Quran Tajweed
+    static func quranReadingMode(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Lesemodus"
+        case .english: return "Reading Mode"
+        case .turkish: return "Okuma Modu"
+        }
+    }
+    static func quranReadingModeDescription(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Weißer Hintergrund für bessere Lesbarkeit"
+        case .english: return "White background for better legibility"
+        case .turkish: return "Daha iyi okunabilirlik için beyaz arka plan"
+        }
+    }
     static func quranTajweed(_ lang: AppLanguage) -> String {
         switch lang {
         case .german, .germanArabic, .germanTurkish: return "Tajweed-Farben"

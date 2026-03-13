@@ -18,6 +18,7 @@ private enum UserDefaultsKeys {
     static let dailyGoalPages = "dailydee.dailyGoalPages"
     static let lastReadDate = "dailydee.lastReadDate"
     static let isTajweedEnabled = "dailydee.isTajweedEnabled"
+    static let isReadingModeEnabled = "dailydee.isReadingModeEnabled"
     static let accentTheme = "dailydee.accentTheme"
 }
 
@@ -32,6 +33,11 @@ final class AppState: ObservableObject {
     // MARK: - Tajweed
     @Published var isTajweedEnabled: Bool {
         didSet { UserDefaults.standard.set(isTajweedEnabled, forKey: UserDefaultsKeys.isTajweedEnabled) }
+    }
+
+    // MARK: - Reading Mode (white background, black text)
+    @Published var isReadingModeEnabled: Bool {
+        didSet { UserDefaults.standard.set(isReadingModeEnabled, forKey: UserDefaultsKeys.isReadingModeEnabled) }
     }
 
     // MARK: - Accent Theme
@@ -75,6 +81,9 @@ final class AppState: ObservableObject {
         } else {
             self.isTajweedEnabled = true
         }
+
+        // Reading mode: defaults to false (dark theme)
+        self.isReadingModeEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isReadingModeEnabled)
 
         // Accent theme: defaults to Emerald Green
         let rawTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme)

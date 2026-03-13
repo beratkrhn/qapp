@@ -88,12 +88,11 @@ struct TajweedParser {
     // MARK: - Debug Scalar Logger
 
 #if DEBUG
-    /// Logs every Unicode scalar value inside a tajweed segment so you can identify
-    /// exactly which hidden codepoints the API is embedding (run once, then remove).
-    ///
-    /// Example output:
-    ///   [TajweedParser] rule 'm' content: U+0645 U+0640 U+06DF  "مـ۟"
+    /// Set to `true` to re-enable per-segment scalar logging for debugging.
+    static var logEnabled = false
+
     private static func debugLogScalars(_ text: String, rule: String) {
+        guard logEnabled else { return }
         let hexList = text.unicodeScalars
             .map { String(format: "U+%04X", $0.value) }
             .joined(separator: " ")
@@ -132,18 +131,18 @@ struct TajweedParser {
     ///   - text:     Raw string from the `quran-tajweed` API edition.
     ///   - fontSize: Point size applied to every character.
     ///   - enabled:  When `false` the text is returned plain (brackets stripped, default colour).
-    static func parse(_ text: String, fontSize: CGFloat, enabled: Bool) -> AttributedString {
+    static func parse(_ text: String, fontSize: CGFloat, enabled: Bool, defaultColor: Color = Theme.tajweedDefault) -> AttributedString {
         let hafsFont = QuranArabicFont.getHafsFont(size: fontSize)
 
         guard enabled else {
             var attr = AttributedString(stripAllTags(text))
             attr.font = hafsFont
-            attr.foregroundColor = Theme.tajweedDefault
+            attr.foregroundColor = defaultColor
             return attr
         }
 
         guard let regex = try? NSRegularExpression(pattern: bracketPattern) else {
-            return plainFallback(text, font: hafsFont)
+            return plainFallback(text, font: hafsFont, defaultColor: defaultColor)
         }
 
         let ns = text as NSString
@@ -152,7 +151,7 @@ struct TajweedParser {
         guard !matches.isEmpty else {
             var plain = AttributedString(text)
             plain.font = hafsFont
-            plain.foregroundColor = Theme.tajweedDefault
+            plain.foregroundColor = defaultColor
             return plain
         }
 
@@ -161,14 +160,11 @@ struct TajweedParser {
 
         for match in matches {
             if match.range.location > cursor {
-                // Sanitize plain runs too: the KFGQPC Hafs COLR font renders annotation
-                // marks (U+06D6–U+06ED) with built-in orange glyphs that override any
-                // foreground colour we set — strip them here before building the segment.
                 let rawSegment = sanitize(ns.substring(with: NSRange(location: cursor,
                                                                      length: match.range.location - cursor)))
                 var seg = AttributedString(rawSegment)
                 seg.font = hafsFont
-                seg.foregroundColor = Theme.tajweedDefault
+                seg.foregroundColor = defaultColor
                 result.append(seg)
             }
 
@@ -189,19 +185,19 @@ struct TajweedParser {
         if cursor < ns.length {
             var seg = AttributedString(sanitize(ns.substring(from: cursor)))
             seg.font = hafsFont
-            seg.foregroundColor = Theme.tajweedDefault
+            seg.foregroundColor = defaultColor
             result.append(seg)
         }
 
-        return result.characters.isEmpty ? plainFallback(text, font: hafsFont) : result
+        return result.characters.isEmpty ? plainFallback(text, font: hafsFont, defaultColor: defaultColor) : result
     }
 
     // MARK: - Plain-text Fallback
 
-    private static func plainFallback(_ text: String, font: Font) -> AttributedString {
+    private static func plainFallback(_ text: String, font: Font, defaultColor: Color = Theme.tajweedDefault) -> AttributedString {
         var attr = AttributedString(stripAllTags(text))
         attr.font = font
-        attr.foregroundColor = Theme.tajweedDefault
+        attr.foregroundColor = defaultColor
         return attr
     }
 
@@ -217,11 +213,12 @@ struct TajweedParser {
     static func nsAttributedString(
         from text: String,
         bodyFont: UIFont,
-        paragraphStyle: NSParagraphStyle
+        paragraphStyle: NSParagraphStyle,
+        defaultTextColor: UIColor = .white
     ) -> NSAttributedString {
         let defaultAttrs: [NSAttributedString.Key: Any] = [
             .font:           bodyFont,
-            .foregroundColor: UIColor.white,
+            .foregroundColor: defaultTextColor,
             .paragraphStyle: paragraphStyle,
         ]
 

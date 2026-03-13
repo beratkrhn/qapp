@@ -131,8 +131,8 @@ struct PrayerTutorialView: View {
 
             if showTransliteration, let translit = step.transliteration, !translit.isEmpty {
                 Text(translit)
-                    .font(.system(size: translitBaseSize, weight: .medium))
-                    .foregroundColor(Theme.accent)
+                    .font(.system(size: translitBaseSize))
+                    .foregroundColor(Theme.textSecondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(15)
                     .minimumScaleFactor(0.1)

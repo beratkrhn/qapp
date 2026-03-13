@@ -65,7 +65,8 @@ struct QuranView: View {
                 language: appState.appLanguage,
                 arabicFontSize: $arabicFontSize,
                 translationOption: $translationOption,
-                isTajweedEnabled: $appState.isTajweedEnabled
+                isTajweedEnabled: $appState.isTajweedEnabled,
+                isReadingModeEnabled: $appState.isReadingModeEnabled
             )
         }
     }
@@ -306,9 +307,12 @@ struct QuranReaderView: View {
     let language: AppLanguage
     @Binding var showSettings: Bool
 
+    private var readingMode: Bool { appState.isReadingModeEnabled }
+    private var readerBg: Color { readingMode ? .white : Theme.background }
+
     var body: some View {
         ZStack {
-            Theme.background.ignoresSafeArea()
+            readerBg.ignoresSafeArea()
             VStack(spacing: 0) {
                 modePicker
                 switch displayMode {
@@ -333,7 +337,8 @@ struct QuranReaderView: View {
                             store: store,
                             arabicFontSize: arabicFontSize,
                             translationOption: translationOption,
-                            isTajweedEnabled: appState.isTajweedEnabled
+                            isTajweedEnabled: appState.isTajweedEnabled,
+                            readingMode: readingMode
                         )
                     }
                 }
@@ -417,6 +422,11 @@ struct QuranMushafPageView: View {
     @State private var showPageJump = false
     @State private var pageScrollID: Int? = nil
     @State private var sliderPage: Double = 1
+
+    private var readingMode: Bool { appState.isReadingModeEnabled }
+    private var pageBg: Color { readingMode ? .white : Theme.background }
+    private var primaryText: Color { readingMode ? .black : Theme.textPrimary }
+    private var cardBg: Color { readingMode ? Color(hex: "F5F5F0") : Theme.cardBackground }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -502,7 +512,7 @@ struct QuranMushafPageView: View {
                 .padding(.top, 10)
                 .padding(.bottom, 16)
             }
-            .background(Theme.background)
+            .background(pageBg)
         } else {
             VStack(spacing: 10) {
                 ProgressView().tint(Theme.accent)
@@ -573,7 +583,7 @@ struct QuranMushafPageView: View {
             .padding(.vertical, 6)
             .background(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Theme.cardBackground)
+                    .fill(cardBg)
                     .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .strokeBorder(Theme.accent.opacity(0.25), lineWidth: 0.5))
             )
@@ -597,7 +607,7 @@ struct QuranMushafPageView: View {
     private var bismillahView: some View {
         Text("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")
             .font(kArabicFont.font(size: arabicFontSize))
-            .foregroundColor(Theme.textPrimary)
+            .foregroundColor(primaryText)
             .frame(maxWidth: .infinity)
             .multilineTextAlignment(.center)
             .padding(.vertical, 8)
@@ -618,7 +628,8 @@ struct QuranMushafPageView: View {
             bodyFont: bodyUIFont,
             markerFont: markerUIFont,
             tajweedEnabled: appState.isTajweedEnabled,
-            tajweedCache: store.mushafTajweedCache
+            tajweedCache: store.mushafTajweedCache,
+            readingMode: readingMode
         )
         .frame(maxWidth: .infinity)
     }
@@ -861,9 +872,15 @@ struct QuranListView: View {
     let arabicFontSize: CGFloat
     let translationOption: QuranTranslationOption
     let isTajweedEnabled: Bool
+    let readingMode: Bool
 
     @State private var selectedWord: String? = nil
     @State private var showWordSheet = false
+
+    private var primaryText: Color { readingMode ? .black : Theme.textPrimary }
+    private var secondaryText: Color { readingMode ? Color(hex: "555555") : Theme.textSecondary }
+    private var rowBg: Color { readingMode ? .white : Theme.cardBackground }
+    private var tajweedDefault: Color { readingMode ? .black : Theme.tajweedDefault }
 
     var body: some View {
         Group {
@@ -888,7 +905,7 @@ struct QuranListView: View {
                             .multilineTextAlignment(.center)
                             .padding(.vertical, 16)
                             .environment(\.layoutDirection, .rightToLeft)
-                            .listRowBackground(Theme.cardBackground)
+                            .listRowBackground(rowBg)
                             .listRowSeparator(.hidden)
                     }
 
@@ -904,7 +921,8 @@ struct QuranListView: View {
                                 Text(QuranStore.parseTajweedAttributedString(
                                     tajweedHTML ?? verse.arabic,
                                     fontSize: arabicFontSize,
-                                    enabled: tajweedHTML != nil
+                                    enabled: tajweedHTML != nil,
+                                    defaultColor: tajweedDefault
                                 ))
                                 .multilineTextAlignment(.trailing)
                                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -923,7 +941,7 @@ struct QuranListView: View {
                                         }) {
                                             Text(word)
                                                 .font(kArabicFont.font(size: arabicFontSize))
-                                                .foregroundColor(Theme.textPrimary)
+                                                .foregroundColor(primaryText)
                                                 .padding(.horizontal, 3)
                                                 .padding(.vertical, 2)
                                                 .contentShape(Rectangle())
@@ -939,7 +957,7 @@ struct QuranListView: View {
                                !translit.isEmpty {
                                 Text(translit)
                                     .font(.subheadline.italic())
-                                    .foregroundColor(Theme.textSecondary.opacity(0.8))
+                                    .foregroundColor(secondaryText.opacity(0.8))
                                     .multilineTextAlignment(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .fixedSize(horizontal: false, vertical: true)
@@ -949,10 +967,10 @@ struct QuranListView: View {
                             if translationOption != .none,
                                let translation = store.suraTranslationTexts[verse.verseNumber],
                                !translation.isEmpty {
-                                Divider().background(Theme.textSecondary.opacity(0.15))
+                                Divider().background(secondaryText.opacity(0.15))
                                 Text(translation)
                                     .font(.subheadline)
-                                    .foregroundColor(Theme.textSecondary)
+                                    .foregroundColor(secondaryText)
                                     .multilineTextAlignment(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .fixedSize(horizontal: false, vertical: true)
@@ -965,8 +983,8 @@ struct QuranListView: View {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                         .padding(.vertical, 6)
-                        .listRowBackground(Theme.cardBackground)
-                        .listRowSeparatorTint(Theme.textSecondary.opacity(0.2))
+                        .listRowBackground(rowBg)
+                        .listRowSeparatorTint(secondaryText.opacity(0.2))
                     }
                 }
                 .listStyle(.plain)
@@ -1056,6 +1074,7 @@ struct QuranSettingsSheet: View {
     @Binding var arabicFontSize: CGFloat
     @Binding var translationOption: QuranTranslationOption
     @Binding var isTajweedEnabled: Bool
+    @Binding var isReadingModeEnabled: Bool
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -1085,6 +1104,18 @@ struct QuranSettingsSheet: View {
                         .foregroundStyle(Theme.textPrimary)
                 }
                 .listRowBackground(Theme.cardBackground)
+
+                Section {
+                    Toggle(L10n.quranReadingMode(language), isOn: $isReadingModeEnabled)
+                        .tint(Theme.accent)
+                        .foregroundStyle(Theme.textPrimary)
+                    Text(L10n.quranReadingModeDescription(language))
+                        .font(.caption)
+                        .foregroundColor(Theme.textSecondary)
+                } header: {
+                    Text(L10n.quranReadingMode(language))
+                }
+                .listRowBackground(Theme.cardBackground)
             }
             .scrollContentBackground(.hidden)
             .background(Theme.background)
@@ -1102,15 +1133,15 @@ struct QuranSettingsSheet: View {
 // MARK: - Justified Arabic Text (UIKit)
 
 private struct JustifiedArabicText: UIViewRepresentable {
-    /// Each segment carries the global Quran ayah ID (-1 for marker segments)
-    /// so the builder can look up tajweed HTML from `tajweedCache`.
     let segments: [(text: String, isMarker: Bool, ayahID: Int)]
     let bodyFont: UIFont
     let markerFont: UIFont
     let tajweedEnabled: Bool
     let tajweedCache: [Int: String]
+    let readingMode: Bool
 
     private var markerColor: UIColor { UIColor(ThemeColor.current.color) }
+    private var defaultTextColor: UIColor { readingMode ? .black : .white }
 
     func makeUIView(context: Context) -> UITextView {
         let tv = UITextView()
@@ -1148,14 +1179,14 @@ private struct JustifiedArabicText: UIViewRepresentable {
                     .paragraphStyle:  para,
                 ]))
             } else if tajweedEnabled, let html = tajweedCache[seg.ayahID] {
-                // Delegate to TajweedParser for coloured UIKit output
                 result.append(TajweedParser.nsAttributedString(
-                    from: html, bodyFont: bodyFont, paragraphStyle: para
+                    from: html, bodyFont: bodyFont, paragraphStyle: para,
+                    defaultTextColor: defaultTextColor
                 ))
             } else {
                 result.append(NSAttributedString(string: seg.text, attributes: [
                     .font:            bodyFont,
-                    .foregroundColor: UIColor.white,
+                    .foregroundColor: defaultTextColor,
                     .paragraphStyle:  para,
                 ]))
             }
