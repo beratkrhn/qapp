@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */; };
 		0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */; };
+		0ECEF9662F6CCACA00299C6E /* QWords.json in Resources */ = {isa = PBXBuildFile; fileRef = 0ECEF9652F6CCAC700299C6E /* QWords.json */; };
 		0EEA12372F510DEB006DB819 /* CardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122B2F510DEB006DB819 /* CardContainer.swift */; };
 		0EEA12382F510DEB006DB819 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12262F510DEB006DB819 /* Theme.swift */; };
 		0EEA12392F510DEB006DB819 /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12232F510DEB006DB819 /* PrayerTime.swift */; };
@@ -40,6 +41,8 @@
 		0EEA12782F510DEB006DB819 /* quran_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EEA12792F510DEB006DB819 /* quran_words.json */; };
 		0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12812F510DEB006DB819 /* AppCity.swift */; };
 		0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12832F510DEB006DB819 /* SettingsView.swift */; };
+		0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12852F510DEB006DB819 /* PDFGenerator.swift */; };
+		0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12882F510DEB006DB819 /* WordStatusListView.swift */; };
 		C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */; };
 		DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00012F510DEB006DB81900 /* FlashcardCard.swift */; };
 		DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00032F510DEB006DB81900 /* SRSViewModel.swift */; };
@@ -54,6 +57,7 @@
 /* Begin PBXFileReference section */
 		0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialData.swift; sourceTree = "<group>"; };
 		0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDisplaySettingsView.swift; sourceTree = "<group>"; };
+		0ECEF9652F6CCAC700299C6E /* QWords.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = QWords.json; sourceTree = "<group>"; };
 		0EEA12122F510DB8006DB819 /* DailyDee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyDee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EEA12202F510DEB006DB819 /* AladhanResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AladhanResponse.swift; sourceTree = "<group>"; };
 		0EEA12212F510DEB006DB819 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -88,6 +92,8 @@
 		0EEA12792F510DEB006DB819 /* quran_words.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = quran_words.json; sourceTree = "<group>"; };
 		0EEA12812F510DEB006DB819 /* AppCity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCity.swift; sourceTree = "<group>"; };
 		0EEA12832F510DEB006DB819 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		0EEA12852F510DEB006DB819 /* PDFGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFGenerator.swift; sourceTree = "<group>"; };
+		0EEA12882F510DEB006DB819 /* WordStatusListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordStatusListView.swift; sourceTree = "<group>"; };
 		DD00012F510DEB006DB81900 /* FlashcardCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardCard.swift; sourceTree = "<group>"; };
 		DD00032F510DEB006DB81900 /* SRSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSViewModel.swift; sourceTree = "<group>"; };
 		DD00052F510DEB006DB81900 /* LearningDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningDashboardView.swift; sourceTree = "<group>"; };
@@ -186,6 +192,7 @@
 		0EEA12272F510DEB006DB819 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0ECEF9652F6CCAC700299C6E /* QWords.json */,
 				0EDE0FC32F525DBC001A0974 /* fonts */,
 				0EEA12252F510DEB006DB819 /* Assets.xcassets */,
 				0EEA12262F510DEB006DB819 /* Theme.swift */,
@@ -231,6 +238,7 @@
 				0EEA12772F510DEB006DB819 /* FlashcardView.swift */,
 				DD00052F510DEB006DB81900 /* LearningDashboardView.swift */,
 				DD00072F510DEB006DB81900 /* FlashcardSessionView.swift */,
+				0EEA12882F510DEB006DB819 /* WordStatusListView.swift */,
 				0EEA12832F510DEB006DB819 /* SettingsView.swift */,
 				0EEA12322F510DEB006DB819 /* TabBarView.swift */,
 				DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */,
@@ -241,6 +249,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		0EEA12862F510DEB006DB819 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12852F510DEB006DB819 /* PDFGenerator.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		0EEA12362F510DEB006DB819 /* DeenApp */ = {
 			isa = PBXGroup;
 			children = (
@@ -248,6 +264,7 @@
 				0EEA12272F510DEB006DB819 /* Resources */,
 				0EEA12292F510DEB006DB819 /* ViewModels */,
 				0EEA12332F510DEB006DB819 /* Views */,
+				0EEA12862F510DEB006DB819 /* Utils */,
 				0EEA12342F510DEB006DB819 /* DeenAppApp.swift */,
 				0EEA12352F510DEB006DB819 /* Info.plist */,
 			);
@@ -321,6 +338,7 @@
 				0EEA12472F510DEB006DB819 /* Assets.xcassets in Resources */,
 				0EEA126D2F510DEB006DB819 /* quran_sample.json in Resources */,
 				0EEA12782F510DEB006DB819 /* quran_words.json in Resources */,
+				0ECEF9662F6CCACA00299C6E /* QWords.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +384,8 @@
 				DD00072F510DEB006DB81901 /* FlashcardSessionView.swift in Sources */,
 				0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */,
 				0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */,
+				0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */,
+				0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */,
 				DD00092F510DEB006DB81901 /* PrayerTutorialModels.swift in Sources */,
 				DD000B2F510DEB006DB81901 /* PrayerTutorialViewModel.swift in Sources */,
 				DD000D2F510DEB006DB81901 /* PrayerSelectionView.swift in Sources */,

@@ -15,6 +15,8 @@ struct LearningDashboardView: View {
 
     @State private var activeSessionType: LearningSessionType?
     @State private var showResetAlert = false
+    @State private var pdfExportURL: URL?
+    @State private var showWordStatusList = false
 
     var body: some View {
         NavigationStack {
@@ -25,10 +27,12 @@ struct LearningDashboardView: View {
                     Divider()
                         .background(Theme.textSecondary.opacity(0.2))
                     actionButtons
+                    exportPdfSection
+                        .padding(.top, 32)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 24)
-                .padding(.bottom, 120)
+                .padding(.bottom, 140)
             }
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle(L10n.tabLernen(appState.appLanguage))
@@ -60,41 +64,117 @@ struct LearningDashboardView: View {
             .navigationDestination(item: $activeSessionType) { type in
                 FlashcardSessionView(sessionType: type)
             }
+            .fullScreenCover(isPresented: $showWordStatusList) {
+                WordStatusListView()
+                    .environment(srsViewModel)
+            }
         }
     }
 
     // MARK: - Progress Section
 
     private var progressSection: some View {
-        VStack(spacing: 20) {
-            ZStack {
-                CircularProgressRing(progress: srsViewModel.progressPercent / 100)
-                    .frame(width: 190, height: 190)
+        VStack(spacing: 22) {
+            // Gesamter Quran (nach Vorkommen gelernt vs. ~77.800)
+            VStack(spacing: 14) {
+                Text("Quran insgesamt")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Theme.textSecondary)
+                    .textCase(.uppercase)
+                    .tracking(1.2)
 
-                VStack(spacing: 6) {
-                    Text("\(Int(srsViewModel.progressPercent.rounded()))%")
-                        .font(.system(size: 44, weight: .bold, design: .rounded))
-                        .foregroundColor(Theme.textPrimary)
-                    Text("verstanden")
-                        .font(.caption.weight(.medium))
-                        .foregroundColor(Theme.textSecondary)
-                        .textCase(.uppercase)
-                        .tracking(1.5)
+                ZStack {
+                    CircularProgressRing(progress: min(max(srsViewModel.quranProgressPercent / 100, 0), 1))
+                        .frame(width: 190, height: 190)
+
+                    VStack(spacing: 6) {
+                        Text("\(Int(srsViewModel.quranProgressPercent.rounded()))%")
+                            .font(.system(size: 44, weight: .bold, design: .rounded))
+                            .foregroundColor(Theme.textPrimary)
+                        Text("Vorkommen")
+                            .font(.caption.weight(.medium))
+                            .foregroundColor(Theme.textSecondary)
+                            .textCase(.uppercase)
+                            .tracking(1.5)
+                    }
                 }
             }
 
-            VStack(spacing: 4) {
-                Text("Du verstehst bereits \(Int(srsViewModel.progressPercent.rounded()))%!")
-                    .font(.headline)
-                    .foregroundColor(Theme.textPrimary)
-                    .multilineTextAlignment(.center)
-                Text("der häufigsten Quran-Wörter")
-                    .font(.subheadline)
+            // Deck „QWords“ — getrennt vom Gesamt-Quran
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Deck-Fortschritt")
+                    .font(.caption.weight(.semibold))
                     .foregroundColor(Theme.textSecondary)
-                    .multilineTextAlignment(.center)
+                    .textCase(.uppercase)
+                    .tracking(1.2)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Karten")
+                        .font(.caption2)
+                        .foregroundColor(Theme.textSecondary)
+                    Text("\(srsViewModel.graduatedCount) / \(srsViewModel.deckCardCount)")
+                        .font(.title3.weight(.bold))
+                        .foregroundColor(Theme.textPrimary)
+                    Text("\(Int(srsViewModel.deckProgressPercentByCards.rounded())) %")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundColor(Theme.accent)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .background(
+                    RoundedRectangle(cornerRadius: Theme.cardCornerRadius)
+                        .fill(Theme.cardBackground)
+                )
             }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    // MARK: - PDF Export
+
+    private var exportPdfSection: some View {
+        Group {
+            if let url = pdfExportURL {
+                ShareLink(
+                    item: url,
+                    subject: Text("My Learned Quran Words"),
+                    message: Text("PDF export from DailyDeen"),
+                    preview: SharePreview("My Learned Quran Words", icon: Image(systemName: "doc.fill"))
+                ) {
+                    exportPdfLabel
+                }
+            } else {
+                Button {
+                    guard !srsViewModel.graduatedCards.isEmpty else { return }
+                    pdfExportURL = try? PDFGenerator.generateLearnedWordsPDF(cards: srsViewModel.graduatedCards)
+                } label: {
+                    exportPdfLabel
+                }
+                .disabled(srsViewModel.graduatedCards.isEmpty)
+            }
+        }
+        .onChange(of: srsViewModel.graduatedCount) { _, _ in
+            pdfExportURL = nil
+        }
+    }
+
+    private var exportPdfLabel: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "square.and.arrow.up")
+                .font(.headline)
+            Text("Export Learned Words (PDF)")
+                .font(.headline)
+        }
+        .foregroundColor(.black)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 16)
+        .padding(.horizontal, 20)
+        .background(
+            RoundedRectangle(cornerRadius: Theme.cardCornerRadius)
+                .fill(Theme.accent)
+        )
+        .shadow(color: Theme.accent.opacity(0.35), radius: 8, x: 0, y: 4)
     }
 
     // MARK: - Stats Row
@@ -159,12 +239,21 @@ struct LearningDashboardView: View {
             SessionActionButton(
                 title: "Wiederholen",
                 icon: "arrow.clockwise",
-                count: srsViewModel.dueCount,
-                countLabel: "Fällig"
+                count: srsViewModel.reviewableLearnedCount,
+                countLabel: "Gelernt"
             ) {
                 activeSessionType = .reviewOnly
             }
-            .disabled(srsViewModel.dueCount == 0)
+            .disabled(srsViewModel.reviewableLearnedCount == 0)
+
+            SessionActionButton(
+                title: "Alle Wörter anzeigen",
+                icon: "list.bullet.rectangle",
+                count: srsViewModel.deckCardCount,
+                countLabel: "Gesamt"
+            ) {
+                showWordStatusList = true
+            }
         }
     }
 }

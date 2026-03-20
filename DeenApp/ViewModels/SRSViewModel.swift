@@ -24,32 +24,89 @@ final class SRSViewModel {
     // MARK: - Init
 
     init() {
-        if let data = UserDefaults.standard.data(forKey: kSRSCardsKey),
-           let saved = try? JSONDecoder().decode([FlashcardCard].self, from: data) {
-            // Merge saved SRS state back onto the canonical mock deck so that
-            // new mock words added later are also picked up.
-            let savedMap = Dictionary(uniqueKeysWithValues: saved.map { ($0.id, $0) })
-            self.allCards = Self.mockCards.map { base in
-                savedMap[base.id] ?? base
+            let realCards = Self.loadVocabularyFromJSON()
+            
+            if let data = UserDefaults.standard.data(forKey: kSRSCardsKey),
+               let saved = try? JSONDecoder().decode([FlashcardCard].self, from: data) {
+                
+                // Merge gespeicherte Lern-Fortschritte mit den ECHTEN JSON-Daten
+                let savedMap = Dictionary(uniqueKeysWithValues: saved.map { ($0.id, $0) })
+                self.allCards = realCards.map { base in
+                    savedMap[base.id] ?? base
+                }
+            } else {
+                self.allCards = realCards
             }
-        } else {
-            self.allCards = Self.mockCards
         }
+    
+    private static func loadVocabularyFromJSON() -> [FlashcardCard] {
+            guard let url = qwordsBundleURL() else {
+                print("QWords: Datei nicht im Bundle (forResource: QWords, json).")
+                return []
+            }
+            do {
+                let data = try Data(contentsOf: url)
+                let quranWords = try JSONDecoder().decode([QuranWord].self, from: data)
+                return quranWords.map { word in
+                    FlashcardCard(
+                        id: "q_\(word.id)",
+                        arabic: word.arabic,
+                        meaningEN: word.meaningEN,
+                        frequency: word.frequency
+                    )
+                }
+            } catch {
+                print("QWords: Laden/Dekodieren fehlgeschlagen: \(error)")
+                return []
+            }
+        }
+
+    private static func qwordsBundleURL() -> URL? {
+        Bundle.main.qwordsJSONURL()
     }
 
     // MARK: - Computed Progress
 
-    /// Weighted progress: sum(frequency of graduated) / sum(frequency of all) × 100
-    var progressPercent: Double {
-        let total = allCards.reduce(0) { $0 + $1.frequency }
-        guard total > 0 else { return 0 }
-        let done = allCards.filter { $0.status == .graduated }.reduce(0) { $0 + $1.frequency }
-        return Double(done) / Double(total) * 100.0
+    var graduatedCount: Int { allCards.filter { $0.status == .graduated }.count }
+
+    /// Alle Karten mit Status **graduated** (für Exporte, Statistik).
+    var graduatedCards: [FlashcardCard] {
+        allCards.filter { $0.status == .graduated }
     }
 
-    var graduatedCount: Int { allCards.filter { $0.status == .graduated }.count }
+    /// Summe der `frequency`-Werte aller **graduated** Karten.
+    var graduatedFrequencySum: Int {
+        allCards.filter { $0.status == .graduated }.reduce(0) { $0 + $1.frequency }
+    }
+
+    var deckCardCount: Int { allCards.count }
+
+    /// Summe der Vorkommen aller **gelernten** Karten vs. geschätzte Quran-Gesamtwortzahl (~77.800).
+    var quranProgressPercent: Double {
+        (Double(graduatedFrequencySum) / Double(QuranVocabularyProgress.approximateQuranWordCount)) * 100.0
+    }
+
+    /// Summe der `frequency`-Werte des geladenen Decks (z. B. QWords ≈ 64.282).
+    var deckTotalFrequency: Int {
+        allCards.reduce(0) { $0 + $1.frequency }
+    }
+
+    /// Deck-Fortschritt nach **Vorkommen**: gelernte Vorkommen / Summe aller Deck-Vorkommen (0…100).
+    var deckProgressPercentByFrequency: Double {
+        let total = deckTotalFrequency
+        guard total > 0 else { return 0 }
+        return Double(graduatedFrequencySum) / Double(total) * 100.0
+    }
+
+    /// Deck-Fortschritt nach **Kartenanzahl**: gelernte Karten / Deck-Größe (0…100).
+    var deckProgressPercentByCards: Double {
+        guard !allCards.isEmpty else { return 0 }
+        return Double(graduatedCount) / Double(allCards.count) * 100.0
+    }
+
     var newCount: Int       { allCards.filter { $0.status == .new }.count }
     var dueCount: Int       { allCards.filter { isDue($0) && $0.status != .new }.count }
+    var reviewableLearnedCount: Int { graduatedCards.count }
 
     // MARK: - Session Management
 
@@ -61,7 +118,7 @@ final class SRSViewModel {
         switch type {
         case .mixed:      queue = Array((due + new).prefix(20))
         case .newOnly:    queue = Array(new.prefix(20))
-        case .reviewOnly: queue = Array(due.prefix(20))
+        case .reviewOnly: queue = graduatedCards
         }
 
         sessionQueue  = queue.shuffled()
@@ -72,6 +129,20 @@ final class SRSViewModel {
     var currentCard: FlashcardCard? {
         guard !sessionQueue.isEmpty, currentIndex < sessionQueue.count else { return nil }
         return sessionQueue[currentIndex]
+    }
+
+    /// Vorschau: Datum der nächsten Wiederholung, **ohne** die Karte zu speichern (gleiche Logik wie `applyAlgorithm`).
+    func previewNextReviewDate(for card: FlashcardCard, rating: SRSRating) -> Date {
+        var copy = card
+        applyAlgorithm(rating: rating, to: &copy)
+        return copy.nextReviewDate
+    }
+
+    /// Vorschau: Intervall in Tagen nach Bewertung (SM-2).
+    func previewIntervalDays(for card: FlashcardCard, rating: SRSRating) -> Int {
+        var copy = card
+        applyAlgorithm(rating: rating, to: &copy)
+        return copy.interval
     }
 
     func rate(_ rating: SRSRating) {
@@ -100,7 +171,7 @@ final class SRSViewModel {
 
     /// Resets every card to its initial `.new` state and clears persisted SRS data.
     func resetProgress() {
-        allCards = Self.mockCards
+        allCards = Self.loadVocabularyFromJSON()
         UserDefaults.standard.removeObject(forKey: kSRSCardsKey)
         resetSession()
     }
@@ -149,27 +220,4 @@ final class SRSViewModel {
         guard let data = try? JSONEncoder().encode(allCards) else { return }
         UserDefaults.standard.set(data, forKey: kSRSCardsKey)
     }
-
-    // MARK: - Mock Data (18 häufige Quran-Vokabeln — werden durch echte Daten ersetzt)
-
-    static let mockCards: [FlashcardCard] = [
-        FlashcardCard(id: "q001", arabic: "ٱللَّه",      translation: "Allah (Gott)",              frequency: 2699),
-        FlashcardCard(id: "q002", arabic: "رَبّ",        translation: "Herr, Erhalter",            frequency: 980),
-        FlashcardCard(id: "q003", arabic: "قَالَ",       translation: "Er sagte",                  frequency: 1625),
-        FlashcardCard(id: "q004", arabic: "إِنَّ",       translation: "Wahrlich, fürwahr",         frequency: 1710),
-        FlashcardCard(id: "q005", arabic: "كَانَ",       translation: "Er war",                    frequency: 1360),
-        FlashcardCard(id: "q006", arabic: "مَا",         translation: "Was / nicht",               frequency: 1504),
-        FlashcardCard(id: "q007", arabic: "لَا",         translation: "Nein / nicht",              frequency: 1723),
-        FlashcardCard(id: "q008", arabic: "مِن",         translation: "Von, aus",                  frequency: 3226),
-        FlashcardCard(id: "q009", arabic: "فِى",         translation: "In, bei",                   frequency: 1696),
-        FlashcardCard(id: "q010", arabic: "عَلَىٰ",      translation: "Auf, über",                 frequency: 1391),
-        FlashcardCard(id: "q011", arabic: "إِلَىٰ",      translation: "Zu, bis",                   frequency: 742),
-        FlashcardCard(id: "q012", arabic: "ٱلَّذِى",     translation: "Derjenige, der",            frequency: 983),
-        FlashcardCard(id: "q013", arabic: "هُوَ",        translation: "Er (3. Pers. Sg.)",         frequency: 705),
-        FlashcardCard(id: "q014", arabic: "نَفْس",       translation: "Seele, Selbst",             frequency: 295),
-        FlashcardCard(id: "q015", arabic: "يَوْم",       translation: "Tag",                       frequency: 365),
-        FlashcardCard(id: "q016", arabic: "آيَة",        translation: "Zeichen, Vers",             frequency: 382),
-        FlashcardCard(id: "q017", arabic: "كِتَٰب",      translation: "Buch, Schrift",             frequency: 230),
-        FlashcardCard(id: "q018", arabic: "عَمِلَ",      translation: "Er tat, er handelte",       frequency: 317),
-    ]
 }

@@ -12,7 +12,6 @@ struct FlashcardView: View {
     @EnvironmentObject var appState: AppState
     @StateObject private var deckStore = QuranWordsStore()
     @State private var currentIndex: Int = 0
-    @State private var isFlipped: Bool = false
     @State private var showAnswer: Bool = false
 
     var body: some View {
@@ -57,20 +56,33 @@ struct FlashcardView: View {
         return Button(action: { withAnimation(.easeInOut(duration: 0.25)) { showAnswer.toggle() } }) {
             VStack(spacing: 20) {
                 Text(word.arabic)
-                    .font(.custom("Geeza Pro", size: 32))
+                    // Nutze deine Uthmanic Font, falls registriert, sonst Fallback
+                    .font(.custom("KFGQPC Uthmanic Script HAFS Regular", size: 40, relativeTo: .largeTitle))
                     .foregroundColor(Theme.textPrimary)
                     .multilineTextAlignment(.center)
+                
                 if showAnswer {
                     VStack(spacing: 8) {
-                        Text(word.meaningDE)
+                        Text(word.meaningEN)
                             .font(.title3.weight(.medium))
                             .foregroundColor(Theme.accent)
-                        Text(word.meaningEN)
+                            .multilineTextAlignment(.center)
+
+                        Text(word.partOfSpeech)
+                            .font(.caption.weight(.medium))
+                            .foregroundColor(Theme.textSection)
+
+                        Text("Kommt \(word.frequency)× im Quran vor")
                             .font(.subheadline)
                             .foregroundColor(Theme.textSecondary)
+
+                        Text("Anteil an allen Vorkommen: ca. \(formatPercent(QuranVocabularyProgress.wordOccurrenceSharePercent(frequency: word.frequency))) %")
+                            .font(.caption)
+                            .foregroundColor(Theme.textSection)
+                            .multilineTextAlignment(.center)
                     }
                 } else {
-                    Text("Tippen für Bedeutung")
+                    Text("Tippen für Details")
                         .font(.caption)
                         .foregroundColor(Theme.textSection)
                 }
@@ -121,6 +133,10 @@ struct FlashcardView: View {
             showAnswer = false
         }
     }
+
+    private func formatPercent(_ value: Double) -> String {
+        String(format: "%.2f", value)
+    }
 }
 
 // MARK: - Wort-Deck laden
@@ -136,14 +152,26 @@ final class QuranWordsStore: ObservableObject {
 
     func loadFromBundle() {
         isLoading = true
-        defer { isLoading = false }
-        guard let url = Bundle.main.url(forResource: "quran_words", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let deck = try? JSONDecoder().decode(QuranWordsDeck.self, from: data) else {
-            words = []
-            return
+        
+        Task {
+            // Wir nutzen deine echte generierte JSON Datei
+            guard let url = Bundle.main.qwordsJSONURL() else {
+                print("❌ QWords.json nicht im Bundle")
+                self.isLoading = false
+                return
+            }
+            
+            do {
+                let data = try Data(contentsOf: url)
+                // Wir decodieren direkt ein Array aus QuranWord-Objekten
+                let deck = try JSONDecoder().decode([QuranWord].self, from: data)
+                self.words = deck
+            } catch {
+                print("❌ Fehler beim Decodieren: \(error)")
+            }
+            
+            self.isLoading = false
         }
-        words = deck.words
     }
 }
 
