@@ -238,22 +238,25 @@ enum MainTab: Int, CaseIterable {
     case quran
     case lernen
     case gebet
+    case hifz
 
     func title(lang: AppLanguage) -> String {
         switch self {
-        case .start: return L10n.tabStart(lang)
-        case .quran: return L10n.tabQuran(lang)
+        case .start:  return L10n.tabStart(lang)
+        case .quran:  return L10n.tabQuran(lang)
         case .lernen: return L10n.tabLernen(lang)
-        case .gebet: return L10n.tabGebet(lang)
+        case .gebet:  return L10n.tabGebet(lang)
+        case .hifz:   return "Hifz"
         }
     }
 
     var iconName: String {
         switch self {
-        case .start: return "house.fill"
-        case .quran: return "book.fill"
+        case .start:  return "house.fill"
+        case .quran:  return "book.fill"
         case .lernen: return "graduationcap.fill"
-        case .gebet: return "heart.fill"
+        case .gebet:  return "heart.fill"
+        case .hifz:   return "brain.head.profile"
         }
     }
 }

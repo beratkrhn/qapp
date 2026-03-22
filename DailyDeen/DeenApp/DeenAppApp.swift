@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct DeenAppApp: App {
@@ -53,5 +54,10 @@ struct DeenAppApp: App {
                 )
             }
         }
+        .modelContainer(for: [
+            SRSItem.self,
+            DailyActivity.self,
+            HifzProgress.self
+        ])
     }
 }

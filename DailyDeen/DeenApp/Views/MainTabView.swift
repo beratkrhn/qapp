@@ -4,9 +4,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState
+    @Environment(\.modelContext) private var modelContext
     @State private var srsViewModel = SRSViewModel()
     @State private var prayerTutorialViewModel = PrayerTutorialViewModel()
     @State private var showSettings = false
@@ -28,6 +30,8 @@ struct MainTabView: View {
                 case .gebet:
                     PrayerSelectionView()
                         .environment(prayerTutorialViewModel)
+                case .hifz:
+                    HifzMainView(modelContext: modelContext)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
