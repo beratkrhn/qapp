@@ -13,12 +13,8 @@ struct TabBarView: View {
             ForEach(MainTab.allCases, id: \.rawValue) { tab in
                 TabBarItemView(
                     tab: tab,
-<<<<<<< HEAD
                     isSelected: appState.selectedTab == tab,
                     language: appState.appLanguage
-=======
-                    isSelected: appState.selectedTab == tab
->>>>>>> origin/claude/adoring-banach
                 ) {
                     appState.selectedTab = tab
                 }
@@ -39,10 +35,7 @@ struct TabBarView: View {
 struct TabBarItemView: View {
     let tab: MainTab
     let isSelected: Bool
-<<<<<<< HEAD
     let language: AppLanguage
-=======
->>>>>>> origin/claude/adoring-banach
     let action: () -> Void
 
     var body: some View {
@@ -60,11 +53,7 @@ struct TabBarItemView: View {
                 }
                 .frame(height: 32)
 
-<<<<<<< HEAD
                 Text(tab.title(lang: language))
-=======
-                Text(tab.title)
->>>>>>> origin/claude/adoring-banach
                     .font(.caption2)
                     .foregroundColor(isSelected ? Theme.accent : Theme.textSecondary)
             }

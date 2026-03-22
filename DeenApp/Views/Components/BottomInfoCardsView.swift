@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct BottomInfoCardsView: View {
-<<<<<<< HEAD
     @EnvironmentObject var appState: AppState
     var language: AppLanguage = .german
 
@@ -68,7 +67,6 @@ struct DailyReadingGoalCard: View {
                         }
                     }
                     Spacer()
-                    // Book icon with glow ring
                     ZStack {
                         Circle()
                             .stroke(
@@ -121,22 +119,6 @@ struct DailyReadingGoalCard: View {
                     .buttonStyle(.plain)
                 }
             }
-=======
-    var body: some View {
-        HStack(spacing: 14) {
-            SmallInfoCard(
-                icon: "book.fill",
-                iconColor: Theme.textPrimary,
-                title: "Kur'an",
-                subtitle: "Weiterlesen"
-            )
-            SmallInfoCard(
-                icon: "brain",
-                iconColor: Theme.iconBrain,
-                title: "Vokabeln",
-                subtitle: "Karteikarten"
-            )
->>>>>>> origin/claude/adoring-banach
         }
     }
 }
@@ -166,12 +148,8 @@ struct SmallInfoCard: View {
 }
 
 #Preview {
-<<<<<<< HEAD
     BottomInfoCardsView(language: .german)
         .environmentObject(AppState())
-=======
-    BottomInfoCardsView()
->>>>>>> origin/claude/adoring-banach
         .padding()
         .background(Theme.background)
 }

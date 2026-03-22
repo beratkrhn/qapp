@@ -22,16 +22,19 @@ private struct V4Verse: Codable {
 
 private struct V4Word: Codable {
     let id: Int
-    let text_uthmani: String
+    let text_uthmani: String?    // only present when word_fields=text_uthmani is requested
+    let text: String?            // fallback plain-text field always present
     let audio: V4WordAudio?
-    let char_type_name: String   // "word" | "end"
+    let char_type_name: String?  // "word" | "end" — guard against missing key
 }
 
 private struct V4WordAudio: Codable {
     let url: String?
     let duration: Double?
-    let timestamp_from: Int?     // milliseconds
-    let timestamp_to: Int?       // milliseconds
+    // Quran.com v4 returns timing as nested `segments` arrays, not flat fields —
+    // kept as optional so decoding never fails if the shape varies.
+    let timestamp_from: Int?
+    let timestamp_to: Int?
 }
 
 private struct V4Audio: Codable {
@@ -76,7 +79,7 @@ final class HifzAudioService: NSObject, ObservableObject {
             URLQueryItem(name: "language",         value: "ar"),
             URLQueryItem(name: "words",            value: "true"),
             URLQueryItem(name: "audio",            value: "\(reciterID)"),
-            URLQueryItem(name: "word_fields",      value: "audio"),
+            URLQueryItem(name: "word_fields",      value: "text_uthmani,audio"),
             URLQueryItem(name: "fields",           value: "text_uthmani"),
             URLQueryItem(name: "per_page",         value: "300"),
         ]
@@ -174,11 +177,14 @@ final class HifzAudioService: NSObject, ObservableObject {
 
         // Build HifzWord array from API words (skip punctuation / end markers)
         let hifzWords: [HifzWord] = verse.words
-            .filter { $0.char_type_name == "word" }
-            .map { w in
+            .filter { ($0.char_type_name ?? "word") == "word" }
+            .compactMap { w -> HifzWord? in
+                // text_uthmani is requested via word_fields; fall back to plain text
+                let arabic = w.text_uthmani ?? w.text ?? ""
+                guard !arabic.isEmpty else { return nil }
                 let start = Double(w.audio?.timestamp_from ?? 0) / 1000.0
                 let end   = Double(w.audio?.timestamp_to   ?? 0) / 1000.0
-                return HifzWord(text: w.text_uthmani, startTime: start, endTime: end)
+                return HifzWord(text: arabic, startTime: start, endTime: end)
             }
 
         let parts = verse.verse_key.split(separator: ":")

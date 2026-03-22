@@ -2,7 +2,6 @@
 //  HeaderView.swift
 //  DeenApp
 //
-<<<<<<< HEAD
 //  Zentrierter Header mit animierter arabischer Begrüßung (10 Schriften, danach Stopp),
 //  großem Nutzernamen und Stadtanzeige.
 //
@@ -78,55 +77,15 @@ struct HeaderView: View {
             if fontIndex < GreetingFontCycle.count - 1 {
                 fontIndex += 1
             } else {
-                // Pick a random font from the valid set so each launch settles on a different face.
                 fontIndex = Int.random(in: 0..<max(GreetingFontCycle.count, 1))
                 cycleDone = true
             }
         }
-=======
-
-import SwiftUI
-
-struct HeaderView: View {
-    let userName: String
-    let timezone: String
-
-    var body: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("السلام عليكم")
-                    .font(.subheadline)
-                    .foregroundColor(Theme.textSecondary)
-                Text(userName)
-                    .font(.title2.weight(.semibold))
-                    .foregroundColor(Theme.textPrimary)
-                HStack(spacing: 4) {
-                    Image(systemName: "mappin.circle.fill")
-                        .font(.caption)
-                        .foregroundColor(Theme.textSecondary)
-                    Text(timezone)
-                        .font(.caption)
-                        .foregroundColor(Theme.textSecondary)
-                }
-            }
-            Spacer()
-            Button(action: {}) {
-                Image(systemName: "gearshape.fill")
-                    .font(.title3)
-                    .foregroundColor(Theme.textSecondary)
-            }
-        }
-        .padding(.vertical, 8)
->>>>>>> origin/claude/adoring-banach
     }
 }
 
 #Preview {
-<<<<<<< HEAD
     HeaderView(userName: "Berat", cityName: "Berlin")
-=======
-    HeaderView(userName: "Berat", timezone: "Europe/Berlin")
->>>>>>> origin/claude/adoring-banach
         .padding()
         .background(Theme.background)
 }
