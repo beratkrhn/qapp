@@ -7,10 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E7369DC2F708D6B00C92DD4 /* HifzViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369DB2F708D6B00C92DD4 /* HifzViewModel.swift */; };
+		0E7369E22F708D8700C92DD4 /* HifzModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369DE2F708D8700C92DD4 /* HifzModels.swift */; };
+		0E7369E32F708D8700C92DD4 /* DailyActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369DD2F708D8700C92DD4 /* DailyActivity.swift */; };
+		0E7369E42F708D8700C92DD4 /* SRSItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369E02F708D8700C92DD4 /* SRSItem.swift */; };
+		0E7369E52F708D8700C92DD4 /* HifzProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369DF2F708D8700C92DD4 /* HifzProgress.swift */; };
+		0E7369E92F708DAC00C92DD4 /* HifzCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369E62F708DAC00C92DD4 /* HifzCardView.swift */; };
+		0E7369EA2F708DAC00C92DD4 /* HifzMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369E72F708DAC00C92DD4 /* HifzMainView.swift */; };
+		0E7369EC2F708DBA00C92DD4 /* HifzAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369EB2F708DBA00C92DD4 /* HifzAudioService.swift */; };
 		0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */; };
 		0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */; };
 		0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */; };
 		0ECEF9662F6CCACA00299C6E /* QWords.json in Resources */ = {isa = PBXBuildFile; fileRef = 0ECEF9652F6CCAC700299C6E /* QWords.json */; };
+		0E7369ED2F708DC000C92DD4 /* ContributionHeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7369EE2F708DC000C92DD4 /* ContributionHeatmapView.swift */; };
 		0EEA12372F510DEB006DB819 /* CardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122B2F510DEB006DB819 /* CardContainer.swift */; };
 		0EEA12382F510DEB006DB819 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12262F510DEB006DB819 /* Theme.swift */; };
 		0EEA12392F510DEB006DB819 /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12232F510DEB006DB819 /* PrayerTime.swift */; };
@@ -47,6 +56,9 @@
 		0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12882F510DEB006DB819 /* WordStatusListView.swift */; };
 		0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12902F510DEB006DB819 /* DitibModels.swift */; };
 		0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12912F510DEB006DB819 /* DitibAPIService.swift */; };
+		A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */; };
+		A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */; };
+		A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */; };
 		C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */; };
 		DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00012F510DEB006DB81900 /* FlashcardCard.swift */; };
 		DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00032F510DEB006DB81900 /* SRSViewModel.swift */; };
@@ -56,12 +68,17 @@
 		DD000B2F510DEB006DB81901 /* PrayerTutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */; };
 		DD000D2F510DEB006DB81901 /* PrayerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */; };
 		DD000F2F510DEB006DB81901 /* PrayerTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */; };
-		A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */; };
-		A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */; };
-		A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E7369DB2F708D6B00C92DD4 /* HifzViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzViewModel.swift; sourceTree = "<group>"; };
+		0E7369DD2F708D8700C92DD4 /* DailyActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyActivity.swift; sourceTree = "<group>"; };
+		0E7369DE2F708D8700C92DD4 /* HifzModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzModels.swift; sourceTree = "<group>"; };
+		0E7369DF2F708D8700C92DD4 /* HifzProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzProgress.swift; sourceTree = "<group>"; };
+		0E7369E02F708D8700C92DD4 /* SRSItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSItem.swift; sourceTree = "<group>"; };
+		0E7369E62F708DAC00C92DD4 /* HifzCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzCardView.swift; sourceTree = "<group>"; };
+		0E7369E72F708DAC00C92DD4 /* HifzMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzMainView.swift; sourceTree = "<group>"; };
+		0E7369EB2F708DBA00C92DD4 /* HifzAudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzAudioService.swift; sourceTree = "<group>"; };
 		0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialData.swift; sourceTree = "<group>"; };
 		0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDisplaySettingsView.swift; sourceTree = "<group>"; };
 		0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerBasmalaPreview.swift; sourceTree = "<group>"; };
@@ -75,6 +92,7 @@
 		0EEA12262F510DEB006DB819 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		0EEA12282F510DEB006DB819 /* PrayerTimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimeManager.swift; sourceTree = "<group>"; };
 		0EEA122A2F510DEB006DB819 /* BottomInfoCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInfoCardsView.swift; sourceTree = "<group>"; };
+		0E7369EE2F708DC000C92DD4 /* ContributionHeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributionHeatmapView.swift; sourceTree = "<group>"; };
 		0EEA122B2F510DEB006DB819 /* CardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainer.swift; sourceTree = "<group>"; };
 		0EEA122C2F510DEB006DB819 /* NextPrayerCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextPrayerCard.swift; sourceTree = "<group>"; };
 		0EEA122D2F510DEB006DB819 /* PrayerTimesCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesCardView.swift; sourceTree = "<group>"; };
@@ -104,6 +122,10 @@
 		0EEA12882F510DEB006DB819 /* WordStatusListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordStatusListView.swift; sourceTree = "<group>"; };
 		0EEA12902F510DEB006DB819 /* DitibModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibModels.swift; sourceTree = "<group>"; };
 		0EEA12912F510DEB006DB819 /* DitibAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibAPIService.swift; sourceTree = "<group>"; };
+		A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCalculationSettings.swift; sourceTree = "<group>"; };
+		A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerWidgetSnapshot.swift; sourceTree = "<group>"; };
+		A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPrayerCalculationView.swift; sourceTree = "<group>"; };
+		A2B000042F510DEB006DB819 /* DeenApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DeenApp.entitlements; sourceTree = "<group>"; };
 		DD00012F510DEB006DB81900 /* FlashcardCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardCard.swift; sourceTree = "<group>"; };
 		DD00032F510DEB006DB81900 /* SRSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSViewModel.swift; sourceTree = "<group>"; };
 		DD00052F510DEB006DB81900 /* LearningDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningDashboardView.swift; sourceTree = "<group>"; };
@@ -113,10 +135,6 @@
 		DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerSelectionView.swift; sourceTree = "<group>"; };
 		DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialView.swift; sourceTree = "<group>"; };
 		EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TajweedParser.swift; sourceTree = "<group>"; };
-		A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCalculationSettings.swift; sourceTree = "<group>"; };
-		A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerWidgetSnapshot.swift; sourceTree = "<group>"; };
-		A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPrayerCalculationView.swift; sourceTree = "<group>"; };
-		A2B000042F510DEB006DB819 /* DeenApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DeenApp.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -165,6 +183,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E7369E12F708D8700C92DD4 /* Hifz */ = {
+			isa = PBXGroup;
+			children = (
+				0E7369DD2F708D8700C92DD4 /* DailyActivity.swift */,
+				0E7369DE2F708D8700C92DD4 /* HifzModels.swift */,
+				0E7369DF2F708D8700C92DD4 /* HifzProgress.swift */,
+				0E7369E02F708D8700C92DD4 /* SRSItem.swift */,
+			);
+			path = Hifz;
+			sourceTree = "<group>";
+		};
+		0E7369E82F708DAC00C92DD4 /* Hifz */ = {
+			isa = PBXGroup;
+			children = (
+				0E7369E62F708DAC00C92DD4 /* HifzCardView.swift */,
+				0E7369E72F708DAC00C92DD4 /* HifzMainView.swift */,
+			);
+			path = Hifz;
+			sourceTree = "<group>";
+		};
 		0EEA12092F510DB8006DB819 = {
 			isa = PBXGroup;
 			children = (
@@ -202,6 +240,7 @@
 				0EEA12902F510DEB006DB819 /* DitibModels.swift */,
 				A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */,
 				A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */,
+				0E7369E12F708D8700C92DD4 /* Hifz */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -228,6 +267,7 @@
 				0EEA12622F510DEB006DB819 /* QuranStore.swift */,
 				DD00032F510DEB006DB81900 /* SRSViewModel.swift */,
 				DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */,
+				0E7369DB2F708D6B00C92DD4 /* HifzViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -237,6 +277,7 @@
 			children = (
 				0EEA122A2F510DEB006DB819 /* BottomInfoCardsView.swift */,
 				0EEA122B2F510DEB006DB819 /* CardContainer.swift */,
+				0E7369EE2F708DC000C92DD4 /* ContributionHeatmapView.swift */,
 				0EEA122C2F510DEB006DB819 /* NextPrayerCard.swift */,
 				0EEA122D2F510DEB006DB819 /* PrayerTimesCardView.swift */,
 			);
@@ -264,6 +305,7 @@
 				0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */,
 				0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */,
 				A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */,
+				0E7369E82F708DAC00C92DD4 /* Hifz */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -296,6 +338,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEA12912F510DEB006DB819 /* DitibAPIService.swift */,
+				0E7369EB2F708DBA00C92DD4 /* HifzAudioService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -379,9 +422,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EEA12462F510DEB006DB819 /* DeenAppApp.swift in Sources */,
+				0E7369ED2F708DC000C92DD4 /* ContributionHeatmapView.swift in Sources */,
 				0EEA12372F510DEB006DB819 /* CardContainer.swift in Sources */,
 				0EEA12382F510DEB006DB819 /* Theme.swift in Sources */,
 				0EEA12392F510DEB006DB819 /* PrayerTime.swift in Sources */,
+				0E7369DC2F708D6B00C92DD4 /* HifzViewModel.swift in Sources */,
 				0EEA123A2F510DEB006DB819 /* BottomInfoCardsView.swift in Sources */,
 				0EEA123C2F510DEB006DB819 /* DashboardView.swift in Sources */,
 				0EEA123D2F510DEB006DB819 /* HeaderView.swift in Sources */,
@@ -391,6 +436,10 @@
 				0EEA12412F510DEB006DB819 /* PrayerKind.swift in Sources */,
 				0EEA12422F510DEB006DB819 /* PrayerTimeManager.swift in Sources */,
 				0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */,
+				0E7369E22F708D8700C92DD4 /* HifzModels.swift in Sources */,
+				0E7369E32F708D8700C92DD4 /* DailyActivity.swift in Sources */,
+				0E7369E42F708D8700C92DD4 /* SRSItem.swift in Sources */,
+				0E7369E52F708D8700C92DD4 /* HifzProgress.swift in Sources */,
 				0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */,
 				0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */,
 				0EEA12442F510DEB006DB819 /* AladhanResponse.swift in Sources */,
@@ -418,6 +467,9 @@
 				0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */,
 				0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */,
 				0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */,
+				0E7369EC2F708DBA00C92DD4 /* HifzAudioService.swift in Sources */,
+				0E7369E92F708DAC00C92DD4 /* HifzCardView.swift in Sources */,
+				0E7369EA2F708DAC00C92DD4 /* HifzMainView.swift in Sources */,
 				0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */,
 				DD00092F510DEB006DB81901 /* PrayerTutorialModels.swift in Sources */,
 				DD000B2F510DEB006DB81901 /* PrayerTutorialViewModel.swift in Sources */,
