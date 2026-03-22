@@ -4,9 +4,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -23,6 +25,8 @@ struct MainTabView: View {
                     PlaceholderView(title: "Lernen", subtitle: "Vokabeln & Karteikarten")
                 case .gebet:
                     PlaceholderView(title: "Gebet", subtitle: "Gebetszeiten & Qibla")
+                case .hifz:
+                    HifzMainView(modelContext: modelContext)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
