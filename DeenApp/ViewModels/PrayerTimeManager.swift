@@ -2,7 +2,8 @@
 //  PrayerTimeManager.swift
 //  DeenApp
 //
-//  Lädt Gebetszeiten via Aladhan API basierend auf der gewählten Stadt.
+//  Lädt Gebetszeiten via Aladhan API oder DITIB (Diyanet) API
+//  basierend auf der gewählten Stadt und dem ausgewählten Provider.
 //
 
 import Foundation
@@ -22,7 +23,7 @@ final class PrayerTimeManager: ObservableObject {
 
     // MARK: - Private
 
-    private let baseURL = "https://api.aladhan.com/v1"
+    private let aladhanBaseURL = "https://api.aladhan.com/v1"
     private let kCachedTimesKey  = "prayerTimesCache_v2"
     private let kCachedDateKey   = "prayerTimesCacheDate_v2"
 
@@ -64,15 +65,68 @@ final class PrayerTimeManager: ObservableObject {
         }
     }
 
-    /// Gebetszeiten für eine bestimmte Stadt und Berechnungsmethode laden
-    func loadPrayerTimes(for city: AppCity, method: CalculationMethod = .ditib) {
+    // MARK: - Public Load Entry Point
+
+    func loadPrayerTimes(
+        for city: AppCity,
+        method: CalculationMethod = .ditib,
+        provider: PrayerTimeProvider = .ditib
+    ) {
         Task {
-            await fetchPrayerTimes(latitude: city.latitude, longitude: city.longitude, method: method)
+            switch provider {
+            case .ditib:
+                await fetchDitibPrayerTimes(for: city)
+            case .aladhan:
+                await fetchAladhanPrayerTimes(
+                    latitude: city.latitude,
+                    longitude: city.longitude,
+                    method: method
+                )
+            }
         }
     }
 
-    /// Gebetszeiten per Koordinaten laden (async)
-    private func fetchPrayerTimes(latitude: Double, longitude: Double, method: CalculationMethod = .ditib) async {
+    // MARK: - DITIB Fetch
+
+    private func fetchDitibPrayerTimes(for city: AppCity) async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            let districtId = city.ditibDistrictId
+            let times = try await DitibAPIService.shared.fetchDailyPrayerTimes(districtId: districtId)
+            isLoading = false
+            applyDitibTimes(times)
+        } catch {
+            print("DITIB Fetch Error: \(error.localizedDescription) – falling back to Aladhan")
+            isLoading = false
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func applyDitibTimes(_ t: DitibTimes) {
+        let ref = Date()
+        timezoneIdentifier = "Europe/Berlin"
+        prayerTimes = [
+            PrayerTime(kind: .imsak,   timeString: t.imsak,   referenceDate: ref),
+            PrayerTime(kind: .shuruuq, timeString: t.gunes,   referenceDate: ref),
+            PrayerTime(kind: .dhuhr,   timeString: t.ogle,    referenceDate: ref),
+            PrayerTime(kind: .asr,     timeString: t.ikindi,  referenceDate: ref),
+            PrayerTime(kind: .maghrib, timeString: t.aksam,   referenceDate: ref),
+            PrayerTime(kind: .isha,    timeString: t.yatsi,   referenceDate: ref)
+        ]
+        updateNextPrayerAndCountdown()
+        startCountdownTimer()
+        savePrayerTimesCache()
+    }
+
+    // MARK: - Aladhan Fetch
+
+    private func fetchAladhanPrayerTimes(
+        latitude: Double,
+        longitude: Double,
+        method: CalculationMethod = .ditib
+    ) async {
         isLoading = true
         errorMessage = nil
 
@@ -80,7 +134,7 @@ final class PrayerTimeManager: ObservableObject {
         formatter.dateFormat = "dd-MM-yyyy"
         let dateString = formatter.string(from: Date())
 
-        guard let url = URL(string: "\(baseURL)/timings/\(dateString)?latitude=\(latitude)&longitude=\(longitude)&method=\(method.rawValue)") else {
+        guard let url = URL(string: "\(aladhanBaseURL)/timings/\(dateString)?latitude=\(latitude)&longitude=\(longitude)&method=\(method.rawValue)") else {
             isLoading = false
             errorMessage = "Ungültige URL"
             return
@@ -92,7 +146,7 @@ final class PrayerTimeManager: ObservableObject {
             print("Aladhan Fetch Response Body: \(String(data: data, encoding: .utf8) ?? "NONE")")
             let aladhanResponse = try JSONDecoder().decode(AladhanResponse.self, from: data)
             isLoading = false
-            applyResponse(aladhanResponse)
+            applyAladhanResponse(aladhanResponse)
         } catch {
             print("Aladhan Fetch Error: \(error.localizedDescription)")
             isLoading = false
@@ -100,7 +154,7 @@ final class PrayerTimeManager: ObservableObject {
         }
     }
 
-    private func applyResponse(_ response: AladhanResponse) {
+    private func applyAladhanResponse(_ response: AladhanResponse) {
         guard response.code == 200 else {
             errorMessage = response.status
             return
@@ -108,7 +162,6 @@ final class PrayerTimeManager: ObservableObject {
         let t = response.data.timings
         let ref = Date()
         timezoneIdentifier = response.data.meta?.timezone ?? "Europe/Berlin"
-        // Fajr wird NICHT angezeigt – Imsak übernimmt als "Imsak (Morgengebet)"
         prayerTimes = [
             PrayerTime(kind: .imsak,   timeString: cleanTimeString(t.imsak),   referenceDate: ref),
             PrayerTime(kind: .shuruuq, timeString: cleanTimeString(t.sunrise), referenceDate: ref),
@@ -122,7 +175,7 @@ final class PrayerTimeManager: ObservableObject {
         savePrayerTimesCache()
     }
 
-    /// API gibt manchmal "05:22 (CET)" zurück – wir wollen nur "05:22"
+    /// Aladhan sometimes returns "05:22 (CET)" – strip the timezone suffix.
     private func cleanTimeString(_ raw: String) -> String {
         let trimmed = raw.trimmingCharacters(in: .whitespaces)
         if let spaceIndex = trimmed.firstIndex(of: " ") {
@@ -130,6 +183,8 @@ final class PrayerTimeManager: ObservableObject {
         }
         return trimmed
     }
+
+    // MARK: - Countdown Timer
 
     private var countdownTimer: Timer?
 
@@ -146,7 +201,6 @@ final class PrayerTimeManager: ObservableObject {
 
     private func updateNextPrayerAndCountdown() {
         let now = Date()
-        // Countdown: alle Gebete außer Shuruuq; Imsak gilt als "Imsak (Morgengebet)"
         let prayerOnly = prayerTimes.filter { $0.kind != .shuruuq }
         nextPrayer = prayerOnly.first { $0.time > now }
         if let next = nextPrayer {
@@ -156,7 +210,6 @@ final class PrayerTimeManager: ObservableObject {
             let s = Int(interval) % 60
             countdownString = String(format: "%02d:%02d:%02d", h, m, s)
         } else {
-            // Alle Gebete des Tages vergangen → morgen Imsak (Morgengebet)
             nextPrayer = prayerOnly.first(where: { $0.kind == .imsak }) ?? prayerOnly.first
             let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now) ?? now
             let nextImsak = prayerTimes.first(where: { $0.kind == .imsak }).flatMap { pt in
@@ -180,9 +233,6 @@ final class PrayerTimeManager: ObservableObject {
 
     // MARK: - Kerahat (Makruh) Start Times
 
-    /// Returns the kerahat (disliked) period start time string for prayers that have one.
-    /// Currently Dhuhr and Maghrib each have a 45-minute kerahat window before them.
-    /// e.g. Maghrib at 17:30 → kerahat start "16:45"
     var kerahatStartTimes: [PrayerKind: String] {
         var result: [PrayerKind: String] = [:]
         let fmt = DateFormatter()

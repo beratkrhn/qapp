@@ -14,6 +14,7 @@ private enum UserDefaultsKeys {
     static let appLanguage = "dailydee.appLanguage"
     static let selectedCity = "dailydee.selectedCity"
     static let calculationMethod = "dailydee.calculationMethod"
+    static let prayerTimeProvider = "dailydee.prayerTimeProvider"
     static let dailyReadPages = "dailydee.dailyReadPages"
     static let dailyGoalPages = "dailydee.dailyGoalPages"
     static let lastReadDate = "dailydee.lastReadDate"
@@ -29,6 +30,7 @@ final class AppState: ObservableObject {
     @Published var hasCompletedOnboarding: Bool
     @Published var selectedCity: AppCity
     @Published var calculationMethod: CalculationMethod
+    @Published var prayerTimeProvider: PrayerTimeProvider
 
     // MARK: - Tajweed
     @Published var isTajweedEnabled: Bool {
@@ -60,7 +62,8 @@ final class AppState: ObservableObject {
         appLanguage: AppLanguage = .german,
         hasCompletedOnboarding: Bool = false,
         selectedCity: AppCity = .berlin,
-        calculationMethod: CalculationMethod = .ditib
+        calculationMethod: CalculationMethod = .ditib,
+        prayerTimeProvider: PrayerTimeProvider = .ditib
     ) {
         self.userName = UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? userName
         let rawLang = UserDefaults.standard.string(forKey: UserDefaultsKeys.appLanguage)
@@ -74,6 +77,8 @@ final class AppState: ObservableObject {
         } else {
             self.calculationMethod = calculationMethod
         }
+        let rawProvider = UserDefaults.standard.string(forKey: UserDefaultsKeys.prayerTimeProvider)
+        self.prayerTimeProvider = rawProvider.flatMap(PrayerTimeProvider.init(rawValue:)) ?? prayerTimeProvider
 
         // Tajweed: defaults to true
         if UserDefaults.standard.object(forKey: UserDefaultsKeys.isTajweedEnabled) != nil {
@@ -146,6 +151,11 @@ final class AppState: ObservableObject {
     func updateCalculationMethod(_ method: CalculationMethod) {
         calculationMethod = method
         UserDefaults.standard.set(method.rawValue, forKey: UserDefaultsKeys.calculationMethod)
+    }
+
+    func updatePrayerTimeProvider(_ provider: PrayerTimeProvider) {
+        prayerTimeProvider = provider
+        UserDefaults.standard.set(provider.rawValue, forKey: UserDefaultsKeys.prayerTimeProvider)
     }
 
     func updateAccentTheme(_ theme: ThemeColor) {

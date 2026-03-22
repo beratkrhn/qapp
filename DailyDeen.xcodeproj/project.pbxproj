@@ -43,6 +43,8 @@
 		0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12812F510DEB006DB819 /* AppCity.swift */; };
 		0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12832F510DEB006DB819 /* SettingsView.swift */; };
 		0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12852F510DEB006DB819 /* PDFGenerator.swift */; };
+		0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12902F510DEB006DB819 /* DitibModels.swift */; };
+		0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12912F510DEB006DB819 /* DitibAPIService.swift */; };
 		0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12882F510DEB006DB819 /* WordStatusListView.swift */; };
 		C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */; };
 		DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00012F510DEB006DB81900 /* FlashcardCard.swift */; };
@@ -95,6 +97,8 @@
 		0EEA12812F510DEB006DB819 /* AppCity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCity.swift; sourceTree = "<group>"; };
 		0EEA12832F510DEB006DB819 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0EEA12852F510DEB006DB819 /* PDFGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFGenerator.swift; sourceTree = "<group>"; };
+		0EEA12902F510DEB006DB819 /* DitibModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibModels.swift; sourceTree = "<group>"; };
+		0EEA12912F510DEB006DB819 /* DitibAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibAPIService.swift; sourceTree = "<group>"; };
 		0EEA12882F510DEB006DB819 /* WordStatusListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordStatusListView.swift; sourceTree = "<group>"; };
 		DD00012F510DEB006DB81900 /* FlashcardCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardCard.swift; sourceTree = "<group>"; };
 		DD00032F510DEB006DB81900 /* SRSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSViewModel.swift; sourceTree = "<group>"; };
@@ -187,6 +191,7 @@
 				0EEA12752F510DEB006DB819 /* QuranWord.swift */,
 				DD00012F510DEB006DB81900 /* FlashcardCard.swift */,
 				DD00092F510DEB006DB81900 /* PrayerTutorialModels.swift */,
+				0EEA12902F510DEB006DB819 /* DitibModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,10 +265,19 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		0EEA12942F510DEB006DB819 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12912F510DEB006DB819 /* DitibAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		0EEA12362F510DEB006DB819 /* DeenApp */ = {
 			isa = PBXGroup;
 			children = (
 				0EEA12242F510DEB006DB819 /* Models */,
+				0EEA12942F510DEB006DB819 /* Services */,
 				0EEA12272F510DEB006DB819 /* Resources */,
 				0EEA12292F510DEB006DB819 /* ViewModels */,
 				0EEA12332F510DEB006DB819 /* Views */,
@@ -363,6 +377,8 @@
 				0EEA12402F510DEB006DB819 /* NextPrayerCard.swift in Sources */,
 				0EEA12412F510DEB006DB819 /* PrayerKind.swift in Sources */,
 				0EEA12422F510DEB006DB819 /* PrayerTimeManager.swift in Sources */,
+				0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */,
+				0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */,
 				0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */,
 				0EEA12442F510DEB006DB819 /* AladhanResponse.swift in Sources */,
 				0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */,

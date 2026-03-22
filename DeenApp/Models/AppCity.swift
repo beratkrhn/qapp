@@ -7,6 +7,22 @@
 
 import Foundation
 
+// MARK: - Prayer-Time Provider
+
+enum PrayerTimeProvider: String, CaseIterable, Identifiable {
+    case ditib   = "ditib"
+    case aladhan = "aladhan"
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .ditib:   return "DITIB (Diyanet)"
+        case .aladhan: return "Aladhan API"
+        }
+    }
+}
+
 // MARK: - Berechnungsmethoden (Aladhan API &method=)
 
 enum CalculationMethod: Int, CaseIterable, Identifiable {
@@ -61,6 +77,16 @@ enum AppCity: String, CaseIterable, Identifiable {
         case .augsburg: return 10.8978
         case .stuttgart: return 9.1829
         case .guenzburg: return 10.2746
+        }
+    }
+
+    /// Diyanet district ID used by the DITIB API (ezanvakti.imsakiyem.com).
+    var ditibDistrictId: String {
+        switch self {
+        case .berlin:    return "11002"
+        case .augsburg:  return "11036"
+        case .stuttgart:  return "11027"
+        case .guenzburg:  return "10112"
         }
     }
 }

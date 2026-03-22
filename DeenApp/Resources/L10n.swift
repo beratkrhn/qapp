@@ -217,6 +217,13 @@ enum L10n {
         case .turkish: return "örn. Berat"
         }
     }
+    static func settingsPrayerSource(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Gebetszeiten-Quelle"
+        case .english: return "Prayer Times Source"
+        case .turkish: return "Namaz Vakti Kaynağı"
+        }
+    }
     static func settingsCalculationMethod(_ lang: AppLanguage) -> String {
         switch lang {
         case .german, .germanArabic, .germanTurkish: return "Zeitrechnungsmethode"

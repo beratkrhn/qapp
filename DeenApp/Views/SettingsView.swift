@@ -144,10 +144,10 @@ struct SettingsView: View {
                                 }
 
                                 ForEach(AppCity.allCases) { city in
-                                    Button(action: {
-                                        appState.updateCity(city)
-                                        prayerTimeManager.loadPrayerTimes(for: city, method: appState.calculationMethod)
-                                    }) {
+                    Button(action: {
+                        appState.updateCity(city)
+                        prayerTimeManager.loadPrayerTimes(for: city, method: appState.calculationMethod, provider: appState.prayerTimeProvider)
+                    }) {
                                         HStack {
                                             Text(city.displayName)
                                                 .font(.body)
@@ -171,6 +171,45 @@ struct SettingsView: View {
                             }
                         }
 
+                        // MARK: - Gebetszeiten-Quelle
+                        settingsCard {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Label {
+                                    Text(L10n.settingsPrayerSource(appState.appLanguage))
+                                        .font(.headline)
+                                        .foregroundColor(Theme.textPrimary)
+                                } icon: {
+                                    Image(systemName: "antenna.radiowaves.left.and.right")
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                ForEach(PrayerTimeProvider.allCases) { provider in
+                                    Button(action: {
+                                        appState.updatePrayerTimeProvider(provider)
+                                    }) {
+                                        HStack {
+                                            Text(provider.displayName)
+                                                .font(.body)
+                                                .foregroundColor(Theme.textPrimary)
+                                            Spacer()
+                                            if appState.prayerTimeProvider == provider {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .foregroundColor(Theme.accent)
+                                            } else {
+                                                Image(systemName: "circle")
+                                                    .foregroundColor(Theme.textSecondary.opacity(0.5))
+                                            }
+                                        }
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal, 4)
+                                    }
+                                    if provider != PrayerTimeProvider.allCases.last {
+                                        Divider().overlay(Theme.textSecondary.opacity(0.2))
+                                    }
+                                }
+                            }
+                        }
+
                         // MARK: - Zeitrechnungsmethode
                         settingsCard {
                             VStack(alignment: .leading, spacing: 12) {
@@ -184,10 +223,10 @@ struct SettingsView: View {
                                 }
 
                                 ForEach(CalculationMethod.allCases) { method in
-                                    Button(action: {
-                                        appState.updateCalculationMethod(method)
-                                        prayerTimeManager.loadPrayerTimes(for: appState.selectedCity, method: method)
-                                    }) {
+                    Button(action: {
+                        appState.updateCalculationMethod(method)
+                        prayerTimeManager.loadPrayerTimes(for: appState.selectedCity, method: method, provider: appState.prayerTimeProvider)
+                    }) {
                                         HStack {
                                             Text(method.displayName)
                                                 .font(.body)
