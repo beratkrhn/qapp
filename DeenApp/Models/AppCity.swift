@@ -23,28 +23,6 @@ enum PrayerTimeProvider: String, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - Berechnungsmethoden (Aladhan API &method=)
-
-enum CalculationMethod: Int, CaseIterable, Identifiable {
-    case ditib   = 13   // Diyanet İşleri Başkanlığı (DITIB) – Standard DE
-    case mwl     = 3    // Muslim World League
-    case isna    = 2    // Islamic Society of North America
-    case egypt   = 5    // Egyptian General Authority of Survey
-    case karachi = 1    // University of Islamic Sciences, Karachi
-
-    var id: Int { rawValue }
-
-    var displayName: String {
-        switch self {
-        case .ditib:    return "DITIB (Diyanet)"
-        case .mwl:      return "Muslim World League"
-        case .isna:     return "ISNA"
-        case .egypt:    return "Ägyptische Behörde"
-        case .karachi:  return "Karachi"
-        }
-    }
-}
-
 enum AppCity: String, CaseIterable, Identifiable {
     case berlin = "berlin"
     case augsburg = "augsburg"

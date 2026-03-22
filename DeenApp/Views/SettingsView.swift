@@ -11,6 +11,7 @@ struct SettingsView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var prayerTimeManager: PrayerTimeManager
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
 
     @State private var nameInput: String = ""
 
@@ -87,11 +88,48 @@ struct SettingsView: View {
                             }
                         }
 
-                        // MARK: - App Theme
+                        // MARK: - Erscheinungsbild (Light / Dark)
+                        settingsCard {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Label {
+                                    Text("Erscheinungsbild")
+                                        .font(.headline)
+                                        .foregroundColor(Theme.textPrimary)
+                                } icon: {
+                                    Image(systemName: "circle.lefthalf.filled")
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                ForEach(AppearanceMode.allCases) { mode in
+                                    Button(action: { appState.updateAppearanceMode(mode) }) {
+                                        HStack {
+                                            Text(mode.displayName)
+                                                .font(.body)
+                                                .foregroundColor(Theme.textPrimary)
+                                            Spacer()
+                                            if appState.appearanceMode == mode {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .foregroundColor(Theme.accent)
+                                            } else {
+                                                Image(systemName: "circle")
+                                                    .foregroundColor(Theme.textSecondary.opacity(0.5))
+                                            }
+                                        }
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal, 4)
+                                    }
+                                    if mode != AppearanceMode.allCases.last {
+                                        Divider().overlay(Theme.textSecondary.opacity(0.2))
+                                    }
+                                }
+                            }
+                        }
+
+                        // MARK: - App Theme (Akzentfarbe)
                         settingsCard {
                             VStack(alignment: .leading, spacing: 16) {
                                 Label {
-                                    Text("App Theme")
+                                    Text("Akzentfarbe")
                                         .font(.headline)
                                         .foregroundColor(Theme.textPrimary)
                                 } icon: {
@@ -100,7 +138,7 @@ struct SettingsView: View {
                                 }
 
                                 LazyVGrid(
-                                    columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 7),
+                                    columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 6),
                                     spacing: 10
                                 ) {
                                     ForEach(ThemeColor.allCases) { theme in
@@ -111,7 +149,7 @@ struct SettingsView: View {
                                                     .frame(width: 38, height: 38)
                                                 if appState.accentTheme == theme {
                                                     Circle()
-                                                        .strokeBorder(Color.white, lineWidth: 2.5)
+                                                        .strokeBorder(accentSelectionRingColor, lineWidth: 2.5)
                                                         .frame(width: 38, height: 38)
                                                     Image(systemName: "checkmark")
                                                         .font(.system(size: 11, weight: .bold))
@@ -146,7 +184,11 @@ struct SettingsView: View {
                                 ForEach(AppCity.allCases) { city in
                     Button(action: {
                         appState.updateCity(city)
-                        prayerTimeManager.loadPrayerTimes(for: city, method: appState.calculationMethod, provider: appState.prayerTimeProvider)
+                        prayerTimeManager.loadPrayerTimes(
+                            for: city,
+                            calculation: appState.prayerCalculation,
+                            provider: appState.prayerTimeProvider
+                        )
                     }) {
                                         HStack {
                                             Text(city.displayName)
@@ -186,6 +228,11 @@ struct SettingsView: View {
                                 ForEach(PrayerTimeProvider.allCases) { provider in
                                     Button(action: {
                                         appState.updatePrayerTimeProvider(provider)
+                                        prayerTimeManager.loadPrayerTimes(
+                                            for: appState.selectedCity,
+                                            calculation: appState.prayerCalculation,
+                                            provider: provider
+                                        )
                                     }) {
                                         HStack {
                                             Text(provider.displayName)
@@ -210,7 +257,7 @@ struct SettingsView: View {
                             }
                         }
 
-                        // MARK: - Zeitrechnungsmethode
+                        // MARK: - Zeitrechnungsmethode (Aladhan / Fazilet / Custom)
                         settingsCard {
                             VStack(alignment: .leading, spacing: 12) {
                                 Label {
@@ -222,17 +269,27 @@ struct SettingsView: View {
                                         .foregroundColor(Theme.accent)
                                 }
 
-                                ForEach(CalculationMethod.allCases) { method in
-                    Button(action: {
-                        appState.updateCalculationMethod(method)
-                        prayerTimeManager.loadPrayerTimes(for: appState.selectedCity, method: method, provider: appState.prayerTimeProvider)
-                    }) {
+                                if appState.prayerTimeProvider == .ditib {
+                                    Text("Voreinstellung und eigene Parameter wirken bei der Quelle „Aladhan API“. DITIB liefert feste Vakitler.")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textSecondary)
+                                }
+
+                                ForEach(AladhanPresetCalculation.allCases) { preset in
+                                    Button(action: {
+                                        appState.updatePrayerCalculation(.preset(preset))
+                                        prayerTimeManager.loadPrayerTimes(
+                                            for: appState.selectedCity,
+                                            calculation: .preset(preset),
+                                            provider: appState.prayerTimeProvider
+                                        )
+                                    }) {
                                         HStack {
-                                            Text(method.displayName)
+                                            Text(preset.displayName)
                                                 .font(.body)
                                                 .foregroundColor(Theme.textPrimary)
                                             Spacer()
-                                            if appState.calculationMethod == method {
+                                            if appState.prayerCalculation.presetValue == preset, !appState.prayerCalculation.isCustom {
                                                 Image(systemName: "checkmark.circle.fill")
                                                     .foregroundColor(Theme.accent)
                                             } else {
@@ -243,9 +300,34 @@ struct SettingsView: View {
                                         .padding(.vertical, 8)
                                         .padding(.horizontal, 4)
                                     }
-                                    if method != CalculationMethod.allCases.last {
+                                    if preset != AladhanPresetCalculation.allCases.last {
                                         Divider().overlay(Theme.textSecondary.opacity(0.2))
                                     }
+                                }
+
+                                Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                NavigationLink {
+                                    CustomPrayerCalculationView()
+                                        .environmentObject(appState)
+                                        .environmentObject(prayerTimeManager)
+                                } label: {
+                                    HStack {
+                                        Text("Eigene Winkel & Minuten-Offsets")
+                                            .font(.body)
+                                            .foregroundColor(Theme.textPrimary)
+                                        Spacer()
+                                        if appState.prayerCalculation.isCustom {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(Theme.accent)
+                                        } else {
+                                            Image(systemName: "chevron.right")
+                                                .font(.caption.weight(.semibold))
+                                                .foregroundColor(Theme.textSecondary.opacity(0.6))
+                                        }
+                                    }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 4)
                                 }
                             }
                         }
@@ -257,7 +339,7 @@ struct SettingsView: View {
             .navigationTitle(L10n.settingsTitle(appState.appLanguage))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Theme.cardBackground, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(colorScheme == .dark ? .dark : .light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(L10n.settingsDone(appState.appLanguage)) { dismiss() }
@@ -266,6 +348,10 @@ struct SettingsView: View {
             }
             .onAppear { nameInput = appState.userName }
         }
+    }
+
+    private var accentSelectionRingColor: Color {
+        colorScheme == .dark ? Color.white : Color.black.opacity(0.85)
     }
 
     @ViewBuilder

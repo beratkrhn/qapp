@@ -43,7 +43,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIUserInterfaceStyle</key>
-	<string>Dark</string>
+	<string>Automatic</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Alkalami-Regular.ttf</string>

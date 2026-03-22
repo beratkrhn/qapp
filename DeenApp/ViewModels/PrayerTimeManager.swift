@@ -8,6 +8,9 @@
 
 import Foundation
 import Combine
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 @MainActor
 final class PrayerTimeManager: ObservableObject {
@@ -53,6 +56,7 @@ final class PrayerTimeManager: ObservableObject {
         prayerTimes = cached.map { PrayerTime(kind: $0.kind, timeString: $0.ts, referenceDate: ref) }
         updateNextPrayerAndCountdown()
         startCountdownTimer()
+        publishWidgetSnapshotIfPossible()
     }
 
     private func savePrayerTimesCache() {
@@ -69,7 +73,7 @@ final class PrayerTimeManager: ObservableObject {
 
     func loadPrayerTimes(
         for city: AppCity,
-        method: CalculationMethod = .ditib,
+        calculation: PrayerCalculationSettings,
         provider: PrayerTimeProvider = .ditib
     ) {
         Task {
@@ -80,7 +84,7 @@ final class PrayerTimeManager: ObservableObject {
                 await fetchAladhanPrayerTimes(
                     latitude: city.latitude,
                     longitude: city.longitude,
-                    method: method
+                    calculation: calculation
                 )
             }
         }
@@ -118,6 +122,7 @@ final class PrayerTimeManager: ObservableObject {
         updateNextPrayerAndCountdown()
         startCountdownTimer()
         savePrayerTimesCache()
+        publishWidgetSnapshotIfPossible()
     }
 
     // MARK: - Aladhan Fetch
@@ -125,7 +130,7 @@ final class PrayerTimeManager: ObservableObject {
     private func fetchAladhanPrayerTimes(
         latitude: Double,
         longitude: Double,
-        method: CalculationMethod = .ditib
+        calculation: PrayerCalculationSettings
     ) async {
         isLoading = true
         errorMessage = nil
@@ -134,7 +139,7 @@ final class PrayerTimeManager: ObservableObject {
         formatter.dateFormat = "dd-MM-yyyy"
         let dateString = formatter.string(from: Date())
 
-        guard let url = URL(string: "\(aladhanBaseURL)/timings/\(dateString)?latitude=\(latitude)&longitude=\(longitude)&method=\(method.rawValue)") else {
+        guard let url = aladhanTimingsURL(dateString: dateString, latitude: latitude, longitude: longitude, calculation: calculation) else {
             isLoading = false
             errorMessage = "Ungültige URL"
             return
@@ -152,6 +157,33 @@ final class PrayerTimeManager: ObservableObject {
             isLoading = false
             errorMessage = error.localizedDescription
         }
+    }
+
+    /// Fazilet: eigene Voreinstellung über `method=99` und typische TR/EU-Winkel (18° / 17°), s. Aladhan-Doku zu `methodSettings`.
+    private func aladhanTimingsURL(
+        dateString: String,
+        latitude: Double,
+        longitude: Double,
+        calculation: PrayerCalculationSettings
+    ) -> URL? {
+        var components = URLComponents(string: "\(aladhanBaseURL)/timings/\(dateString)")
+        var items: [URLQueryItem] = [
+            URLQueryItem(name: "latitude", value: String(latitude)),
+            URLQueryItem(name: "longitude", value: String(longitude))
+        ]
+        switch calculation {
+        case .preset(let preset):
+            items.append(URLQueryItem(name: "method", value: String(preset.aladhanMethodId)))
+            if preset == .fazilet {
+                items.append(URLQueryItem(name: "methodSettings", value: "18,null,17"))
+            }
+        case .custom(let custom):
+            items.append(URLQueryItem(name: "method", value: "99"))
+            items.append(URLQueryItem(name: "methodSettings", value: custom.methodSettingsQueryValue))
+            items.append(URLQueryItem(name: "tune", value: custom.tuneQueryValue))
+        }
+        components?.queryItems = items
+        return components?.url
     }
 
     private func applyAladhanResponse(_ response: AladhanResponse) {
@@ -173,6 +205,7 @@ final class PrayerTimeManager: ObservableObject {
         updateNextPrayerAndCountdown()
         startCountdownTimer()
         savePrayerTimesCache()
+        publishWidgetSnapshotIfPossible()
     }
 
     /// Aladhan sometimes returns "05:22 (CET)" – strip the timezone suffix.
@@ -182,6 +215,29 @@ final class PrayerTimeManager: ObservableObject {
             return String(trimmed[trimmed.startIndex..<spaceIndex])
         }
         return trimmed
+    }
+
+    // MARK: - Widget snapshot (App Group)
+
+    private func publishWidgetSnapshotIfPossible() {
+        let kinds: [PrayerKind] = [.fajr, .dhuhr, .asr, .maghrib, .isha]
+        let rows: [PrayerWidgetSnapshot.Row] = kinds.compactMap { kind in
+            let pt = prayerTimes.first(where: { $0.kind == kind })
+                ?? (kind == .fajr ? prayerTimes.first(where: { $0.kind == .imsak }) : nil)
+            guard let pt else { return nil }
+            return PrayerWidgetSnapshot.Row(
+                kindRaw: kind.rawValue,
+                time: pt.timeString,
+                iconSystemName: kind.iconName,
+                title: kind.displayName
+            )
+        }
+        guard rows.count == kinds.count else { return }
+        let snap = PrayerWidgetSnapshot(savedAt: Date().timeIntervalSince1970, rows: rows)
+        PrayerWidgetStore.save(snap)
+        #if canImport(WidgetKit)
+        WidgetCenter.shared.reloadAllTimelines()
+        #endif
     }
 
     // MARK: - Countdown Timer

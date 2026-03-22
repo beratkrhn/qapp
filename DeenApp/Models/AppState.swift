@@ -13,8 +13,10 @@ private enum UserDefaultsKeys {
     static let userName = "dailydee.userName"
     static let appLanguage = "dailydee.appLanguage"
     static let selectedCity = "dailydee.selectedCity"
-    static let calculationMethod = "dailydee.calculationMethod"
+    static let calculationMethodLegacy = "dailydee.calculationMethod"
+    static let prayerCalculation = "dailydee.prayerCalculation_v1"
     static let prayerTimeProvider = "dailydee.prayerTimeProvider"
+    static let appearanceMode = "dailydee.appearanceMode"
     static let dailyReadPages = "dailydee.dailyReadPages"
     static let dailyGoalPages = "dailydee.dailyGoalPages"
     static let lastReadDate = "dailydee.lastReadDate"
@@ -29,8 +31,15 @@ final class AppState: ObservableObject {
     @Published var appLanguage: AppLanguage
     @Published var hasCompletedOnboarding: Bool
     @Published var selectedCity: AppCity
-    @Published var calculationMethod: CalculationMethod
+    @Published var prayerCalculation: PrayerCalculationSettings {
+        didSet { Self.persistPrayerCalculation(prayerCalculation) }
+    }
     @Published var prayerTimeProvider: PrayerTimeProvider
+
+    /// Light / Dark / System — steuert `preferredColorScheme` in der App.
+    @Published var appearanceMode: AppearanceMode {
+        didSet { UserDefaults.standard.set(appearanceMode.rawValue, forKey: UserDefaultsKeys.appearanceMode) }
+    }
 
     // MARK: - Tajweed
     @Published var isTajweedEnabled: Bool {
@@ -62,7 +71,7 @@ final class AppState: ObservableObject {
         appLanguage: AppLanguage = .german,
         hasCompletedOnboarding: Bool = false,
         selectedCity: AppCity = .berlin,
-        calculationMethod: CalculationMethod = .ditib,
+        prayerCalculation: PrayerCalculationSettings = .preset(.ditib),
         prayerTimeProvider: PrayerTimeProvider = .ditib
     ) {
         self.userName = UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? userName
@@ -71,12 +80,7 @@ final class AppState: ObservableObject {
         self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: UserDefaultsKeys.onboardingCompleted)
         let rawCity = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectedCity)
         self.selectedCity = rawCity.flatMap(AppCity.init(rawValue:)) ?? selectedCity
-        if let rawInt = UserDefaults.standard.object(forKey: UserDefaultsKeys.calculationMethod) as? Int,
-           let saved = CalculationMethod(rawValue: rawInt) {
-            self.calculationMethod = saved
-        } else {
-            self.calculationMethod = calculationMethod
-        }
+        self.prayerCalculation = Self.loadPrayerCalculation(default: prayerCalculation)
         let rawProvider = UserDefaults.standard.string(forKey: UserDefaultsKeys.prayerTimeProvider)
         self.prayerTimeProvider = rawProvider.flatMap(PrayerTimeProvider.init(rawValue:)) ?? prayerTimeProvider
 
@@ -90,9 +94,16 @@ final class AppState: ObservableObject {
         // Reading mode: defaults to false (dark theme)
         self.isReadingModeEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isReadingModeEnabled)
 
-        // Accent theme: defaults to Emerald Green
+        // Accent theme: defaults to Emerald Green (entferntes slate_blue → Smaragd + Persistenz bereinigen)
         let rawTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme)
-        self.accentTheme = rawTheme.flatMap(ThemeColor.init(rawValue:)) ?? .emeraldGreen
+        if rawTheme == "slate_blue" {
+            UserDefaults.standard.set(ThemeColor.emeraldGreen.rawValue, forKey: UserDefaultsKeys.accentTheme)
+        }
+        let resolvedTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme).flatMap(ThemeColor.init(rawValue:)) ?? .emeraldGreen
+        self.accentTheme = resolvedTheme
+
+        let rawAppearance = UserDefaults.standard.string(forKey: UserDefaultsKeys.appearanceMode)
+        self.appearanceMode = rawAppearance.flatMap(AppearanceMode.init(rawValue:)) ?? .system
 
         // Daily reading: reset if last read was not today
         let savedGoal = UserDefaults.standard.integer(forKey: UserDefaultsKeys.dailyGoalPages)
@@ -148,9 +159,44 @@ final class AppState: ObservableObject {
         UserDefaults.standard.set(city.rawValue, forKey: UserDefaultsKeys.selectedCity)
     }
 
-    func updateCalculationMethod(_ method: CalculationMethod) {
-        calculationMethod = method
-        UserDefaults.standard.set(method.rawValue, forKey: UserDefaultsKeys.calculationMethod)
+    func updatePrayerCalculation(_ settings: PrayerCalculationSettings) {
+        prayerCalculation = settings
+    }
+
+    func updateAppearanceMode(_ mode: AppearanceMode) {
+        appearanceMode = mode
+    }
+
+    var preferredSwiftUIColorScheme: ColorScheme? {
+        appearanceMode.preferredColorScheme
+    }
+
+    private static func persistPrayerCalculation(_ settings: PrayerCalculationSettings) {
+        guard let data = try? JSONEncoder().encode(settings) else { return }
+        UserDefaults.standard.set(data, forKey: UserDefaultsKeys.prayerCalculation)
+    }
+
+    private static func loadPrayerCalculation(default: PrayerCalculationSettings) -> PrayerCalculationSettings {
+        if let data = UserDefaults.standard.data(forKey: UserDefaultsKeys.prayerCalculation),
+           let decoded = try? JSONDecoder().decode(PrayerCalculationSettings.self, from: data) {
+            return decoded
+        }
+        if let legacy = UserDefaults.standard.object(forKey: UserDefaultsKeys.calculationMethodLegacy) as? Int {
+            let preset: AladhanPresetCalculation
+            switch legacy {
+            case 13: preset = .ditib
+            case 3: preset = .mwl
+            case 2: preset = .isna
+            case 5: preset = .egypt
+            case 1: preset = .karachi
+            default: preset = .ditib
+            }
+            let migrated: PrayerCalculationSettings = .preset(preset)
+            persistPrayerCalculation(migrated)
+            UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.calculationMethodLegacy)
+            return migrated
+        }
+        return `default`
     }
 
     func updatePrayerTimeProvider(_ provider: PrayerTimeProvider) {
@@ -160,6 +206,30 @@ final class AppState: ObservableObject {
 
     func updateAccentTheme(_ theme: ThemeColor) {
         accentTheme = theme
+    }
+}
+
+enum AppearanceMode: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Hell"
+        case .dark: return "Dunkel"
+        }
+    }
+
+    var preferredColorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
     }
 }
 
