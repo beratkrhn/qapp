@@ -2,17 +2,12 @@
 //  AppState.swift
 //  DeenApp
 //
-<<<<<<< HEAD
 //  Globaler App-Zustand (z. B. ausgewählter Tab, Nutzername, Sprache, Standort, Onboarding).
-=======
-//  Globaler App-Zustand (z. B. ausgewählter Tab, Nutzername)
->>>>>>> origin/claude/adoring-banach
 //
 
 import SwiftUI
 import Combine
 
-<<<<<<< HEAD
 private enum UserDefaultsKeys {
     static let onboardingCompleted = "dailydee.onboardingCompleted"
     static let userName = "dailydee.userName"
@@ -57,8 +52,6 @@ final class AppState: ObservableObject {
     }
 
     // MARK: - Accent Theme
-    /// Writing this triggers a view rebuild in any observer, at which point
-    /// `Theme.accent` (a computed var reading UserDefaults) returns the new color.
     @Published var accentTheme: ThemeColor {
         didSet { UserDefaults.standard.set(accentTheme.rawValue, forKey: UserDefaultsKeys.accentTheme) }
     }
@@ -99,7 +92,7 @@ final class AppState: ObservableObject {
         // Reading mode: defaults to false (dark theme)
         self.isReadingModeEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isReadingModeEnabled)
 
-        // Accent theme: defaults to Emerald Green (entferntes slate_blue → Smaragd + Persistenz bereinigen)
+        // Accent theme: defaults to Emerald Green
         let rawTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme)
         if rawTheme == "slate_blue" {
             UserDefaults.standard.set(ThemeColor.emeraldGreen.rawValue, forKey: UserDefaultsKeys.accentTheme)
@@ -127,7 +120,6 @@ final class AppState: ObservableObject {
 
     // MARK: - Daily Reading Actions
 
-    /// Inkrementiert den Tageszähler um 1 und setzt ihn bei Tageswechsel zurück.
     func incrementDailyPages() {
         let savedDateTS = UserDefaults.standard.double(forKey: UserDefaultsKeys.lastReadDate)
         let savedDate = savedDateTS > 0 ? Date(timeIntervalSince1970: savedDateTS) : nil
@@ -236,11 +228,6 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
         case .dark: return .dark
         }
     }
-=======
-final class AppState: ObservableObject {
-    @Published var selectedTab: MainTab = .start
-    @Published var userName: String = "Berat"
->>>>>>> origin/claude/adoring-banach
 }
 
 enum MainTab: Int, CaseIterable {
@@ -248,7 +235,7 @@ enum MainTab: Int, CaseIterable {
     case quran
     case lernen
     case gebet
-<<<<<<< HEAD
+    case hifz
 
     func title(lang: AppLanguage) -> String {
         switch self {
@@ -256,34 +243,17 @@ enum MainTab: Int, CaseIterable {
         case .quran: return L10n.tabQuran(lang)
         case .lernen: return L10n.tabLernen(lang)
         case .gebet: return L10n.tabGebet(lang)
-=======
-    case hifz
-
-    var title: String {
-        switch self {
-        case .start:  return "Start"
-        case .quran:  return "Quran"
-        case .lernen: return "Lernen"
-        case .gebet:  return "Gebet"
-        case .hifz:   return "Hifz"
->>>>>>> origin/claude/adoring-banach
+        case .hifz: return "Hifz"
         }
     }
 
     var iconName: String {
         switch self {
-<<<<<<< HEAD
-        case .start: return "house.fill"
-        case .quran: return "book.fill"
-        case .lernen: return "graduationcap.fill"
-        case .gebet: return "heart.fill"
-=======
         case .start:  return "house.fill"
         case .quran:  return "book.fill"
         case .lernen: return "graduationcap.fill"
         case .gebet:  return "heart.fill"
         case .hifz:   return "brain.head.profile"
->>>>>>> origin/claude/adoring-banach
         }
     }
 }

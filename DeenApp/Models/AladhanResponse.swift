@@ -20,24 +20,16 @@ struct AladhanData: Decodable {
 }
 
 struct AladhanTimings: Decodable {
-<<<<<<< HEAD
     let imsak: String
     let fajr: String
     let sunrise: String
-=======
-    let fajr: String
-    let sunrise: String?
->>>>>>> origin/claude/adoring-banach
     let dhuhr: String
     let asr: String
     let maghrib: String
     let isha: String
 
     enum CodingKeys: String, CodingKey {
-<<<<<<< HEAD
         case imsak = "Imsak"
-=======
->>>>>>> origin/claude/adoring-banach
         case fajr = "Fajr"
         case sunrise = "Sunrise"
         case dhuhr = "Dhuhr"

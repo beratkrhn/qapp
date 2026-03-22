@@ -2,7 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<<<<<<< HEAD
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -58,11 +57,5 @@
 		<string>Ruwudu-Regular.ttf</string>
 		<string>KFGQPC Uthmanic Script HAFS Regular.otf</string>
 	</array>
-=======
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>DeenApp nutzt deinen Standort, um die Gebetszeiten für deine Region zu laden.</string>
-	<key>UIUserInterfaceStyle</key>
-	<string>Dark</string>
->>>>>>> origin/claude/adoring-banach
 </dict>
 </plist>
