@@ -256,18 +256,22 @@ final class HifzViewModel: ObservableObject {
             return
         }
 
+        // Extract primitives — #Predicate cannot traverse keypaths on captured structs.
+        let surahNum  = chunk.surahNumber
+        let chunkIdx  = chunk.chunkIndex
+        let ayatCount = chunk.ayat.count
+
         // 1. Save / update SRSItem
         let sDescriptor = FetchDescriptor<SRSItem>(
             predicate: #Predicate {
-                $0.surahNumber == chunk.surahNumber &&
-                $0.chunkIndex  == chunk.chunkIndex
+                $0.surahNumber == surahNum &&
+                $0.chunkIndex  == chunkIdx
             }
         )
         if let existing = try? modelContext.fetch(sDescriptor).first {
             existing.markReviewed()
         } else {
-            modelContext.insert(SRSItem(surahNumber: chunk.surahNumber,
-                                        chunkIndex: chunk.chunkIndex))
+            modelContext.insert(SRSItem(surahNumber: surahNum, chunkIndex: chunkIdx))
         }
 
         // 2. Upsert DailyActivity for today
@@ -277,16 +281,16 @@ final class HifzViewModel: ObservableObject {
         )
         if let activity = try? modelContext.fetch(aDescriptor).first {
             activity.loopsCompleted += 1
-            activity.ayatMemorized  += chunk.ayat.count
+            activity.ayatMemorized  += ayatCount
         } else {
             modelContext.insert(DailyActivity(date: today,
                                               loopsCompleted: 1,
-                                              ayatMemorized: chunk.ayat.count))
+                                              ayatMemorized: ayatCount))
         }
 
         // 3. Advance HifzProgress
         let pDescriptor = FetchDescriptor<HifzProgress>(
-            predicate: #Predicate { $0.surahNumber == chunk.surahNumber }
+            predicate: #Predicate { $0.surahNumber == surahNum }
         )
         try? modelContext.fetch(pDescriptor).first?.advanceChunk()
 
