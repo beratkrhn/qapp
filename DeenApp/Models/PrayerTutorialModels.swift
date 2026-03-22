@@ -37,6 +37,7 @@ struct PrayerStep: Identifiable, Hashable {
     let title: String
     let arabicText: String?
     let transliteration: String?
+    let dmgTransliteration: String?
     let translation: String?
     let audioFileName: String?
     let imageNameMale: String
@@ -47,6 +48,7 @@ struct PrayerStep: Identifiable, Hashable {
         title: String,
         arabicText: String? = nil,
         transliteration: String? = nil,
+        dmgTransliteration: String? = nil,
         translation: String? = nil,
         audioFileName: String? = nil,
         imageNameMale: String,
@@ -56,6 +58,7 @@ struct PrayerStep: Identifiable, Hashable {
         self.title = title
         self.arabicText = arabicText
         self.transliteration = transliteration
+        self.dmgTransliteration = dmgTransliteration
         self.translation = translation
         self.audioFileName = audioFileName
         self.imageNameMale = imageNameMale

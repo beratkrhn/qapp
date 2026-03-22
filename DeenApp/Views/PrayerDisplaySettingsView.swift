@@ -2,7 +2,7 @@
 //  PrayerDisplaySettingsView.swift
 //  DeenApp
 //
-//  Einstellungen für die Anzeige von Arabisch, Transliteration und Übersetzung.
+//  Einstellungen für die Anzeige von Arabisch, Transliteration, DMG und Übersetzung.
 //
 
 
@@ -11,6 +11,7 @@ import SwiftUI
 struct PrayerDisplaySettingsView: View {
     @AppStorage("showArabic") var showArabic: Bool = true
     @AppStorage("showTransliteration") var showTransliteration: Bool = true
+    @AppStorage("showDMGTransliteration") var showDMGTransliteration: Bool = true
     @AppStorage("showTranslation") var showTranslation: Bool = true
     @Environment(\.dismiss) private var dismiss
 
@@ -22,26 +23,38 @@ struct PrayerDisplaySettingsView: View {
                 ScrollView {
                     VStack(spacing: Theme.sectionSpacing) {
                         VStack(spacing: 0) {
-                            settingsRow(
+                            displayOptionRow(
                                 title: "Arabischer Text",
                                 subtitle: "Koranvers und Dua in Arabisch",
-                                isOn: $showArabic
+                                isOn: $showArabic,
+                                previewStyle: PrayerBasmalaPreviewSnippetView.Style.arabic
                             )
                             Divider()
                                 .background(Theme.textSecondary.opacity(0.3))
                                 .padding(.leading, Theme.cardPadding)
-                            settingsRow(
+                            displayOptionRow(
                                 title: "Transliteration",
                                 subtitle: "Aussprache in lateinischer Schrift",
-                                isOn: $showTransliteration
+                                isOn: $showTransliteration,
+                                previewStyle: PrayerBasmalaPreviewSnippetView.Style.simplifiedLatin
                             )
                             Divider()
                                 .background(Theme.textSecondary.opacity(0.3))
                                 .padding(.leading, Theme.cardPadding)
-                            settingsRow(
+                            displayOptionRow(
+                                title: "DMG-Transliteration",
+                                subtitle: "Wissenschaftliche Umschrift (Deutsche Morgenländische Gesellschaft)",
+                                isOn: $showDMGTransliteration,
+                                previewStyle: PrayerBasmalaPreviewSnippetView.Style.dmgLatin
+                            )
+                            Divider()
+                                .background(Theme.textSecondary.opacity(0.3))
+                                .padding(.leading, Theme.cardPadding)
+                            displayOptionRow(
                                 title: "Übersetzung",
                                 subtitle: "Deutsche Bedeutung",
-                                isOn: $showTranslation
+                                isOn: $showTranslation,
+                                previewStyle: PrayerBasmalaPreviewSnippetView.Style.german
                             )
                         }
                         .background(Theme.cardBackground)
@@ -72,19 +85,28 @@ struct PrayerDisplaySettingsView: View {
         }
     }
 
-    private func settingsRow(title: String, subtitle: String, isOn: Binding<Bool>) -> some View {
-        Toggle(isOn: isOn) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(Theme.textPrimary)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(Theme.textSecondary)
+    private func displayOptionRow(
+        title: String,
+        subtitle: String,
+        isOn: Binding<Bool>,
+        previewStyle: PrayerBasmalaPreviewSnippetView.Style
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Toggle(isOn: isOn) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.headline)
+                        .foregroundColor(Theme.textPrimary)
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundColor(Theme.textSecondary)
+                }
+                .padding(.vertical, 4)
             }
-            .padding(.vertical, 4)
+            .tint(Theme.accent)
+
+            PrayerBasmalaPreviewSnippetView(style: previewStyle)
         }
-        .tint(Theme.accent)
         .padding(.horizontal, Theme.cardPadding)
         .padding(.vertical, 12)
     }

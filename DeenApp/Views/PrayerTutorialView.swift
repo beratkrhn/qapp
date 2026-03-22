@@ -13,10 +13,13 @@ struct PrayerTutorialView: View {
 
     @AppStorage("showArabic") private var showArabic = true
     @AppStorage("showTransliteration") private var showTransliteration = true
+    @AppStorage("showDMGTransliteration") private var showDMGTransliteration = true
     @AppStorage("showTranslation") private var showTranslation = true
 
+    @State private var showDisplaySettings = false
+
     private var activeCount: Int {
-        [showArabic, showTransliteration, showTranslation].filter(\.self).count
+        [showArabic, showTransliteration, showDMGTransliteration, showTranslation].filter(\.self).count
     }
 
     private var arabicBaseSize: CGFloat {
@@ -32,6 +35,15 @@ struct PrayerTutorialView: View {
         case 1:  return 70
         case 2:  return 50
         default: return 38
+        }
+    }
+
+    /// DMG line under the simplified transliteration (slightly smaller).
+    private var dmgBaseSize: CGFloat {
+        switch activeCount {
+        case 1:  return 48
+        case 2:  return 34
+        default: return 26
         }
     }
 
@@ -67,6 +79,17 @@ struct PrayerTutorialView: View {
                     .foregroundColor(Theme.textSecondary)
                     .tracking(1)
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showDisplaySettings = true
+                } label: {
+                    Image(systemName: "textformat.size")
+                }
+                .accessibilityLabel("Anzeigeoptionen")
+            }
+        }
+        .sheet(isPresented: $showDisplaySettings) {
+            PrayerTutorialDisplaySettingsSheet()
         }
     }
 
@@ -135,6 +158,16 @@ struct PrayerTutorialView: View {
                     .foregroundColor(Theme.textSecondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(15)
+                    .minimumScaleFactor(0.1)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            if showDMGTransliteration, let dmg = step.dmgTransliteration, !dmg.isEmpty {
+                Text(dmg)
+                    .font(.system(size: dmgBaseSize))
+                    .foregroundColor(Theme.textSecondary.opacity(0.88))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(20)
                     .minimumScaleFactor(0.1)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -249,6 +282,53 @@ struct PrayerTutorialView: View {
         } else {
             return "figure.stand"
         }
+    }
+}
+
+// MARK: - Display settings sheet
+
+private struct PrayerTutorialDisplaySettingsSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    @AppStorage("showArabic") private var showArabic = true
+    @AppStorage("showTransliteration") private var showTransliteration = true
+    @AppStorage("showDMGTransliteration") private var showDMGTransliteration = true
+    @AppStorage("showTranslation") private var showTranslation = true
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Toggle("Arabisch", isOn: $showArabic)
+                    PrayerBasmalaPreviewSnippetView(style: .arabic)
+                }
+                Section {
+                    Toggle("Transliteration", isOn: $showTransliteration)
+                    PrayerBasmalaPreviewSnippetView(style: .simplifiedLatin)
+                }
+                Section {
+                    Toggle("DMG-Transliteration", isOn: $showDMGTransliteration)
+                    PrayerBasmalaPreviewSnippetView(style: .dmgLatin)
+                }
+                Section {
+                    Toggle("Übersetzung", isOn: $showTranslation)
+                    PrayerBasmalaPreviewSnippetView(style: .german)
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .background(Theme.background)
+            .navigationTitle("Anzeige")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Theme.background.opacity(0.95), for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Fertig") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
 }
 

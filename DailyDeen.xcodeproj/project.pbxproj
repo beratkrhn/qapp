@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */; };
 		0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */; };
+		0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */; };
 		0ECEF9662F6CCACA00299C6E /* QWords.json in Resources */ = {isa = PBXBuildFile; fileRef = 0ECEF9652F6CCAC700299C6E /* QWords.json */; };
 		0EEA12372F510DEB006DB819 /* CardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122B2F510DEB006DB819 /* CardContainer.swift */; };
 		0EEA12382F510DEB006DB819 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12262F510DEB006DB819 /* Theme.swift */; };
@@ -57,6 +58,7 @@
 /* Begin PBXFileReference section */
 		0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialData.swift; sourceTree = "<group>"; };
 		0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDisplaySettingsView.swift; sourceTree = "<group>"; };
+		0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerBasmalaPreview.swift; sourceTree = "<group>"; };
 		0ECEF9652F6CCAC700299C6E /* QWords.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = QWords.json; sourceTree = "<group>"; };
 		0EEA12122F510DB8006DB819 /* DailyDee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyDee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EEA12202F510DEB006DB819 /* AladhanResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AladhanResponse.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */,
 				0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */,
 				0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */,
+				0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */,
 				0EEA12442F510DEB006DB819 /* AladhanResponse.swift in Sources */,
 				0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */,
+				0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */,
 				0EEA12452F510DEB006DB819 /* MainTabView.swift in Sources */,
 				0EEA125B2F510DEB006DB819 /* AppLanguage.swift in Sources */,
 				0EEA125D2F510DEB006DB819 /* L10n.swift in Sources */,
