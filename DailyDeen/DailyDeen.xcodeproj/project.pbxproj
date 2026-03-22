@@ -1,0 +1,669 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */; };
+		0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */; };
+		0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */; };
+		0ECEF9662F6CCACA00299C6E /* QWords.json in Resources */ = {isa = PBXBuildFile; fileRef = 0ECEF9652F6CCAC700299C6E /* QWords.json */; };
+		0EEA12372F510DEB006DB819 /* CardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122B2F510DEB006DB819 /* CardContainer.swift */; };
+		0EEA12382F510DEB006DB819 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12262F510DEB006DB819 /* Theme.swift */; };
+		0EEA12392F510DEB006DB819 /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12232F510DEB006DB819 /* PrayerTime.swift */; };
+		0EEA123A2F510DEB006DB819 /* BottomInfoCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122A2F510DEB006DB819 /* BottomInfoCardsView.swift */; };
+		0EEA123C2F510DEB006DB819 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122F2F510DEB006DB819 /* DashboardView.swift */; };
+		0EEA123D2F510DEB006DB819 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12302F510DEB006DB819 /* HeaderView.swift */; };
+		0EEA123E2F510DEB006DB819 /* PrayerTimesCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122D2F510DEB006DB819 /* PrayerTimesCardView.swift */; };
+		0EEA123F2F510DEB006DB819 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12212F510DEB006DB819 /* AppState.swift */; };
+		0EEA12402F510DEB006DB819 /* NextPrayerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA122C2F510DEB006DB819 /* NextPrayerCard.swift */; };
+		0EEA12412F510DEB006DB819 /* PrayerKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12222F510DEB006DB819 /* PrayerKind.swift */; };
+		0EEA12422F510DEB006DB819 /* PrayerTimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12282F510DEB006DB819 /* PrayerTimeManager.swift */; };
+		0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12322F510DEB006DB819 /* TabBarView.swift */; };
+		0EEA12442F510DEB006DB819 /* AladhanResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12202F510DEB006DB819 /* AladhanResponse.swift */; };
+		0EEA12452F510DEB006DB819 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12312F510DEB006DB819 /* MainTabView.swift */; };
+		0EEA12462F510DEB006DB819 /* DeenAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12342F510DEB006DB819 /* DeenAppApp.swift */; };
+		0EEA12472F510DEB006DB819 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EEA12252F510DEB006DB819 /* Assets.xcassets */; };
+		0EEA125B2F510DEB006DB819 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA125A2F510DEB006DB819 /* AppLanguage.swift */; };
+		0EEA125D2F510DEB006DB819 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA125C2F510DEB006DB819 /* L10n.swift */; };
+		0EEA125F2F510DEB006DB819 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA125E2F510DEB006DB819 /* OnboardingView.swift */; };
+		0EEA12612F510DEB006DB819 /* QuranView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12602F510DEB006DB819 /* QuranView.swift */; };
+		0EEA12632F510DEB006DB819 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12622F510DEB006DB819 /* QuranStore.swift */; };
+		0EEA12652F510DEB006DB819 /* GreetingFontCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12642F510DEB006DB819 /* GreetingFontCycle.swift */; };
+		0EEA12672F510DEB006DB819 /* QuranModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12662F510DEB006DB819 /* QuranModels.swift */; };
+		0EEA12692F510DEB006DB819 /* QuranArabicFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12682F510DEB006DB819 /* QuranArabicFont.swift */; };
+		0EEA126B2F510DEB006DB819 /* QuranTranslation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA126A2F510DEB006DB819 /* QuranTranslation.swift */; };
+		0EEA126D2F510DEB006DB819 /* quran_sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EEA126C2F510DEB006DB819 /* quran_sample.json */; };
+		0EEA12722F510DEB006DB819 /* AlquranAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12732F510DEB006DB819 /* AlquranAPI.swift */; };
+		0EEA12742F510DEB006DB819 /* QuranWord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12752F510DEB006DB819 /* QuranWord.swift */; };
+		0EEA12762F510DEB006DB819 /* FlashcardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12772F510DEB006DB819 /* FlashcardView.swift */; };
+		0EEA12782F510DEB006DB819 /* quran_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EEA12792F510DEB006DB819 /* quran_words.json */; };
+		0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12812F510DEB006DB819 /* AppCity.swift */; };
+		0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12832F510DEB006DB819 /* SettingsView.swift */; };
+		0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12852F510DEB006DB819 /* PDFGenerator.swift */; };
+		0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12882F510DEB006DB819 /* WordStatusListView.swift */; };
+		0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12902F510DEB006DB819 /* DitibModels.swift */; };
+		0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12912F510DEB006DB819 /* DitibAPIService.swift */; };
+		C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */; };
+		DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00012F510DEB006DB81900 /* FlashcardCard.swift */; };
+		DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00032F510DEB006DB81900 /* SRSViewModel.swift */; };
+		DD00052F510DEB006DB81901 /* LearningDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00052F510DEB006DB81900 /* LearningDashboardView.swift */; };
+		DD00072F510DEB006DB81901 /* FlashcardSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00072F510DEB006DB81900 /* FlashcardSessionView.swift */; };
+		DD00092F510DEB006DB81901 /* PrayerTutorialModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00092F510DEB006DB81900 /* PrayerTutorialModels.swift */; };
+		DD000B2F510DEB006DB81901 /* PrayerTutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */; };
+		DD000D2F510DEB006DB81901 /* PrayerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */; };
+		DD000F2F510DEB006DB81901 /* PrayerTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */; };
+		A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */; };
+		A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */; };
+		A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialData.swift; sourceTree = "<group>"; };
+		0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDisplaySettingsView.swift; sourceTree = "<group>"; };
+		0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerBasmalaPreview.swift; sourceTree = "<group>"; };
+		0ECEF9652F6CCAC700299C6E /* QWords.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = QWords.json; sourceTree = "<group>"; };
+		0EEA12122F510DB8006DB819 /* DailyDee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyDee.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0EEA12202F510DEB006DB819 /* AladhanResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AladhanResponse.swift; sourceTree = "<group>"; };
+		0EEA12212F510DEB006DB819 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		0EEA12222F510DEB006DB819 /* PrayerKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerKind.swift; sourceTree = "<group>"; };
+		0EEA12232F510DEB006DB819 /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
+		0EEA12252F510DEB006DB819 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0EEA12262F510DEB006DB819 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		0EEA12282F510DEB006DB819 /* PrayerTimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimeManager.swift; sourceTree = "<group>"; };
+		0EEA122A2F510DEB006DB819 /* BottomInfoCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomInfoCardsView.swift; sourceTree = "<group>"; };
+		0EEA122B2F510DEB006DB819 /* CardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainer.swift; sourceTree = "<group>"; };
+		0EEA122C2F510DEB006DB819 /* NextPrayerCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextPrayerCard.swift; sourceTree = "<group>"; };
+		0EEA122D2F510DEB006DB819 /* PrayerTimesCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesCardView.swift; sourceTree = "<group>"; };
+		0EEA122F2F510DEB006DB819 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		0EEA12302F510DEB006DB819 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		0EEA12312F510DEB006DB819 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		0EEA12322F510DEB006DB819 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		0EEA12342F510DEB006DB819 /* DeenAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeenAppApp.swift; sourceTree = "<group>"; };
+		0EEA12352F510DEB006DB819 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0EEA125A2F510DEB006DB819 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
+		0EEA125C2F510DEB006DB819 /* L10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		0EEA125E2F510DEB006DB819 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		0EEA12602F510DEB006DB819 /* QuranView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranView.swift; sourceTree = "<group>"; };
+		0EEA12622F510DEB006DB819 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
+		0EEA12642F510DEB006DB819 /* GreetingFontCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreetingFontCycle.swift; sourceTree = "<group>"; };
+		0EEA12662F510DEB006DB819 /* QuranModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranModels.swift; sourceTree = "<group>"; };
+		0EEA12682F510DEB006DB819 /* QuranArabicFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranArabicFont.swift; sourceTree = "<group>"; };
+		0EEA126A2F510DEB006DB819 /* QuranTranslation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranTranslation.swift; sourceTree = "<group>"; };
+		0EEA126C2F510DEB006DB819 /* quran_sample.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = quran_sample.json; sourceTree = "<group>"; };
+		0EEA12732F510DEB006DB819 /* AlquranAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlquranAPI.swift; sourceTree = "<group>"; };
+		0EEA12752F510DEB006DB819 /* QuranWord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranWord.swift; sourceTree = "<group>"; };
+		0EEA12772F510DEB006DB819 /* FlashcardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardView.swift; sourceTree = "<group>"; };
+		0EEA12792F510DEB006DB819 /* quran_words.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = quran_words.json; sourceTree = "<group>"; };
+		0EEA12812F510DEB006DB819 /* AppCity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCity.swift; sourceTree = "<group>"; };
+		0EEA12832F510DEB006DB819 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		0EEA12852F510DEB006DB819 /* PDFGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFGenerator.swift; sourceTree = "<group>"; };
+		0EEA12882F510DEB006DB819 /* WordStatusListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordStatusListView.swift; sourceTree = "<group>"; };
+		0EEA12902F510DEB006DB819 /* DitibModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibModels.swift; sourceTree = "<group>"; };
+		0EEA12912F510DEB006DB819 /* DitibAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibAPIService.swift; sourceTree = "<group>"; };
+		DD00012F510DEB006DB81900 /* FlashcardCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardCard.swift; sourceTree = "<group>"; };
+		DD00032F510DEB006DB81900 /* SRSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSViewModel.swift; sourceTree = "<group>"; };
+		DD00052F510DEB006DB81900 /* LearningDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningDashboardView.swift; sourceTree = "<group>"; };
+		DD00072F510DEB006DB81900 /* FlashcardSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardSessionView.swift; sourceTree = "<group>"; };
+		DD00092F510DEB006DB81900 /* PrayerTutorialModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialModels.swift; sourceTree = "<group>"; };
+		DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialViewModel.swift; sourceTree = "<group>"; };
+		DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerSelectionView.swift; sourceTree = "<group>"; };
+		DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialView.swift; sourceTree = "<group>"; };
+		EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TajweedParser.swift; sourceTree = "<group>"; };
+		A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCalculationSettings.swift; sourceTree = "<group>"; };
+		A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerWidgetSnapshot.swift; sourceTree = "<group>"; };
+		A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPrayerCalculationView.swift; sourceTree = "<group>"; };
+		A2B000042F510DEB006DB819 /* DeenApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DeenApp.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "DailyDee" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Alkalami/Alkalami-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Almarai/Almarai-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Amiri/Amiri-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Handjet/static/Handjet-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Kufam/Kufam-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Mirza/Mirza-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Parastoo/static/Parastoo-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Reem_Kufi/static/ReemKufi-Regular.ttf",
+				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Ruwudu/Ruwudu-Regular.ttf",
+				"KFGQPC Uthmanic Script HAFS Regular.otf",
+			);
+			target = 0EEA12112F510DB8006DB819 /* DailyDee */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		0EDE0FC32F525DBC001A0974 /* fonts */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "DailyDee" target */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
+		0EEA12142F510DB8006DB819 /* DailyDeen */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DailyDeen;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0EEA120F2F510DB8006DB819 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0EEA12092F510DB8006DB819 = {
+			isa = PBXGroup;
+			children = (
+				0EEA12362F510DEB006DB819 /* DeenApp */,
+				0EEA12142F510DB8006DB819 /* DailyDeen */,
+				0EEA12132F510DB8006DB819 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0EEA12132F510DB8006DB819 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12122F510DB8006DB819 /* DailyDee.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0EEA12242F510DEB006DB819 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12202F510DEB006DB819 /* AladhanResponse.swift */,
+				0EEA12212F510DEB006DB819 /* AppState.swift */,
+				0EEA125A2F510DEB006DB819 /* AppLanguage.swift */,
+				0EEA12812F510DEB006DB819 /* AppCity.swift */,
+				0EEA12732F510DEB006DB819 /* AlquranAPI.swift */,
+				0EEA12222F510DEB006DB819 /* PrayerKind.swift */,
+				0EEA12232F510DEB006DB819 /* PrayerTime.swift */,
+				0EEA12662F510DEB006DB819 /* QuranModels.swift */,
+				0EEA12682F510DEB006DB819 /* QuranArabicFont.swift */,
+				EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */,
+				0EEA126A2F510DEB006DB819 /* QuranTranslation.swift */,
+				0EEA12752F510DEB006DB819 /* QuranWord.swift */,
+				DD00012F510DEB006DB81900 /* FlashcardCard.swift */,
+				DD00092F510DEB006DB81900 /* PrayerTutorialModels.swift */,
+				0EEA12902F510DEB006DB819 /* DitibModels.swift */,
+				A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */,
+				A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0EEA12272F510DEB006DB819 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0ECEF9652F6CCAC700299C6E /* QWords.json */,
+				0EDE0FC32F525DBC001A0974 /* fonts */,
+				0EEA12252F510DEB006DB819 /* Assets.xcassets */,
+				0EEA12262F510DEB006DB819 /* Theme.swift */,
+				0EEA125C2F510DEB006DB819 /* L10n.swift */,
+				0EEA12642F510DEB006DB819 /* GreetingFontCycle.swift */,
+				0EEA126C2F510DEB006DB819 /* quran_sample.json */,
+				0EEA12792F510DEB006DB819 /* quran_words.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		0EEA12292F510DEB006DB819 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12282F510DEB006DB819 /* PrayerTimeManager.swift */,
+				0EEA12622F510DEB006DB819 /* QuranStore.swift */,
+				DD00032F510DEB006DB81900 /* SRSViewModel.swift */,
+				DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		0EEA122E2F510DEB006DB819 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA122A2F510DEB006DB819 /* BottomInfoCardsView.swift */,
+				0EEA122B2F510DEB006DB819 /* CardContainer.swift */,
+				0EEA122C2F510DEB006DB819 /* NextPrayerCard.swift */,
+				0EEA122D2F510DEB006DB819 /* PrayerTimesCardView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		0EEA12332F510DEB006DB819 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA122E2F510DEB006DB819 /* Components */,
+				0EEA122F2F510DEB006DB819 /* DashboardView.swift */,
+				0EEA12302F510DEB006DB819 /* HeaderView.swift */,
+				0EEA12312F510DEB006DB819 /* MainTabView.swift */,
+				0EEA125E2F510DEB006DB819 /* OnboardingView.swift */,
+				0EEA12602F510DEB006DB819 /* QuranView.swift */,
+				0EEA12772F510DEB006DB819 /* FlashcardView.swift */,
+				DD00052F510DEB006DB81900 /* LearningDashboardView.swift */,
+				DD00072F510DEB006DB81900 /* FlashcardSessionView.swift */,
+				0EEA12882F510DEB006DB819 /* WordStatusListView.swift */,
+				0EEA12832F510DEB006DB819 /* SettingsView.swift */,
+				0EEA12322F510DEB006DB819 /* TabBarView.swift */,
+				DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */,
+				DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */,
+				0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */,
+				0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */,
+				0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */,
+				A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0EEA12362F510DEB006DB819 /* DeenApp */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12242F510DEB006DB819 /* Models */,
+				0EEA12942F510DEB006DB819 /* Services */,
+				0EEA12272F510DEB006DB819 /* Resources */,
+				0EEA12292F510DEB006DB819 /* ViewModels */,
+				0EEA12332F510DEB006DB819 /* Views */,
+				0EEA12862F510DEB006DB819 /* Utils */,
+				0EEA12342F510DEB006DB819 /* DeenAppApp.swift */,
+				0EEA12352F510DEB006DB819 /* Info.plist */,
+				A2B000042F510DEB006DB819 /* DeenApp.entitlements */,
+			);
+			path = DeenApp;
+			sourceTree = "<group>";
+		};
+		0EEA12862F510DEB006DB819 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12852F510DEB006DB819 /* PDFGenerator.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		0EEA12942F510DEB006DB819 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0EEA12912F510DEB006DB819 /* DitibAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0EEA12112F510DB8006DB819 /* DailyDee */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0EEA121D2F510DB9006DB819 /* Build configuration list for PBXNativeTarget "DailyDee" */;
+			buildPhases = (
+				0EEA120E2F510DB8006DB819 /* Sources */,
+				0EEA120F2F510DB8006DB819 /* Frameworks */,
+				0EEA12102F510DB8006DB819 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0EEA12142F510DB8006DB819 /* DailyDeen */,
+			);
+			name = DailyDee;
+			packageProductDependencies = (
+			);
+			productName = DailyDee;
+			productReference = 0EEA12122F510DB8006DB819 /* DailyDee.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0EEA120A2F510DB8006DB819 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					0EEA12112F510DB8006DB819 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+				};
+			};
+			buildConfigurationList = 0EEA120D2F510DB8006DB819 /* Build configuration list for PBXProject "DailyDeen" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0EEA12092F510DB8006DB819;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 0EEA12132F510DB8006DB819 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0EEA12112F510DB8006DB819 /* DailyDee */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0EEA12102F510DB8006DB819 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0EEA12472F510DEB006DB819 /* Assets.xcassets in Resources */,
+				0EEA126D2F510DEB006DB819 /* quran_sample.json in Resources */,
+				0EEA12782F510DEB006DB819 /* quran_words.json in Resources */,
+				0ECEF9662F6CCACA00299C6E /* QWords.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0EEA120E2F510DB8006DB819 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0EEA12462F510DEB006DB819 /* DeenAppApp.swift in Sources */,
+				0EEA12372F510DEB006DB819 /* CardContainer.swift in Sources */,
+				0EEA12382F510DEB006DB819 /* Theme.swift in Sources */,
+				0EEA12392F510DEB006DB819 /* PrayerTime.swift in Sources */,
+				0EEA123A2F510DEB006DB819 /* BottomInfoCardsView.swift in Sources */,
+				0EEA123C2F510DEB006DB819 /* DashboardView.swift in Sources */,
+				0EEA123D2F510DEB006DB819 /* HeaderView.swift in Sources */,
+				0EEA123E2F510DEB006DB819 /* PrayerTimesCardView.swift in Sources */,
+				0EEA123F2F510DEB006DB819 /* AppState.swift in Sources */,
+				0EEA12402F510DEB006DB819 /* NextPrayerCard.swift in Sources */,
+				0EEA12412F510DEB006DB819 /* PrayerKind.swift in Sources */,
+				0EEA12422F510DEB006DB819 /* PrayerTimeManager.swift in Sources */,
+				0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */,
+				0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */,
+				0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */,
+				0EEA12442F510DEB006DB819 /* AladhanResponse.swift in Sources */,
+				0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */,
+				0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */,
+				0EEA12452F510DEB006DB819 /* MainTabView.swift in Sources */,
+				0EEA125B2F510DEB006DB819 /* AppLanguage.swift in Sources */,
+				0EEA125D2F510DEB006DB819 /* L10n.swift in Sources */,
+				0EEA125F2F510DEB006DB819 /* OnboardingView.swift in Sources */,
+				0EEA12612F510DEB006DB819 /* QuranView.swift in Sources */,
+				0EEA12632F510DEB006DB819 /* QuranStore.swift in Sources */,
+				0EEA12652F510DEB006DB819 /* GreetingFontCycle.swift in Sources */,
+				0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */,
+				0EEA12672F510DEB006DB819 /* QuranModels.swift in Sources */,
+				0EEA12692F510DEB006DB819 /* QuranArabicFont.swift in Sources */,
+				C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */,
+				0EEA126B2F510DEB006DB819 /* QuranTranslation.swift in Sources */,
+				0EEA12722F510DEB006DB819 /* AlquranAPI.swift in Sources */,
+				0EEA12742F510DEB006DB819 /* QuranWord.swift in Sources */,
+				0EEA12762F510DEB006DB819 /* FlashcardView.swift in Sources */,
+				DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */,
+				DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */,
+				DD00052F510DEB006DB81901 /* LearningDashboardView.swift in Sources */,
+				DD00072F510DEB006DB81901 /* FlashcardSessionView.swift in Sources */,
+				0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */,
+				0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */,
+				0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */,
+				0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */,
+				DD00092F510DEB006DB81901 /* PrayerTutorialModels.swift in Sources */,
+				DD000B2F510DEB006DB81901 /* PrayerTutorialViewModel.swift in Sources */,
+				DD000D2F510DEB006DB81901 /* PrayerSelectionView.swift in Sources */,
+				DD000F2F510DEB006DB81901 /* PrayerTutorialView.swift in Sources */,
+				A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */,
+				A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */,
+				A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0EEA121B2F510DB9006DB819 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		0EEA121C2F510DB9006DB819 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		0EEA121E2F510DB9006DB819 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DeenApp/DeenApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = WAM6U438Y8;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DeenApp/Info.plist;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		0EEA121F2F510DB9006DB819 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DeenApp/DeenApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = WAM6U438Y8;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DeenApp/Info.plist;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0EEA120D2F510DB8006DB819 /* Build configuration list for PBXProject "DailyDeen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0EEA121B2F510DB9006DB819 /* Debug */,
+				0EEA121C2F510DB9006DB819 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0EEA121D2F510DB9006DB819 /* Build configuration list for PBXNativeTarget "DailyDee" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0EEA121E2F510DB9006DB819 /* Debug */,
+				0EEA121F2F510DB9006DB819 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0EEA120A2F510DB8006DB819 /* Project object */;
+}

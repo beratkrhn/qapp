@@ -4,12 +4,20 @@
 //
 
 import SwiftUI
+<<<<<<< HEAD
 
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState
     @State private var srsViewModel = SRSViewModel()
     @State private var prayerTutorialViewModel = PrayerTutorialViewModel()
     @State private var showSettings = false
+=======
+import SwiftData
+
+struct MainTabView: View {
+    @EnvironmentObject var appState: AppState
+    @Environment(\.modelContext) private var modelContext
+>>>>>>> origin/claude/adoring-banach
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -19,6 +27,7 @@ struct MainTabView: View {
             Group {
                 switch appState.selectedTab {
                 case .start:
+<<<<<<< HEAD
                     DashboardView(showSettings: $showSettings)
                 case .quran:
                     QuranView()
@@ -28,6 +37,17 @@ struct MainTabView: View {
                 case .gebet:
                     PrayerSelectionView()
                         .environment(prayerTutorialViewModel)
+=======
+                    DashboardView()
+                case .quran:
+                    PlaceholderView(title: "Quran", subtitle: "Weiterlesen")
+                case .lernen:
+                    PlaceholderView(title: "Lernen", subtitle: "Vokabeln & Karteikarten")
+                case .gebet:
+                    PlaceholderView(title: "Gebet", subtitle: "Gebetszeiten & Qibla")
+                case .hifz:
+                    HifzMainView(modelContext: modelContext)
+>>>>>>> origin/claude/adoring-banach
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -35,9 +55,12 @@ struct MainTabView: View {
             TabBarView()
         }
         .ignoresSafeArea(edges: .bottom)
+<<<<<<< HEAD
         .sheet(isPresented: $showSettings) {
             SettingsView()
         }
+=======
+>>>>>>> origin/claude/adoring-banach
     }
 }
 

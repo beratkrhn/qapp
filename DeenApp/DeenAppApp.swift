@@ -6,6 +6,10 @@
 //
 
 import SwiftUI
+<<<<<<< HEAD
+=======
+import SwiftData
+>>>>>>> origin/claude/adoring-banach
 
 @main
 struct DeenAppApp: App {
@@ -14,6 +18,7 @@ struct DeenAppApp: App {
 
     var body: some Scene {
         WindowGroup {
+<<<<<<< HEAD
             Group {
                 if appState.hasCompletedOnboarding {
                     MainTabView()
@@ -53,5 +58,17 @@ struct DeenAppApp: App {
                 )
             }
         }
+=======
+            MainTabView()
+                .environmentObject(prayerTimeManager)
+                .environmentObject(appState)
+                .preferredColorScheme(.dark)
+        }
+        .modelContainer(for: [
+            SRSItem.self,
+            DailyActivity.self,
+            HifzProgress.self
+        ])
+>>>>>>> origin/claude/adoring-banach
     }
 }

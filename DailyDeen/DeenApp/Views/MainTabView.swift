@@ -1,0 +1,65 @@
+//
+//  MainTabView.swift
+//  DeenApp
+//
+
+import SwiftUI
+
+struct MainTabView: View {
+    @EnvironmentObject var appState: AppState
+    @State private var srsViewModel = SRSViewModel()
+    @State private var prayerTutorialViewModel = PrayerTutorialViewModel()
+    @State private var showSettings = false
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            Theme.background
+                .ignoresSafeArea()
+
+            Group {
+                switch appState.selectedTab {
+                case .start:
+                    DashboardView(showSettings: $showSettings)
+                case .quran:
+                    QuranView()
+                case .lernen:
+                    LearningDashboardView()
+                        .environment(srsViewModel)
+                case .gebet:
+                    PrayerSelectionView()
+                        .environment(prayerTutorialViewModel)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            TabBarView()
+        }
+        .ignoresSafeArea(edges: .bottom)
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+        }
+    }
+}
+
+private struct PlaceholderView: View {
+    let title: String
+    let subtitle: String
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Text(title)
+                .font(.title.weight(.semibold))
+                .foregroundColor(Theme.textPrimary)
+            Text(subtitle)
+                .font(.subheadline)
+                .foregroundColor(Theme.textSecondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+#Preview {
+    MainTabView()
+        .environmentObject(PrayerTimeManager())
+        .environmentObject(AppState())
+}

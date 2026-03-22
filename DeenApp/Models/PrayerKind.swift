@@ -6,11 +6,17 @@
 import Foundation
 import SwiftUI
 
+<<<<<<< HEAD
 /// Die täglichen Gebete + Imsak und Shuruuq
 enum PrayerKind: String, CaseIterable, Codable {
     case imsak = "Imsak"
     case fajr = "Fajr"
     case shuruuq = "Sunrise"
+=======
+/// Die 5 täglichen Gebete (API: Fajr, Dhuhr, Asr, Maghrib, Isha)
+enum PrayerKind: String, CaseIterable, Codable {
+    case fajr = "Fajr"
+>>>>>>> origin/claude/adoring-banach
     case dhuhr = "Dhuhr"
     case asr = "Asr"
     case maghrib = "Maghrib"
@@ -19,9 +25,13 @@ enum PrayerKind: String, CaseIterable, Codable {
     /// Anzeigename (z. B. deutsch/türkisch)
     var displayName: String {
         switch self {
+<<<<<<< HEAD
         case .imsak: return "İmsak"
         case .fajr: return "Sabah"
         case .shuruuq: return "Güneş"
+=======
+        case .fajr: return "Sabah"
+>>>>>>> origin/claude/adoring-banach
         case .dhuhr: return "Öğle"
         case .asr: return "İkindi"
         case .maghrib: return "Akşam"
@@ -29,6 +39,7 @@ enum PrayerKind: String, CaseIterable, Codable {
         }
     }
 
+<<<<<<< HEAD
     var germanName: String {
         switch self {
         case .imsak: return "Imsak (Morgengebet)"
@@ -87,10 +98,20 @@ enum PrayerKind: String, CaseIterable, Codable {
         case .dhuhr: return "sun.max.fill"
         case .asr: return "cloud.sun.fill"
         case .maghrib: return "sunset.fill"
+=======
+    /// SF Symbol oder Icon-Hinweis für die View
+    var iconName: String {
+        switch self {
+        case .fajr: return "flag.fill"
+        case .dhuhr: return "sun.max.fill"
+        case .asr: return "cloud.sun.fill"
+        case .maghrib: return "building.2.fill"
+>>>>>>> origin/claude/adoring-banach
         case .isha: return "moon.fill"
         }
     }
 
+<<<<<<< HEAD
     /// Farbe für das Icon
     var iconColor: Color {
         switch self {
@@ -101,6 +122,13 @@ enum PrayerKind: String, CaseIterable, Codable {
         case .asr:     return Color(hex: "FFB74D")
         case .maghrib: return Color(hex: "FF7043")
         case .isha:    return Theme.textSecondary
+=======
+    /// Farbe für das Fajr-Flaggen-Icon
+    var iconColor: Color {
+        switch self {
+        case .fajr: return Theme.iconFajr
+        default: return Theme.textSecondary
+>>>>>>> origin/claude/adoring-banach
         }
     }
 }

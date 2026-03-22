@@ -1,0 +1,4242 @@
+[
+    {
+        "id": "1",
+        "arabic": "مِن",
+        "frequency": 3226,
+        "partOfSpeech": "Preposition",
+        "percentage": 4.35,
+        "meaningDE": "Übersetzung für مِن fehlt"
+    },
+    {
+        "id": "2",
+        "arabic": "ٱللَّه",
+        "frequency": 2699,
+        "partOfSpeech": "Proper noun",
+        "percentage": 7.99,
+        "meaningDE": "Übersetzung für ٱللَّه fehlt"
+    },
+    {
+        "id": "3",
+        "arabic": "فِى",
+        "frequency": 1701,
+        "partOfSpeech": "Preposition",
+        "percentage": 10.29,
+        "meaningDE": "Übersetzung für فِى fehlt"
+    },
+    {
+        "id": "4",
+        "arabic": "إِنّ",
+        "frequency": 1682,
+        "partOfSpeech": "Accusative particle",
+        "percentage": 12.56,
+        "meaningDE": "Übersetzung für إِنّ fehlt"
+    },
+    {
+        "id": "5",
+        "arabic": "قَالَ",
+        "frequency": 1618,
+        "partOfSpeech": "Verb",
+        "percentage": 14.74,
+        "meaningDE": "Übersetzung für قَالَ fehlt"
+    },
+    {
+        "id": "6",
+        "arabic": "عَلَىٰ",
+        "frequency": 1445,
+        "partOfSpeech": "Preposition",
+        "percentage": 16.69,
+        "meaningDE": "Übersetzung für عَلَىٰ fehlt"
+    },
+    {
+        "id": "7",
+        "arabic": "ٱلَّذِى",
+        "frequency": 1442,
+        "partOfSpeech": "Relative pronoun",
+        "percentage": 18.64,
+        "meaningDE": "Übersetzung für ٱلَّذِى fehlt"
+    },
+    {
+        "id": "8",
+        "arabic": "لَا",
+        "frequency": 1364,
+        "partOfSpeech": "Negative particle",
+        "percentage": 20.48,
+        "meaningDE": "Übersetzung für لَا fehlt"
+    },
+    {
+        "id": "9",
+        "arabic": "كَانَ",
+        "frequency": 1358,
+        "partOfSpeech": "Verb",
+        "percentage": 22.31,
+        "meaningDE": "Übersetzung für كَانَ fehlt"
+    },
+    {
+        "id": "10",
+        "arabic": "مَا",
+        "frequency": 1266,
+        "partOfSpeech": "Relative pronoun",
+        "percentage": 24.02,
+        "meaningDE": "Übersetzung für مَا fehlt"
+    },
+    {
+        "id": "11",
+        "arabic": "رَبّ",
+        "frequency": 975,
+        "partOfSpeech": "Noun",
+        "percentage": 25.33,
+        "meaningDE": "Übersetzung für رَبّ fehlt"
+    },
+    {
+        "id": "12",
+        "arabic": "إِلَىٰ",
+        "frequency": 742,
+        "partOfSpeech": "Preposition",
+        "percentage": 26.33,
+        "meaningDE": "Übersetzung für إِلَىٰ fehlt"
+    },
+    {
+        "id": "13",
+        "arabic": "مَا",
+        "frequency": 704,
+        "partOfSpeech": "Negative particle",
+        "percentage": 27.28,
+        "meaningDE": "Übersetzung für مَا fehlt"
+    },
+    {
+        "id": "14",
+        "arabic": "مَن",
+        "frequency": 606,
+        "partOfSpeech": "Relative pronoun",
+        "percentage": 28.1,
+        "meaningDE": "Übersetzung für مَن fehlt"
+    },
+    {
+        "id": "15",
+        "arabic": "إِن",
+        "frequency": 578,
+        "partOfSpeech": "Conditional particle",
+        "percentage": 28.88,
+        "meaningDE": "Übersetzung für إِن fehlt"
+    },
+    {
+        "id": "16",
+        "arabic": "أَن",
+        "frequency": 578,
+        "partOfSpeech": "Subordinating conjunction",
+        "percentage": 29.66,
+        "meaningDE": "Übersetzung für أَن fehlt"
+    },
+    {
+        "id": "17",
+        "arabic": "إِلَّا",
+        "frequency": 558,
+        "partOfSpeech": "Restriction particle",
+        "percentage": 30.41,
+        "meaningDE": "Übersetzung für إِلَّا fehlt"
+    },
+    {
+        "id": "18",
+        "arabic": "ءَامَنَ",
+        "frequency": 537,
+        "partOfSpeech": "Verb",
+        "percentage": 31.14,
+        "meaningDE": "Übersetzung für ءَامَنَ fehlt"
+    },
+    {
+        "id": "19",
+        "arabic": "ذَٰلِك",
+        "frequency": 520,
+        "partOfSpeech": "Demonstrative pronoun",
+        "percentage": 31.84,
+        "meaningDE": "Übersetzung für ذَٰلِك fehlt"
+    },
+    {
+        "id": "20",
+        "arabic": "عَن",
+        "frequency": 465,
+        "partOfSpeech": "Preposition",
+        "percentage": 32.47,
+        "meaningDE": "Übersetzung für عَن fehlt"
+    },
+    {
+        "id": "21",
+        "arabic": "أَرْض",
+        "frequency": 461,
+        "partOfSpeech": "Noun",
+        "percentage": 33.09,
+        "meaningDE": "Übersetzung für أَرْض fehlt"
+    },
+    {
+        "id": "22",
+        "arabic": "قَد",
+        "frequency": 406,
+        "partOfSpeech": "Particle of certainty",
+        "percentage": 33.64,
+        "meaningDE": "Übersetzung für قَد fehlt"
+    },
+    {
+        "id": "23",
+        "arabic": "إِذَا",
+        "frequency": 405,
+        "partOfSpeech": "Time adverb",
+        "percentage": 34.18,
+        "meaningDE": "Übersetzung für إِذَا fehlt"
+    },
+    {
+        "id": "24",
+        "arabic": "قَوْم",
+        "frequency": 383,
+        "partOfSpeech": "Noun",
+        "percentage": 34.7,
+        "meaningDE": "Übersetzung für قَوْم fehlt"
+    },
+    {
+        "id": "25",
+        "arabic": "ءَايَة",
+        "frequency": 382,
+        "partOfSpeech": "Noun",
+        "percentage": 35.21,
+        "meaningDE": "Übersetzung für ءَايَة fehlt"
+    },
+    {
+        "id": "26",
+        "arabic": "عَلِمَ",
+        "frequency": 382,
+        "partOfSpeech": "Verb",
+        "percentage": 35.73,
+        "meaningDE": "Übersetzung für عَلِمَ fehlt"
+    },
+    {
+        "id": "27",
+        "arabic": "أَنّ",
+        "frequency": 362,
+        "partOfSpeech": "Accusative particle",
+        "percentage": 36.22,
+        "meaningDE": "Übersetzung für أَنّ fehlt"
+    },
+    {
+        "id": "28",
+        "arabic": "كُلّ",
+        "frequency": 358,
+        "partOfSpeech": "Noun",
+        "percentage": 36.7,
+        "meaningDE": "Übersetzung für كُلّ fehlt"
+    },
+    {
+        "id": "29",
+        "arabic": "لَم",
+        "frequency": 353,
+        "partOfSpeech": "Negative particle",
+        "percentage": 37.18,
+        "meaningDE": "Übersetzung für لَم fehlt"
+    },
+    {
+        "id": "30",
+        "arabic": "جَعَلَ",
+        "frequency": 340,
+        "partOfSpeech": "Verb",
+        "percentage": 37.64,
+        "meaningDE": "Übersetzung für جَعَلَ fehlt"
+    },
+    {
+        "id": "31",
+        "arabic": "ثُمّ",
+        "frequency": 338,
+        "partOfSpeech": "Coordinating conjunction",
+        "percentage": 38.09,
+        "meaningDE": "Übersetzung für ثُمّ fehlt"
+    },
+    {
+        "id": "32",
+        "arabic": "رَسُول",
+        "frequency": 332,
+        "partOfSpeech": "Noun",
+        "percentage": 38.54,
+        "meaningDE": "Übersetzung für رَسُول fehlt"
+    },
+    {
+        "id": "33",
+        "arabic": "لَا",
+        "frequency": 327,
+        "partOfSpeech": "Prohibition particle",
+        "percentage": 38.98,
+        "meaningDE": "Übersetzung für لَا fehlt"
+    },
+    {
+        "id": "34",
+        "arabic": "يَوْم",
+        "frequency": 325,
+        "partOfSpeech": "Noun",
+        "percentage": 39.42,
+        "meaningDE": "Übersetzung für يَوْم fehlt"
+    },
+    {
+        "id": "35",
+        "arabic": "عَذَاب",
+        "frequency": 322,
+        "partOfSpeech": "Noun",
+        "percentage": 39.85,
+        "meaningDE": "Übersetzung für عَذَاب fehlt"
+    },
+    {
+        "id": "36",
+        "arabic": "هَٰذَا",
+        "frequency": 317,
+        "partOfSpeech": "Demonstrative pronoun",
+        "percentage": 40.28,
+        "meaningDE": "Übersetzung für هَٰذَا fehlt"
+    },
+    {
+        "id": "37",
+        "arabic": "سَمَآء",
+        "frequency": 310,
+        "partOfSpeech": "Noun",
+        "percentage": 40.7,
+        "meaningDE": "Übersetzung für سَمَآء fehlt"
+    },
+    {
+        "id": "38",
+        "arabic": "نَفْس",
+        "frequency": 295,
+        "partOfSpeech": "Noun",
+        "percentage": 41.1,
+        "meaningDE": "Übersetzung für نَفْس fehlt"
+    },
+    {
+        "id": "39",
+        "arabic": "كَفَرَ",
+        "frequency": 289,
+        "partOfSpeech": "Verb",
+        "percentage": 41.49,
+        "meaningDE": "Übersetzung für كَفَرَ fehlt"
+    },
+    {
+        "id": "40",
+        "arabic": "شَىْء",
+        "frequency": 283,
+        "partOfSpeech": "Noun",
+        "percentage": 41.87,
+        "meaningDE": "Übersetzung für شَىْء fehlt"
+    },
+    {
+        "id": "41",
+        "arabic": "أَو",
+        "frequency": 280,
+        "partOfSpeech": "Coordinating conjunction",
+        "percentage": 42.25,
+        "meaningDE": "Übersetzung für أَو fehlt"
+    },
+    {
+        "id": "42",
+        "arabic": "جَآءَ",
+        "frequency": 278,
+        "partOfSpeech": "Verb",
+        "percentage": 42.62,
+        "meaningDE": "Übersetzung für جَآءَ fehlt"
+    },
+    {
+        "id": "43",
+        "arabic": "عَمِلَ",
+        "frequency": 276,
+        "partOfSpeech": "Verb",
+        "percentage": 42.99,
+        "meaningDE": "Übersetzung für عَمِلَ fehlt"
+    },
+    {
+        "id": "44",
+        "arabic": "آتَى",
+        "frequency": 271,
+        "partOfSpeech": "Verb",
+        "percentage": 43.36,
+        "meaningDE": "Übersetzung für آتَى fehlt"
+    },
+    {
+        "id": "45",
+        "arabic": "رَءَا",
+        "frequency": 271,
+        "partOfSpeech": "Verb",
+        "percentage": 43.73,
+        "meaningDE": "Übersetzung für رَءَا fehlt"
+    },
+    {
+        "id": "46",
+        "arabic": "أَتَى",
+        "frequency": 264,
+        "partOfSpeech": "Verb",
+        "percentage": 44.08,
+        "meaningDE": "Übersetzung für أَتَى fehlt"
+    },
+    {
+        "id": "47",
+        "arabic": "كِتَٰب",
+        "frequency": 260,
+        "partOfSpeech": "Noun",
+        "percentage": 44.43,
+        "meaningDE": "Übersetzung für كِتَٰب fehlt"
+    },
+    {
+        "id": "48",
+        "arabic": "بَيْن",
+        "frequency": 243,
+        "partOfSpeech": "Location adverb",
+        "percentage": 44.76,
+        "meaningDE": "Übersetzung für بَيْن fehlt"
+    },
+    {
+        "id": "49",
+        "arabic": "حَقّ",
+        "frequency": 242,
+        "partOfSpeech": "Noun",
+        "percentage": 45.09,
+        "meaningDE": "Übersetzung für حَقّ fehlt"
+    },
+    {
+        "id": "50",
+        "arabic": "نَّاس",
+        "frequency": 241,
+        "partOfSpeech": "Noun",
+        "percentage": 45.41,
+        "meaningDE": "Übersetzung für نَّاس fehlt"
+    },
+    {
+        "id": "51",
+        "arabic": "إِذ",
+        "frequency": 239,
+        "partOfSpeech": "Time adverb",
+        "percentage": 45.73,
+        "meaningDE": "Übersetzung für إِذ fehlt"
+    },
+    {
+        "id": "52",
+        "arabic": "شَآءَ",
+        "frequency": 236,
+        "partOfSpeech": "Verb",
+        "percentage": 46.05,
+        "meaningDE": "Übersetzung für شَآءَ fehlt"
+    },
+    {
+        "id": "53",
+        "arabic": "أُولَٰٓئِك",
+        "frequency": 204,
+        "partOfSpeech": "Demonstrative pronoun",
+        "percentage": 46.33,
+        "meaningDE": "Übersetzung für أُولَٰٓئِك fehlt"
+    },
+    {
+        "id": "54",
+        "arabic": "قَبْل",
+        "frequency": 197,
+        "partOfSpeech": "Noun",
+        "percentage": 46.59,
+        "meaningDE": "Übersetzung für قَبْل fehlt"
+    },
+    {
+        "id": "55",
+        "arabic": "مُؤْمِن",
+        "frequency": 195,
+        "partOfSpeech": "Noun",
+        "percentage": 46.86,
+        "meaningDE": "Übersetzung für مُؤْمِن fehlt"
+    },
+    {
+        "id": "56",
+        "arabic": "لَو",
+        "frequency": 184,
+        "partOfSpeech": "Conditional particle",
+        "percentage": 47.1,
+        "meaningDE": "Übersetzung für لَو fehlt"
+    },
+    {
+        "id": "57",
+        "arabic": "مَن",
+        "frequency": 184,
+        "partOfSpeech": "Conditional particle",
+        "percentage": 47.35,
+        "meaningDE": "Übersetzung für مَن fehlt"
+    },
+    {
+        "id": "58",
+        "arabic": "خَلَقَ",
+        "frequency": 184,
+        "partOfSpeech": "Verb",
+        "percentage": 47.6,
+        "meaningDE": "Übersetzung für خَلَقَ fehlt"
+    },
+    {
+        "id": "59",
+        "arabic": "أَنزَلَ",
+        "frequency": 183,
+        "partOfSpeech": "Verb",
+        "percentage": 47.85,
+        "meaningDE": "Übersetzung für أَنزَلَ fehlt"
+    },
+    {
+        "id": "60",
+        "arabic": "سَبِيل",
+        "frequency": 176,
+        "partOfSpeech": "Noun",
+        "percentage": 48.09,
+        "meaningDE": "Übersetzung für سَبِيل fehlt"
+    },
+    {
+        "id": "61",
+        "arabic": "كَذَّبَ",
+        "frequency": 176,
+        "partOfSpeech": "Verb",
+        "percentage": 48.32,
+        "meaningDE": "Übersetzung für كَذَّبَ fehlt"
+    },
+    {
+        "id": "62",
+        "arabic": "دَعَا",
+        "frequency": 170,
+        "partOfSpeech": "Verb",
+        "percentage": 48.55,
+        "meaningDE": "Übersetzung für دَعَا fehlt"
+    },
+    {
+        "id": "63",
+        "arabic": "أَمْر",
+        "frequency": 166,
+        "partOfSpeech": "Noun",
+        "percentage": 48.78,
+        "meaningDE": "Übersetzung für أَمْر fehlt"
+    },
+    {
+        "id": "64",
+        "arabic": "ٱتَّقَىٰ",
+        "frequency": 166,
+        "partOfSpeech": "Verb",
+        "percentage": 49.0,
+        "meaningDE": "Übersetzung für ٱتَّقَىٰ fehlt"
+    },
+    {
+        "id": "65",
+        "arabic": "عِند",
+        "frequency": 160,
+        "partOfSpeech": "Location adverb",
+        "percentage": 49.22,
+        "meaningDE": "Übersetzung für عِند fehlt"
+    },
+    {
+        "id": "66",
+        "arabic": "مَع",
+        "frequency": 159,
+        "partOfSpeech": "Location adverb",
+        "percentage": 49.43,
+        "meaningDE": "Übersetzung für مَع fehlt"
+    },
+    {
+        "id": "67",
+        "arabic": "بَعْض",
+        "frequency": 157,
+        "partOfSpeech": "Noun",
+        "percentage": 49.64,
+        "meaningDE": "Übersetzung für بَعْض fehlt"
+    },
+    {
+        "id": "68",
+        "arabic": "لَمَّا",
+        "frequency": 156,
+        "partOfSpeech": "Time adverb",
+        "percentage": 49.85,
+        "meaningDE": "Übersetzung für لَمَّا fehlt"
+    },
+    {
+        "id": "69",
+        "arabic": "أَيُّهَا",
+        "frequency": 153,
+        "partOfSpeech": "Noun",
+        "percentage": 50.06,
+        "meaningDE": "Übersetzung für أَيُّهَا fehlt"
+    },
+    {
+        "id": "70",
+        "arabic": "خَيْر",
+        "frequency": 148,
+        "partOfSpeech": "Noun",
+        "percentage": 50.26,
+        "meaningDE": "Übersetzung für خَيْر fehlt"
+    },
+    {
+        "id": "71",
+        "arabic": "إِلَٰه",
+        "frequency": 147,
+        "partOfSpeech": "Noun",
+        "percentage": 50.46,
+        "meaningDE": "Übersetzung für إِلَٰه fehlt"
+    },
+    {
+        "id": "72",
+        "arabic": "نَار",
+        "frequency": 145,
+        "partOfSpeech": "Noun",
+        "percentage": 50.65,
+        "meaningDE": "Übersetzung für نَار fehlt"
+    },
+    {
+        "id": "73",
+        "arabic": "غَيْر",
+        "frequency": 144,
+        "partOfSpeech": "Noun",
+        "percentage": 50.85,
+        "meaningDE": "Übersetzung für غَيْر fehlt"
+    },
+    {
+        "id": "74",
+        "arabic": "هَدَى",
+        "frequency": 144,
+        "partOfSpeech": "Verb",
+        "percentage": 51.04,
+        "meaningDE": "Übersetzung für هَدَى fehlt"
+    },
+    {
+        "id": "75",
+        "arabic": "أَرَادَ",
+        "frequency": 139,
+        "partOfSpeech": "Verb",
+        "percentage": 51.23,
+        "meaningDE": "Übersetzung für أَرَادَ fehlt"
+    },
+    {
+        "id": "76",
+        "arabic": "أَم",
+        "frequency": 137,
+        "partOfSpeech": "Coordinating conjunction",
+        "percentage": 51.41,
+        "meaningDE": "Übersetzung für أَم fehlt"
+    },
+    {
+        "id": "77",
+        "arabic": "مُوسَىٰ",
+        "frequency": 136,
+        "partOfSpeech": "Proper noun",
+        "percentage": 51.6,
+        "meaningDE": "Übersetzung für مُوسَىٰ fehlt"
+    },
+    {
+        "id": "78",
+        "arabic": "ٱتَّبَعَ",
+        "frequency": 136,
+        "partOfSpeech": "Verb",
+        "percentage": 51.78,
+        "meaningDE": "Übersetzung für ٱتَّبَعَ fehlt"
+    },
+    {
+        "id": "79",
+        "arabic": "دُون",
+        "frequency": 135,
+        "partOfSpeech": "Noun",
+        "percentage": 51.96,
+        "meaningDE": "Übersetzung für دُون fehlt"
+    },
+    {
+        "id": "80",
+        "arabic": "آخِر",
+        "frequency": 133,
+        "partOfSpeech": "Noun",
+        "percentage": 52.14,
+        "meaningDE": "Übersetzung für آخِر fehlt"
+    },
+    {
+        "id": "81",
+        "arabic": "بَعْد",
+        "frequency": 133,
+        "partOfSpeech": "Noun",
+        "percentage": 52.32,
+        "meaningDE": "Übersetzung für بَعْد fehlt"
+    },
+    {
+        "id": "82",
+        "arabic": "قَلْب",
+        "frequency": 132,
+        "partOfSpeech": "Noun",
+        "percentage": 52.5,
+        "meaningDE": "Übersetzung für قَلْب fehlt"
+    },
+    {
+        "id": "83",
+        "arabic": "عَبْد",
+        "frequency": 131,
+        "partOfSpeech": "Noun",
+        "percentage": 52.68,
+        "meaningDE": "Übersetzung für عَبْد fehlt"
+    },
+    {
+        "id": "84",
+        "arabic": "أَرْسَلَ",
+        "frequency": 130,
+        "partOfSpeech": "Verb",
+        "percentage": 52.85,
+        "meaningDE": "Übersetzung für أَرْسَلَ fehlt"
+    },
+    {
+        "id": "85",
+        "arabic": "أَهْل",
+        "frequency": 127,
+        "partOfSpeech": "Noun",
+        "percentage": 53.02,
+        "meaningDE": "Übersetzung für أَهْل fehlt"
+    },
+    {
+        "id": "86",
+        "arabic": "أَخَذَ",
+        "frequency": 127,
+        "partOfSpeech": "Verb",
+        "percentage": 53.19,
+        "meaningDE": "Übersetzung für أَخَذَ fehlt"
+    },
+    {
+        "id": "87",
+        "arabic": "ٱتَّخَذَ",
+        "frequency": 124,
+        "partOfSpeech": "Verb",
+        "percentage": 53.36,
+        "meaningDE": "Übersetzung für ٱتَّخَذَ fehlt"
+    },
+    {
+        "id": "88",
+        "arabic": "لَعَلّ",
+        "frequency": 123,
+        "partOfSpeech": "Accusative particle",
+        "percentage": 53.53,
+        "meaningDE": "Übersetzung für لَعَلّ fehlt"
+    },
+    {
+        "id": "89",
+        "arabic": "بَل",
+        "frequency": 122,
+        "partOfSpeech": "Retraction particle",
+        "percentage": 53.69,
+        "meaningDE": "Übersetzung für بَل fehlt"
+    },
+    {
+        "id": "90",
+        "arabic": "عَبَدَ",
+        "frequency": 122,
+        "partOfSpeech": "Verb",
+        "percentage": 53.86,
+        "meaningDE": "Übersetzung für عَبَدَ fehlt"
+    },
+    {
+        "id": "91",
+        "arabic": "يَد",
+        "frequency": 120,
+        "partOfSpeech": "Noun",
+        "percentage": 54.02,
+        "meaningDE": "Übersetzung für يَد fehlt"
+    },
+    {
+        "id": "92",
+        "arabic": "كَٰفِرُون",
+        "frequency": 119,
+        "partOfSpeech": "Noun",
+        "percentage": 54.18,
+        "meaningDE": "Übersetzung für كَٰفِرُون fehlt"
+    },
+    {
+        "id": "93",
+        "arabic": "إِن",
+        "frequency": 114,
+        "partOfSpeech": "Negative particle",
+        "percentage": 54.33,
+        "meaningDE": "Übersetzung für إِن fehlt"
+    },
+    {
+        "id": "94",
+        "arabic": "رَحْمَة",
+        "frequency": 114,
+        "partOfSpeech": "Noun",
+        "percentage": 54.49,
+        "meaningDE": "Übersetzung für رَحْمَة fehlt"
+    },
+    {
+        "id": "95",
+        "arabic": "رَّحِيم",
+        "frequency": 112,
+        "partOfSpeech": "Adjective",
+        "percentage": 54.64,
+        "meaningDE": "Übersetzung für رَّحِيم fehlt"
+    },
+    {
+        "id": "96",
+        "arabic": "ظَلَمَ",
+        "frequency": 110,
+        "partOfSpeech": "Verb",
+        "percentage": 54.79,
+        "meaningDE": "Übersetzung für ظَلَمَ fehlt"
+    },
+    {
+        "id": "97",
+        "arabic": "سَأَلَ",
+        "frequency": 106,
+        "partOfSpeech": "Verb",
+        "percentage": 54.93,
+        "meaningDE": "Übersetzung für سَأَلَ fehlt"
+    },
+    {
+        "id": "98",
+        "arabic": "وَجَدَ",
+        "frequency": 106,
+        "partOfSpeech": "Verb",
+        "percentage": 55.07,
+        "meaningDE": "Übersetzung für وَجَدَ fehlt"
+    },
+    {
+        "id": "99",
+        "arabic": "أَجْر",
+        "frequency": 105,
+        "partOfSpeech": "Noun",
+        "percentage": 55.21,
+        "meaningDE": "Übersetzung für أَجْر fehlt"
+    },
+    {
+        "id": "100",
+        "arabic": "ظَالِم",
+        "frequency": 105,
+        "partOfSpeech": "Noun",
+        "percentage": 55.36,
+        "meaningDE": "Übersetzung für ظَالِم fehlt"
+    },
+    {
+        "id": "101",
+        "arabic": "عِلْم",
+        "frequency": 105,
+        "partOfSpeech": "Noun",
+        "percentage": 55.5,
+        "meaningDE": "Übersetzung für عِلْم fehlt"
+    },
+    {
+        "id": "102",
+        "arabic": "عَظِيم",
+        "frequency": 104,
+        "partOfSpeech": "Adjective",
+        "percentage": 55.64,
+        "meaningDE": "Übersetzung für عَظِيم fehlt"
+    },
+    {
+        "id": "103",
+        "arabic": "لَن",
+        "frequency": 104,
+        "partOfSpeech": "Negative particle",
+        "percentage": 55.78,
+        "meaningDE": "Übersetzung für لَن fehlt"
+    },
+    {
+        "id": "104",
+        "arabic": "إِلَّا",
+        "frequency": 102,
+        "partOfSpeech": "Exceptive particle",
+        "percentage": 55.92,
+        "meaningDE": "Übersetzung für إِلَّا fehlt"
+    },
+    {
+        "id": "105",
+        "arabic": "عَلِيم",
+        "frequency": 101,
+        "partOfSpeech": "Adjective",
+        "percentage": 56.05,
+        "meaningDE": "Übersetzung für عَلِيم fehlt"
+    },
+    {
+        "id": "106",
+        "arabic": "أَخْرَجَ",
+        "frequency": 99,
+        "partOfSpeech": "Verb",
+        "percentage": 56.19,
+        "meaningDE": "Übersetzung für أَخْرَجَ fehlt"
+    },
+    {
+        "id": "107",
+        "arabic": "جَنَّة",
+        "frequency": 96,
+        "partOfSpeech": "Noun",
+        "percentage": 56.32,
+        "meaningDE": "Übersetzung für جَنَّة fehlt"
+    },
+    {
+        "id": "108",
+        "arabic": "حَتَّىٰ",
+        "frequency": 95,
+        "partOfSpeech": "Preposition",
+        "percentage": 56.44,
+        "meaningDE": "Übersetzung für حَتَّىٰ fehlt"
+    },
+    {
+        "id": "109",
+        "arabic": "هَل",
+        "frequency": 93,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 56.57,
+        "meaningDE": "Übersetzung für هَل fehlt"
+    },
+    {
+        "id": "110",
+        "arabic": "أَكَلَ",
+        "frequency": 93,
+        "partOfSpeech": "Verb",
+        "percentage": 56.69,
+        "meaningDE": "Übersetzung für أَكَلَ fehlt"
+    },
+    {
+        "id": "111",
+        "arabic": "دِين",
+        "frequency": 92,
+        "partOfSpeech": "Noun",
+        "percentage": 56.82,
+        "meaningDE": "Übersetzung für دِين fehlt"
+    },
+    {
+        "id": "112",
+        "arabic": "قَوْل",
+        "frequency": 92,
+        "partOfSpeech": "Noun",
+        "percentage": 56.94,
+        "meaningDE": "Übersetzung für قَوْل fehlt"
+    },
+    {
+        "id": "113",
+        "arabic": "مَا",
+        "frequency": 92,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 57.07,
+        "meaningDE": "Übersetzung für مَا fehlt"
+    },
+    {
+        "id": "114",
+        "arabic": "ذُو",
+        "frequency": 90,
+        "partOfSpeech": "Noun",
+        "percentage": 57.19,
+        "meaningDE": "Übersetzung für ذُو fehlt"
+    },
+    {
+        "id": "115",
+        "arabic": "لَّيْسَ",
+        "frequency": 89,
+        "partOfSpeech": "Verb",
+        "percentage": 57.31,
+        "meaningDE": "Übersetzung für لَّيْسَ fehlt"
+    },
+    {
+        "id": "116",
+        "arabic": "مَلَك",
+        "frequency": 88,
+        "partOfSpeech": "Noun",
+        "percentage": 57.43,
+        "meaningDE": "Übersetzung für مَلَك fehlt"
+    },
+    {
+        "id": "117",
+        "arabic": "فَعَلَ",
+        "frequency": 88,
+        "partOfSpeech": "Verb",
+        "percentage": 57.55,
+        "meaningDE": "Übersetzung für فَعَلَ fehlt"
+    },
+    {
+        "id": "118",
+        "arabic": "مَثَل",
+        "frequency": 87,
+        "partOfSpeech": "Noun",
+        "percentage": 57.66,
+        "meaningDE": "Übersetzung für مَثَل fehlt"
+    },
+    {
+        "id": "119",
+        "arabic": "نَّظَرَ",
+        "frequency": 87,
+        "partOfSpeech": "Verb",
+        "percentage": 57.78,
+        "meaningDE": "Übersetzung für نَّظَرَ fehlt"
+    },
+    {
+        "id": "120",
+        "arabic": "مَال",
+        "frequency": 86,
+        "partOfSpeech": "Noun",
+        "percentage": 57.9,
+        "meaningDE": "Übersetzung für مَال fehlt"
+    },
+    {
+        "id": "121",
+        "arabic": "وَلِىّ",
+        "frequency": 86,
+        "partOfSpeech": "Noun",
+        "percentage": 58.01,
+        "meaningDE": "Übersetzung für وَلِىّ fehlt"
+    },
+    {
+        "id": "122",
+        "arabic": "هُدًى",
+        "frequency": 85,
+        "partOfSpeech": "Noun",
+        "percentage": 58.13,
+        "meaningDE": "Übersetzung für هُدًى fehlt"
+    },
+    {
+        "id": "123",
+        "arabic": "حَكِيم",
+        "frequency": 84,
+        "partOfSpeech": "Adjective",
+        "percentage": 58.24,
+        "meaningDE": "Übersetzung für حَكِيم fehlt"
+    },
+    {
+        "id": "124",
+        "arabic": "فَضْل",
+        "frequency": 84,
+        "partOfSpeech": "Noun",
+        "percentage": 58.35,
+        "meaningDE": "Übersetzung für فَضْل fehlt"
+    },
+    {
+        "id": "125",
+        "arabic": "ذَكَرَ",
+        "frequency": 84,
+        "partOfSpeech": "Verb",
+        "percentage": 58.47,
+        "meaningDE": "Übersetzung für ذَكَرَ fehlt"
+    },
+    {
+        "id": "126",
+        "arabic": "صَلَوٰة",
+        "frequency": 83,
+        "partOfSpeech": "Noun",
+        "percentage": 58.58,
+        "meaningDE": "Übersetzung für صَلَوٰة fehlt"
+    },
+    {
+        "id": "127",
+        "arabic": "خَافَ",
+        "frequency": 83,
+        "partOfSpeech": "Verb",
+        "percentage": 58.69,
+        "meaningDE": "Übersetzung für خَافَ fehlt"
+    },
+    {
+        "id": "128",
+        "arabic": "قَتَلَ",
+        "frequency": 83,
+        "partOfSpeech": "Verb",
+        "percentage": 58.8,
+        "meaningDE": "Übersetzung für قَتَلَ fehlt"
+    },
+    {
+        "id": "129",
+        "arabic": "لَيْل",
+        "frequency": 82,
+        "partOfSpeech": "Noun",
+        "percentage": 58.91,
+        "meaningDE": "Übersetzung für لَيْل fehlt"
+    },
+    {
+        "id": "130",
+        "arabic": "بُنَىّ",
+        "frequency": 80,
+        "partOfSpeech": "Noun",
+        "percentage": 59.02,
+        "meaningDE": "Übersetzung für بُنَىّ fehlt"
+    },
+    {
+        "id": "131",
+        "arabic": "شَيْطَٰن",
+        "frequency": 80,
+        "partOfSpeech": "Proper noun",
+        "percentage": 59.13,
+        "meaningDE": "Übersetzung für شَيْطَٰن fehlt"
+    },
+    {
+        "id": "132",
+        "arabic": "كَيْف",
+        "frequency": 80,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 59.24,
+        "meaningDE": "Übersetzung für كَيْف fehlt"
+    },
+    {
+        "id": "133",
+        "arabic": "يَوْم",
+        "frequency": 80,
+        "partOfSpeech": "Time adverb",
+        "percentage": 59.35,
+        "meaningDE": "Übersetzung für يَوْم fehlt"
+    },
+    {
+        "id": "134",
+        "arabic": "مَا",
+        "frequency": 79,
+        "partOfSpeech": "Subordinating conjunction",
+        "percentage": 59.45,
+        "meaningDE": "Übersetzung für مَا fehlt"
+    },
+    {
+        "id": "135",
+        "arabic": "رَجَعَ",
+        "frequency": 79,
+        "partOfSpeech": "Verb",
+        "percentage": 59.56,
+        "meaningDE": "Übersetzung für رَجَعَ fehlt"
+    },
+    {
+        "id": "136",
+        "arabic": "أَصْحَٰب",
+        "frequency": 78,
+        "partOfSpeech": "Noun",
+        "percentage": 59.66,
+        "meaningDE": "Übersetzung für أَصْحَٰب fehlt"
+    },
+    {
+        "id": "137",
+        "arabic": "أَكْثَر",
+        "frequency": 78,
+        "partOfSpeech": "Noun",
+        "percentage": 59.77,
+        "meaningDE": "Übersetzung für أَكْثَر fehlt"
+    },
+    {
+        "id": "138",
+        "arabic": "سَمِعَ",
+        "frequency": 78,
+        "partOfSpeech": "Verb",
+        "percentage": 59.87,
+        "meaningDE": "Übersetzung für سَمِعَ fehlt"
+    },
+    {
+        "id": "139",
+        "arabic": "تَوَلَّىٰ",
+        "frequency": 78,
+        "partOfSpeech": "Verb",
+        "percentage": 59.98,
+        "meaningDE": "Übersetzung für تَوَلَّىٰ fehlt"
+    },
+    {
+        "id": "140",
+        "arabic": "جَهَنَّم",
+        "frequency": 77,
+        "partOfSpeech": "Proper noun",
+        "percentage": 60.08,
+        "meaningDE": "Übersetzung für جَهَنَّم fehlt"
+    },
+    {
+        "id": "141",
+        "arabic": "أَمَرَ",
+        "frequency": 77,
+        "partOfSpeech": "Verb",
+        "percentage": 60.19,
+        "meaningDE": "Übersetzung für أَمَرَ fehlt"
+    },
+    {
+        "id": "142",
+        "arabic": "حَيَوٰة",
+        "frequency": 76,
+        "partOfSpeech": "Noun",
+        "percentage": 60.29,
+        "meaningDE": "Übersetzung für حَيَوٰة fehlt"
+    },
+    {
+        "id": "143",
+        "arabic": "ذِكْر",
+        "frequency": 76,
+        "partOfSpeech": "Noun",
+        "percentage": 60.39,
+        "meaningDE": "Übersetzung für ذِكْر fehlt"
+    },
+    {
+        "id": "144",
+        "arabic": "زَوْج",
+        "frequency": 76,
+        "partOfSpeech": "Noun",
+        "percentage": 60.49,
+        "meaningDE": "Übersetzung für زَوْج fehlt"
+    },
+    {
+        "id": "145",
+        "arabic": "دَخَلَ",
+        "frequency": 76,
+        "partOfSpeech": "Verb",
+        "percentage": 60.6,
+        "meaningDE": "Übersetzung für دَخَلَ fehlt"
+    },
+    {
+        "id": "146",
+        "arabic": "أَخ",
+        "frequency": 75,
+        "partOfSpeech": "Noun",
+        "percentage": 60.7,
+        "meaningDE": "Übersetzung für أَخ fehlt"
+    },
+    {
+        "id": "147",
+        "arabic": "مِثْل",
+        "frequency": 75,
+        "partOfSpeech": "Noun",
+        "percentage": 60.8,
+        "meaningDE": "Übersetzung für مِثْل fehlt"
+    },
+    {
+        "id": "148",
+        "arabic": "نَّبِىّ",
+        "frequency": 75,
+        "partOfSpeech": "Noun",
+        "percentage": 60.9,
+        "meaningDE": "Übersetzung für نَّبِىّ fehlt"
+    },
+    {
+        "id": "149",
+        "arabic": "أَحَد",
+        "frequency": 74,
+        "partOfSpeech": "Noun",
+        "percentage": 61.0,
+        "meaningDE": "Übersetzung für أَحَد fehlt"
+    },
+    {
+        "id": "150",
+        "arabic": "خَٰلِد",
+        "frequency": 74,
+        "partOfSpeech": "Noun",
+        "percentage": 61.1,
+        "meaningDE": "Übersetzung für خَٰلِد fehlt"
+    },
+    {
+        "id": "151",
+        "arabic": "دُّنْيَا",
+        "frequency": 74,
+        "partOfSpeech": "Adjective",
+        "percentage": 61.2,
+        "meaningDE": "Übersetzung für دُّنْيَا fehlt"
+    },
+    {
+        "id": "152",
+        "arabic": "فِرْعَوْن",
+        "frequency": 74,
+        "partOfSpeech": "Proper noun",
+        "percentage": 61.3,
+        "meaningDE": "Übersetzung für فِرْعَوْن fehlt"
+    },
+    {
+        "id": "153",
+        "arabic": "عَٰلَمِين",
+        "frequency": 73,
+        "partOfSpeech": "Noun",
+        "percentage": 61.4,
+        "meaningDE": "Übersetzung für عَٰلَمِين fehlt"
+    },
+    {
+        "id": "154",
+        "arabic": "جَزَىٰ",
+        "frequency": 73,
+        "partOfSpeech": "Verb",
+        "percentage": 61.5,
+        "meaningDE": "Übersetzung für جَزَىٰ fehlt"
+    },
+    {
+        "id": "155",
+        "arabic": "أَلِيم",
+        "frequency": 72,
+        "partOfSpeech": "Adjective",
+        "percentage": 61.59,
+        "meaningDE": "Übersetzung für أَلِيم fehlt"
+    },
+    {
+        "id": "156",
+        "arabic": "مُّبِين",
+        "frequency": 72,
+        "partOfSpeech": "Noun",
+        "percentage": 61.69,
+        "meaningDE": "Übersetzung für مُّبِين fehlt"
+    },
+    {
+        "id": "157",
+        "arabic": "أَطَاعَ",
+        "frequency": 72,
+        "partOfSpeech": "Verb",
+        "percentage": 61.79,
+        "meaningDE": "Übersetzung für أَطَاعَ fehlt"
+    },
+    {
+        "id": "158",
+        "arabic": "أَوْحَىٰٓ",
+        "frequency": 72,
+        "partOfSpeech": "Verb",
+        "percentage": 61.89,
+        "meaningDE": "Übersetzung für أَوْحَىٰٓ fehlt"
+    },
+    {
+        "id": "159",
+        "arabic": "إِنسَٰن",
+        "frequency": 71,
+        "partOfSpeech": "Noun",
+        "percentage": 61.98,
+        "meaningDE": "Übersetzung für إِنسَٰن fehlt"
+    },
+    {
+        "id": "160",
+        "arabic": "عَمَل",
+        "frequency": 71,
+        "partOfSpeech": "Noun",
+        "percentage": 62.08,
+        "meaningDE": "Übersetzung für عَمَل fehlt"
+    },
+    {
+        "id": "161",
+        "arabic": "وَجْه",
+        "frequency": 71,
+        "partOfSpeech": "Noun",
+        "percentage": 62.17,
+        "meaningDE": "Übersetzung für وَجْه fehlt"
+    },
+    {
+        "id": "162",
+        "arabic": "أَشْرَكَ",
+        "frequency": 71,
+        "partOfSpeech": "Verb",
+        "percentage": 62.27,
+        "meaningDE": "Übersetzung für أَشْرَكَ fehlt"
+    },
+    {
+        "id": "163",
+        "arabic": "أَلْقَىٰٓ",
+        "frequency": 71,
+        "partOfSpeech": "Verb",
+        "percentage": 62.36,
+        "meaningDE": "Übersetzung für أَلْقَىٰٓ fehlt"
+    },
+    {
+        "id": "164",
+        "arabic": "قِيَٰمَة",
+        "frequency": 70,
+        "partOfSpeech": "Noun",
+        "percentage": 62.46,
+        "meaningDE": "Übersetzung für قِيَٰمَة fehlt"
+    },
+    {
+        "id": "165",
+        "arabic": "يَوْمَئِذ",
+        "frequency": 70,
+        "partOfSpeech": "Time adverb",
+        "percentage": 62.55,
+        "meaningDE": "Übersetzung für يَوْمَئِذ fehlt"
+    },
+    {
+        "id": "166",
+        "arabic": "وَعَدَ",
+        "frequency": 70,
+        "partOfSpeech": "Verb",
+        "percentage": 62.65,
+        "meaningDE": "Übersetzung für وَعَدَ fehlt"
+    },
+    {
+        "id": "167",
+        "arabic": "إِبْرَاهِيم",
+        "frequency": 69,
+        "partOfSpeech": "Proper noun",
+        "percentage": 62.74,
+        "meaningDE": "Übersetzung für إِبْرَاهِيم fehlt"
+    },
+    {
+        "id": "168",
+        "arabic": "قُرْءَان",
+        "frequency": 68,
+        "partOfSpeech": "Proper noun",
+        "percentage": 62.83,
+        "meaningDE": "Übersetzung für قُرْءَان fehlt"
+    },
+    {
+        "id": "169",
+        "arabic": "أَنفَقَ",
+        "frequency": 68,
+        "partOfSpeech": "Verb",
+        "percentage": 62.92,
+        "meaningDE": "Übersetzung für أَنفَقَ fehlt"
+    },
+    {
+        "id": "170",
+        "arabic": "بَعْد",
+        "frequency": 66,
+        "partOfSpeech": "Time adverb",
+        "percentage": 63.01,
+        "meaningDE": "Übersetzung für بَعْد fehlt"
+    },
+    {
+        "id": "171",
+        "arabic": "بَيْت",
+        "frequency": 65,
+        "partOfSpeech": "Noun",
+        "percentage": 63.1,
+        "meaningDE": "Übersetzung für بَيْت fehlt"
+    },
+    {
+        "id": "172",
+        "arabic": "لَٰكِن",
+        "frequency": 65,
+        "partOfSpeech": "Amendment particle",
+        "percentage": 63.19,
+        "meaningDE": "Übersetzung für لَٰكِن fehlt"
+    },
+    {
+        "id": "173",
+        "arabic": "يَمِين",
+        "frequency": 65,
+        "partOfSpeech": "Noun",
+        "percentage": 63.28,
+        "meaningDE": "Übersetzung für يَمِين fehlt"
+    },
+    {
+        "id": "174",
+        "arabic": "غَفَرَ",
+        "frequency": 65,
+        "partOfSpeech": "Verb",
+        "percentage": 63.36,
+        "meaningDE": "Übersetzung für غَفَرَ fehlt"
+    },
+    {
+        "id": "175",
+        "arabic": "آبَاء",
+        "frequency": 64,
+        "partOfSpeech": "Noun",
+        "percentage": 63.45,
+        "meaningDE": "Übersetzung für آبَاء fehlt"
+    },
+    {
+        "id": "176",
+        "arabic": "أُمَّة",
+        "frequency": 64,
+        "partOfSpeech": "Noun",
+        "percentage": 63.54,
+        "meaningDE": "Übersetzung für أُمَّة fehlt"
+    },
+    {
+        "id": "177",
+        "arabic": "أَحْبَبْ",
+        "frequency": 64,
+        "partOfSpeech": "Verb",
+        "percentage": 63.62,
+        "meaningDE": "Übersetzung für أَحْبَبْ fehlt"
+    },
+    {
+        "id": "178",
+        "arabic": "أَصَابَ",
+        "frequency": 64,
+        "partOfSpeech": "Verb",
+        "percentage": 63.71,
+        "meaningDE": "Übersetzung für أَصَابَ fehlt"
+    },
+    {
+        "id": "179",
+        "arabic": "أَضَلَّ",
+        "frequency": 64,
+        "partOfSpeech": "Verb",
+        "percentage": 63.8,
+        "meaningDE": "Übersetzung für أَضَلَّ fehlt"
+    },
+    {
+        "id": "180",
+        "arabic": "ٱبْن",
+        "frequency": 63,
+        "partOfSpeech": "Noun",
+        "percentage": 63.88,
+        "meaningDE": "Übersetzung für ٱبْن fehlt"
+    },
+    {
+        "id": "181",
+        "arabic": "عَزِيز",
+        "frequency": 63,
+        "partOfSpeech": "Noun",
+        "percentage": 63.97,
+        "meaningDE": "Übersetzung für عَزِيز fehlt"
+    },
+    {
+        "id": "182",
+        "arabic": "مَآء",
+        "frequency": 63,
+        "partOfSpeech": "Noun",
+        "percentage": 64.05,
+        "meaningDE": "Übersetzung für مَآء fehlt"
+    },
+    {
+        "id": "183",
+        "arabic": "تَابَ",
+        "frequency": 63,
+        "partOfSpeech": "Verb",
+        "percentage": 64.14,
+        "meaningDE": "Übersetzung für تَابَ fehlt"
+    },
+    {
+        "id": "184",
+        "arabic": "صَّٰلِحَٰت",
+        "frequency": 62,
+        "partOfSpeech": "Noun",
+        "percentage": 64.22,
+        "meaningDE": "Übersetzung für صَّٰلِحَٰت fehlt"
+    },
+    {
+        "id": "185",
+        "arabic": "عَلِيم",
+        "frequency": 62,
+        "partOfSpeech": "Noun",
+        "percentage": 64.3,
+        "meaningDE": "Übersetzung für عَلِيم fehlt"
+    },
+    {
+        "id": "186",
+        "arabic": "غَفُور",
+        "frequency": 62,
+        "partOfSpeech": "Noun",
+        "percentage": 64.39,
+        "meaningDE": "Übersetzung für غَفُور fehlt"
+    },
+    {
+        "id": "187",
+        "arabic": "كَسَبَ",
+        "frequency": 62,
+        "partOfSpeech": "Verb",
+        "percentage": 64.47,
+        "meaningDE": "Übersetzung für كَسَبَ fehlt"
+    },
+    {
+        "id": "188",
+        "arabic": "نَزَّلَ",
+        "frequency": 62,
+        "partOfSpeech": "Verb",
+        "percentage": 64.55,
+        "meaningDE": "Übersetzung für نَزَّلَ fehlt"
+    },
+    {
+        "id": "189",
+        "arabic": "أَوَّل",
+        "frequency": 61,
+        "partOfSpeech": "Noun",
+        "percentage": 64.64,
+        "meaningDE": "Übersetzung für أَوَّل fehlt"
+    },
+    {
+        "id": "190",
+        "arabic": "تَلَىٰ",
+        "frequency": 61,
+        "partOfSpeech": "Verb",
+        "percentage": 64.72,
+        "meaningDE": "Übersetzung für تَلَىٰ fehlt"
+    },
+    {
+        "id": "191",
+        "arabic": "رَزَقَ",
+        "frequency": 61,
+        "partOfSpeech": "Verb",
+        "percentage": 64.8,
+        "meaningDE": "Übersetzung für رَزَقَ fehlt"
+    },
+    {
+        "id": "192",
+        "arabic": "صَٰلِح",
+        "frequency": 60,
+        "partOfSpeech": "Noun",
+        "percentage": 64.88,
+        "meaningDE": "Übersetzung für صَٰلِح fehlt"
+    },
+    {
+        "id": "193",
+        "arabic": "صَادِق",
+        "frequency": 59,
+        "partOfSpeech": "Noun",
+        "percentage": 64.96,
+        "meaningDE": "Übersetzung für صَادِق fehlt"
+    },
+    {
+        "id": "194",
+        "arabic": "نِسَآء",
+        "frequency": 59,
+        "partOfSpeech": "Noun",
+        "percentage": 65.04,
+        "meaningDE": "Übersetzung für نِسَآء fehlt"
+    },
+    {
+        "id": "195",
+        "arabic": "قَضَىٰٓ",
+        "frequency": 59,
+        "partOfSpeech": "Verb",
+        "percentage": 65.12,
+        "meaningDE": "Übersetzung für قَضَىٰٓ fehlt"
+    },
+    {
+        "id": "196",
+        "arabic": "نَصَرَ",
+        "frequency": 59,
+        "partOfSpeech": "Verb",
+        "percentage": 65.2,
+        "meaningDE": "Übersetzung für نَصَرَ fehlt"
+    },
+    {
+        "id": "197",
+        "arabic": "نَذِير",
+        "frequency": 58,
+        "partOfSpeech": "Noun",
+        "percentage": 65.28,
+        "meaningDE": "Übersetzung für نَذِير fehlt"
+    },
+    {
+        "id": "198",
+        "arabic": "صَبَرَ",
+        "frequency": 58,
+        "partOfSpeech": "Verb",
+        "percentage": 65.36,
+        "meaningDE": "Übersetzung für صَبَرَ fehlt"
+    },
+    {
+        "id": "199",
+        "arabic": "عَيْن",
+        "frequency": 57,
+        "partOfSpeech": "Noun",
+        "percentage": 65.43,
+        "meaningDE": "Übersetzung für عَيْن fehlt"
+    },
+    {
+        "id": "200",
+        "arabic": "قَرْيَة",
+        "frequency": 57,
+        "partOfSpeech": "Noun",
+        "percentage": 65.51,
+        "meaningDE": "Übersetzung für قَرْيَة fehlt"
+    },
+    {
+        "id": "201",
+        "arabic": "لَٰكِنّ",
+        "frequency": 57,
+        "partOfSpeech": "Accusative particle",
+        "percentage": 65.59,
+        "meaningDE": "Übersetzung für لَٰكِنّ fehlt"
+    },
+    {
+        "id": "202",
+        "arabic": "جَرَيْ",
+        "frequency": 57,
+        "partOfSpeech": "Verb",
+        "percentage": 65.66,
+        "meaningDE": "Übersetzung für جَرَيْ fehlt"
+    },
+    {
+        "id": "203",
+        "arabic": "نَهَار",
+        "frequency": 56,
+        "partOfSpeech": "Noun",
+        "percentage": 65.74,
+        "meaningDE": "Übersetzung für نَهَار fehlt"
+    },
+    {
+        "id": "204",
+        "arabic": "وَلَد",
+        "frequency": 56,
+        "partOfSpeech": "Noun",
+        "percentage": 65.82,
+        "meaningDE": "Übersetzung für وَلَد fehlt"
+    },
+    {
+        "id": "205",
+        "arabic": "مَسَّ",
+        "frequency": 56,
+        "partOfSpeech": "Verb",
+        "percentage": 65.89,
+        "meaningDE": "Übersetzung für مَسَّ fehlt"
+    },
+    {
+        "id": "206",
+        "arabic": "بَيِّنَة",
+        "frequency": 55,
+        "partOfSpeech": "Noun",
+        "percentage": 65.97,
+        "meaningDE": "Übersetzung für بَيِّنَة fehlt"
+    },
+    {
+        "id": "207",
+        "arabic": "رِزْق",
+        "frequency": 55,
+        "partOfSpeech": "Noun",
+        "percentage": 66.04,
+        "meaningDE": "Übersetzung für رِزْق fehlt"
+    },
+    {
+        "id": "208",
+        "arabic": "ضَرَبَ",
+        "frequency": 55,
+        "partOfSpeech": "Verb",
+        "percentage": 66.11,
+        "meaningDE": "Übersetzung für ضَرَبَ fehlt"
+    },
+    {
+        "id": "209",
+        "arabic": "نَهَر",
+        "frequency": 54,
+        "partOfSpeech": "Noun",
+        "percentage": 66.19,
+        "meaningDE": "Übersetzung für نَهَر fehlt"
+    },
+    {
+        "id": "210",
+        "arabic": "قَٰتَلَ",
+        "frequency": 54,
+        "partOfSpeech": "Verb",
+        "percentage": 66.26,
+        "meaningDE": "Übersetzung für قَٰتَلَ fehlt"
+    },
+    {
+        "id": "211",
+        "arabic": "أَقَامَ",
+        "frequency": 54,
+        "partOfSpeech": "Verb",
+        "percentage": 66.33,
+        "meaningDE": "Übersetzung für أَقَامَ fehlt"
+    },
+    {
+        "id": "212",
+        "arabic": "جَمِيع",
+        "frequency": 53,
+        "partOfSpeech": "Noun",
+        "percentage": 66.4,
+        "meaningDE": "Übersetzung für جَمِيع fehlt"
+    },
+    {
+        "id": "213",
+        "arabic": "خَرَجَ",
+        "frequency": 53,
+        "partOfSpeech": "Verb",
+        "percentage": 66.48,
+        "meaningDE": "Übersetzung für خَرَجَ fehlt"
+    },
+    {
+        "id": "214",
+        "arabic": "ضَلَّ",
+        "frequency": 53,
+        "partOfSpeech": "Verb",
+        "percentage": 66.55,
+        "meaningDE": "Übersetzung für ضَلَّ fehlt"
+    },
+    {
+        "id": "215",
+        "arabic": "أَجَل",
+        "frequency": 52,
+        "partOfSpeech": "Noun",
+        "percentage": 66.62,
+        "meaningDE": "Übersetzung für أَجَل fehlt"
+    },
+    {
+        "id": "216",
+        "arabic": "خَلْق",
+        "frequency": 52,
+        "partOfSpeech": "Noun",
+        "percentage": 66.69,
+        "meaningDE": "Übersetzung für خَلْق fehlt"
+    },
+    {
+        "id": "217",
+        "arabic": "بَعَثَ",
+        "frequency": 52,
+        "partOfSpeech": "Verb",
+        "percentage": 66.76,
+        "meaningDE": "Übersetzung für بَعَثَ fehlt"
+    },
+    {
+        "id": "218",
+        "arabic": "جَنَّة",
+        "frequency": 51,
+        "partOfSpeech": "Proper noun",
+        "percentage": 66.83,
+        "meaningDE": "Übersetzung für جَنَّة fehlt"
+    },
+    {
+        "id": "219",
+        "arabic": "أَحْيَا",
+        "frequency": 51,
+        "partOfSpeech": "Verb",
+        "percentage": 66.9,
+        "meaningDE": "Übersetzung für أَحْيَا fehlt"
+    },
+    {
+        "id": "220",
+        "arabic": "تَذَكَّرَ",
+        "frequency": 51,
+        "partOfSpeech": "Verb",
+        "percentage": 66.96,
+        "meaningDE": "Übersetzung für تَذَكَّرَ fehlt"
+    },
+    {
+        "id": "221",
+        "arabic": "أَهْلَكَ",
+        "frequency": 51,
+        "partOfSpeech": "Verb",
+        "percentage": 67.03,
+        "meaningDE": "Übersetzung für أَهْلَكَ fehlt"
+    },
+    {
+        "id": "222",
+        "arabic": "سُوٓء",
+        "frequency": 50,
+        "partOfSpeech": "Noun",
+        "percentage": 67.1,
+        "meaningDE": "Übersetzung für سُوٓء fehlt"
+    },
+    {
+        "id": "223",
+        "arabic": "مَوْت",
+        "frequency": 50,
+        "partOfSpeech": "Noun",
+        "percentage": 67.17,
+        "meaningDE": "Übersetzung für مَوْت fehlt"
+    },
+    {
+        "id": "224",
+        "arabic": "نِعْمَة",
+        "frequency": 50,
+        "partOfSpeech": "Noun",
+        "percentage": 67.24,
+        "meaningDE": "Übersetzung für نِعْمَة fehlt"
+    },
+    {
+        "id": "225",
+        "arabic": "ٱفْتَرَىٰ",
+        "frequency": 50,
+        "partOfSpeech": "Verb",
+        "percentage": 67.3,
+        "meaningDE": "Übersetzung für ٱفْتَرَىٰ fehlt"
+    },
+    {
+        "id": "226",
+        "arabic": "عَدُوّ",
+        "frequency": 49,
+        "partOfSpeech": "Noun",
+        "percentage": 67.37,
+        "meaningDE": "Übersetzung für عَدُوّ fehlt"
+    },
+    {
+        "id": "227",
+        "arabic": "غَيْب",
+        "frequency": 49,
+        "partOfSpeech": "Noun",
+        "percentage": 67.43,
+        "meaningDE": "Übersetzung für غَيْب fehlt"
+    },
+    {
+        "id": "228",
+        "arabic": "مُتَّقِين",
+        "frequency": 49,
+        "partOfSpeech": "Noun",
+        "percentage": 67.5,
+        "meaningDE": "Übersetzung für مُتَّقِين fehlt"
+    },
+    {
+        "id": "229",
+        "arabic": "وَعْد",
+        "frequency": 49,
+        "partOfSpeech": "Noun",
+        "percentage": 67.57,
+        "meaningDE": "Übersetzung für وَعْد fehlt"
+    },
+    {
+        "id": "230",
+        "arabic": "زَادَ",
+        "frequency": 49,
+        "partOfSpeech": "Verb",
+        "percentage": 67.63,
+        "meaningDE": "Übersetzung für زَادَ fehlt"
+    },
+    {
+        "id": "231",
+        "arabic": "عَقَلُ",
+        "frequency": 49,
+        "partOfSpeech": "Verb",
+        "percentage": 67.7,
+        "meaningDE": "Übersetzung für عَقَلُ fehlt"
+    },
+    {
+        "id": "232",
+        "arabic": "كَتَبَ",
+        "frequency": 49,
+        "partOfSpeech": "Verb",
+        "percentage": 67.77,
+        "meaningDE": "Übersetzung für كَتَبَ fehlt"
+    },
+    {
+        "id": "233",
+        "arabic": "بَصَر",
+        "frequency": 48,
+        "partOfSpeech": "Noun",
+        "percentage": 67.83,
+        "meaningDE": "Übersetzung für بَصَر fehlt"
+    },
+    {
+        "id": "234",
+        "arabic": "تَحْت",
+        "frequency": 48,
+        "partOfSpeech": "Noun",
+        "percentage": 67.89,
+        "meaningDE": "Übersetzung für تَحْت fehlt"
+    },
+    {
+        "id": "235",
+        "arabic": "دَار",
+        "frequency": 48,
+        "partOfSpeech": "Noun",
+        "percentage": 67.96,
+        "meaningDE": "Übersetzung für دَار fehlt"
+    },
+    {
+        "id": "236",
+        "arabic": "مُلْك",
+        "frequency": 48,
+        "partOfSpeech": "Noun",
+        "percentage": 68.02,
+        "meaningDE": "Übersetzung für مُلْك fehlt"
+    },
+    {
+        "id": "237",
+        "arabic": "أَن",
+        "frequency": 47,
+        "partOfSpeech": "Particle of interpretation",
+        "percentage": 68.09,
+        "meaningDE": "Übersetzung für أَن fehlt"
+    },
+    {
+        "id": "238",
+        "arabic": "حَتَّىٰ",
+        "frequency": 47,
+        "partOfSpeech": "Inceptive particle",
+        "percentage": 68.15,
+        "meaningDE": "Übersetzung für حَتَّىٰ fehlt"
+    },
+    {
+        "id": "239",
+        "arabic": "سَاعَة",
+        "frequency": 47,
+        "partOfSpeech": "Noun",
+        "percentage": 68.21,
+        "meaningDE": "Übersetzung für سَاعَة fehlt"
+    },
+    {
+        "id": "240",
+        "arabic": "مُّبِين",
+        "frequency": 47,
+        "partOfSpeech": "Adjective",
+        "percentage": 68.28,
+        "meaningDE": "Übersetzung für مُّبِين fehlt"
+    },
+    {
+        "id": "241",
+        "arabic": "ظَنَّ",
+        "frequency": 47,
+        "partOfSpeech": "Verb",
+        "percentage": 68.34,
+        "meaningDE": "Übersetzung für ظَنَّ fehlt"
+    },
+    {
+        "id": "242",
+        "arabic": "أَبٌ",
+        "frequency": 46,
+        "partOfSpeech": "Noun",
+        "percentage": 68.4,
+        "meaningDE": "Übersetzung für أَبٌ fehlt"
+    },
+    {
+        "id": "243",
+        "arabic": "شَكَرَ",
+        "frequency": 46,
+        "partOfSpeech": "Verb",
+        "percentage": 68.47,
+        "meaningDE": "Übersetzung für شَكَرَ fehlt"
+    },
+    {
+        "id": "244",
+        "arabic": "نَبَّأَ",
+        "frequency": 46,
+        "partOfSpeech": "Verb",
+        "percentage": 68.53,
+        "meaningDE": "Übersetzung für نَبَّأَ fehlt"
+    },
+    {
+        "id": "245",
+        "arabic": "أُولِى",
+        "frequency": 45,
+        "partOfSpeech": "Noun",
+        "percentage": 68.59,
+        "meaningDE": "Übersetzung für أُولِى fehlt"
+    },
+    {
+        "id": "246",
+        "arabic": "إِيمَٰن",
+        "frequency": 45,
+        "partOfSpeech": "Noun",
+        "percentage": 68.65,
+        "meaningDE": "Übersetzung für إِيمَٰن fehlt"
+    },
+    {
+        "id": "247",
+        "arabic": "رَّحْمَٰن",
+        "frequency": 45,
+        "partOfSpeech": "Noun",
+        "percentage": 68.71,
+        "meaningDE": "Übersetzung für رَّحْمَٰن fehlt"
+    },
+    {
+        "id": "248",
+        "arabic": "صِرَٰط",
+        "frequency": 45,
+        "partOfSpeech": "Noun",
+        "percentage": 68.77,
+        "meaningDE": "Übersetzung für صِرَٰط fehlt"
+    },
+    {
+        "id": "249",
+        "arabic": "قَبْل",
+        "frequency": 45,
+        "partOfSpeech": "Time adverb",
+        "percentage": 68.83,
+        "meaningDE": "Übersetzung für قَبْل fehlt"
+    },
+    {
+        "id": "250",
+        "arabic": "حَكَمَ",
+        "frequency": 45,
+        "partOfSpeech": "Verb",
+        "percentage": 68.89,
+        "meaningDE": "Übersetzung für حَكَمَ fehlt"
+    },
+    {
+        "id": "251",
+        "arabic": "يَذَرَ",
+        "frequency": 45,
+        "partOfSpeech": "Verb",
+        "percentage": 68.95,
+        "meaningDE": "Übersetzung für يَذَرَ fehlt"
+    },
+    {
+        "id": "252",
+        "arabic": "آخَر",
+        "frequency": 44,
+        "partOfSpeech": "Noun",
+        "percentage": 69.01,
+        "meaningDE": "Übersetzung für آخَر fehlt"
+    },
+    {
+        "id": "253",
+        "arabic": "أَمَّا",
+        "frequency": 44,
+        "partOfSpeech": "Explanation particle",
+        "percentage": 69.07,
+        "meaningDE": "Übersetzung für أَمَّا fehlt"
+    },
+    {
+        "id": "254",
+        "arabic": "صَدْر",
+        "frequency": 44,
+        "partOfSpeech": "Noun",
+        "percentage": 69.13,
+        "meaningDE": "Übersetzung für صَدْر fehlt"
+    },
+    {
+        "id": "255",
+        "arabic": "قَدِير",
+        "frequency": 44,
+        "partOfSpeech": "Noun",
+        "percentage": 69.19,
+        "meaningDE": "Übersetzung für قَدِير fehlt"
+    },
+    {
+        "id": "256",
+        "arabic": "مُجْرِم",
+        "frequency": 44,
+        "partOfSpeech": "Noun",
+        "percentage": 69.25,
+        "meaningDE": "Übersetzung für مُجْرِم fehlt"
+    },
+    {
+        "id": "257",
+        "arabic": "مُشْرِك",
+        "frequency": 44,
+        "partOfSpeech": "Noun",
+        "percentage": 69.31,
+        "meaningDE": "Übersetzung für مُشْرِك fehlt"
+    },
+    {
+        "id": "258",
+        "arabic": "حَسِبَ",
+        "frequency": 44,
+        "partOfSpeech": "Verb",
+        "percentage": 69.37,
+        "meaningDE": "Übersetzung für حَسِبَ fehlt"
+    },
+    {
+        "id": "259",
+        "arabic": "شَهِدَ",
+        "frequency": 44,
+        "partOfSpeech": "Verb",
+        "percentage": 69.43,
+        "meaningDE": "Übersetzung für شَهِدَ fehlt"
+    },
+    {
+        "id": "260",
+        "arabic": "مَلَكَتْ",
+        "frequency": 44,
+        "partOfSpeech": "Verb",
+        "percentage": 69.49,
+        "meaningDE": "Übersetzung für مَلَكَتْ fehlt"
+    },
+    {
+        "id": "261",
+        "arabic": "نَادَىٰ",
+        "frequency": 44,
+        "partOfSpeech": "Verb",
+        "percentage": 69.55,
+        "meaningDE": "Übersetzung für نَادَىٰ fehlt"
+    },
+    {
+        "id": "262",
+        "arabic": "أَنذَرَ",
+        "frequency": 44,
+        "partOfSpeech": "Verb",
+        "percentage": 69.61,
+        "meaningDE": "Übersetzung für أَنذَرَ fehlt"
+    },
+    {
+        "id": "263",
+        "arabic": "إِسْرَائِيل",
+        "frequency": 43,
+        "partOfSpeech": "Proper noun",
+        "percentage": 69.66,
+        "meaningDE": "Übersetzung für إِسْرَائِيل fehlt"
+    },
+    {
+        "id": "264",
+        "arabic": "حَمْد",
+        "frequency": 43,
+        "partOfSpeech": "Noun",
+        "percentage": 69.72,
+        "meaningDE": "Übersetzung für حَمْد fehlt"
+    },
+    {
+        "id": "265",
+        "arabic": "قَلِيل",
+        "frequency": 43,
+        "partOfSpeech": "Noun",
+        "percentage": 69.78,
+        "meaningDE": "Übersetzung für قَلِيل fehlt"
+    },
+    {
+        "id": "266",
+        "arabic": "نُوح",
+        "frequency": 43,
+        "partOfSpeech": "Proper noun",
+        "percentage": 69.84,
+        "meaningDE": "Übersetzung für نُوح fehlt"
+    },
+    {
+        "id": "267",
+        "arabic": "نُور",
+        "frequency": 43,
+        "partOfSpeech": "Noun",
+        "percentage": 69.9,
+        "meaningDE": "Übersetzung für نُور fehlt"
+    },
+    {
+        "id": "268",
+        "arabic": "جَزَآء",
+        "frequency": 42,
+        "partOfSpeech": "Noun",
+        "percentage": 69.95,
+        "meaningDE": "Übersetzung für جَزَآء fehlt"
+    },
+    {
+        "id": "269",
+        "arabic": "سَوْف",
+        "frequency": 42,
+        "partOfSpeech": "Future particle",
+        "percentage": 70.01,
+        "meaningDE": "Übersetzung für سَوْف fehlt"
+    },
+    {
+        "id": "270",
+        "arabic": "كَثِير",
+        "frequency": 42,
+        "partOfSpeech": "Noun",
+        "percentage": 70.07,
+        "meaningDE": "Übersetzung für كَثِير fehlt"
+    },
+    {
+        "id": "271",
+        "arabic": "أُدْخِلَ",
+        "frequency": 42,
+        "partOfSpeech": "Verb",
+        "percentage": 70.12,
+        "meaningDE": "Übersetzung für أُدْخِلَ fehlt"
+    },
+    {
+        "id": "272",
+        "arabic": "سَبَّحَ",
+        "frequency": 42,
+        "partOfSpeech": "Verb",
+        "percentage": 70.18,
+        "meaningDE": "Übersetzung für سَبَّحَ fehlt"
+    },
+    {
+        "id": "273",
+        "arabic": "ٱسْتَطَاعَ",
+        "frequency": 42,
+        "partOfSpeech": "Verb",
+        "percentage": 70.24,
+        "meaningDE": "Übersetzung für ٱسْتَطَاعَ fehlt"
+    },
+    {
+        "id": "274",
+        "arabic": "بَحْر",
+        "frequency": 41,
+        "partOfSpeech": "Noun",
+        "percentage": 70.29,
+        "meaningDE": "Übersetzung für بَحْر fehlt"
+    },
+    {
+        "id": "275",
+        "arabic": "دُّنْيَا",
+        "frequency": 41,
+        "partOfSpeech": "Noun",
+        "percentage": 70.35,
+        "meaningDE": "Übersetzung für دُّنْيَا fehlt"
+    },
+    {
+        "id": "276",
+        "arabic": "سُبْحَٰن",
+        "frequency": 41,
+        "partOfSpeech": "Noun",
+        "percentage": 70.4,
+        "meaningDE": "Übersetzung für سُبْحَٰن fehlt"
+    },
+    {
+        "id": "277",
+        "arabic": "سَلَٰم",
+        "frequency": 41,
+        "partOfSpeech": "Noun",
+        "percentage": 70.46,
+        "meaningDE": "Übersetzung für سَلَٰم fehlt"
+    },
+    {
+        "id": "278",
+        "arabic": "حَمَلَ",
+        "frequency": 41,
+        "partOfSpeech": "Verb",
+        "percentage": 70.51,
+        "meaningDE": "Übersetzung für حَمَلَ fehlt"
+    },
+    {
+        "id": "279",
+        "arabic": "عَذَّبَ",
+        "frequency": 41,
+        "partOfSpeech": "Verb",
+        "percentage": 70.57,
+        "meaningDE": "Übersetzung für عَذَّبَ fehlt"
+    },
+    {
+        "id": "280",
+        "arabic": "عَلَّمَ",
+        "frequency": 41,
+        "partOfSpeech": "Verb",
+        "percentage": 70.62,
+        "meaningDE": "Übersetzung für عَلَّمَ fehlt"
+    },
+    {
+        "id": "281",
+        "arabic": "شَرِيك",
+        "frequency": 40,
+        "partOfSpeech": "Noun",
+        "percentage": 70.68,
+        "meaningDE": "Übersetzung für شَرِيك fehlt"
+    },
+    {
+        "id": "282",
+        "arabic": "شَهِيد",
+        "frequency": 40,
+        "partOfSpeech": "Noun",
+        "percentage": 70.73,
+        "meaningDE": "Übersetzung für شَهِيد fehlt"
+    },
+    {
+        "id": "283",
+        "arabic": "لَوْلَآ",
+        "frequency": 40,
+        "partOfSpeech": "Exhortation particle",
+        "percentage": 70.78,
+        "meaningDE": "Übersetzung für لَوْلَآ fehlt"
+    },
+    {
+        "id": "284",
+        "arabic": "وَيْل",
+        "frequency": 40,
+        "partOfSpeech": "Noun",
+        "percentage": 70.84,
+        "meaningDE": "Übersetzung für وَيْل fehlt"
+    },
+    {
+        "id": "285",
+        "arabic": "بِئْسَ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 70.89,
+        "meaningDE": "Übersetzung für بِئْسَ fehlt"
+    },
+    {
+        "id": "286",
+        "arabic": "بَلَغَ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 70.95,
+        "meaningDE": "Übersetzung für بَلَغَ fehlt"
+    },
+    {
+        "id": "287",
+        "arabic": "تَرَكَ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 71.0,
+        "meaningDE": "Übersetzung für تَرَكَ fehlt"
+    },
+    {
+        "id": "288",
+        "arabic": "خَشِىَ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 71.05,
+        "meaningDE": "Übersetzung für خَشِىَ fehlt"
+    },
+    {
+        "id": "289",
+        "arabic": "أَرَيْ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 71.11,
+        "meaningDE": "Übersetzung für أَرَيْ fehlt"
+    },
+    {
+        "id": "290",
+        "arabic": "ٱسْتَغْفَرَ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 71.16,
+        "meaningDE": "Übersetzung für ٱسْتَغْفَرَ fehlt"
+    },
+    {
+        "id": "291",
+        "arabic": "ٱسْتَكْبَرَ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 71.22,
+        "meaningDE": "Übersetzung für ٱسْتَكْبَرَ fehlt"
+    },
+    {
+        "id": "292",
+        "arabic": "ٱهْتَدَىٰ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 71.27,
+        "meaningDE": "Übersetzung für ٱهْتَدَىٰ fehlt"
+    },
+    {
+        "id": "293",
+        "arabic": "تَوَكَّلْ",
+        "frequency": 40,
+        "partOfSpeech": "Verb",
+        "percentage": 71.32,
+        "meaningDE": "Übersetzung für تَوَكَّلْ fehlt"
+    },
+    {
+        "id": "294",
+        "arabic": "إِذْن",
+        "frequency": 39,
+        "partOfSpeech": "Noun",
+        "percentage": 71.38,
+        "meaningDE": "Übersetzung für إِذْن fehlt"
+    },
+    {
+        "id": "295",
+        "arabic": "ٱسْم",
+        "frequency": 39,
+        "partOfSpeech": "Noun",
+        "percentage": 71.43,
+        "meaningDE": "Übersetzung für ٱسْم fehlt"
+    },
+    {
+        "id": "296",
+        "arabic": "أَلَآ",
+        "frequency": 39,
+        "partOfSpeech": "Inceptive particle",
+        "percentage": 71.48,
+        "meaningDE": "Übersetzung für أَلَآ fehlt"
+    },
+    {
+        "id": "297",
+        "arabic": "جَبَل",
+        "frequency": 39,
+        "partOfSpeech": "Noun",
+        "percentage": 71.53,
+        "meaningDE": "Übersetzung für جَبَل fehlt"
+    },
+    {
+        "id": "298",
+        "arabic": "سَمِيع",
+        "frequency": 39,
+        "partOfSpeech": "Noun",
+        "percentage": 71.59,
+        "meaningDE": "Übersetzung für سَمِيع fehlt"
+    },
+    {
+        "id": "299",
+        "arabic": "حَرَّمَ",
+        "frequency": 39,
+        "partOfSpeech": "Verb",
+        "percentage": 71.64,
+        "meaningDE": "Übersetzung für حَرَّمَ fehlt"
+    },
+    {
+        "id": "300",
+        "arabic": "مَّاتَ",
+        "frequency": 39,
+        "partOfSpeech": "Verb",
+        "percentage": 71.69,
+        "meaningDE": "Übersetzung für مَّاتَ fehlt"
+    },
+    {
+        "id": "301",
+        "arabic": "حِسَاب",
+        "frequency": 38,
+        "partOfSpeech": "Noun",
+        "percentage": 71.74,
+        "meaningDE": "Übersetzung für حِسَاب fehlt"
+    },
+    {
+        "id": "302",
+        "arabic": "ضَلَٰل",
+        "frequency": 38,
+        "partOfSpeech": "Noun",
+        "percentage": 71.8,
+        "meaningDE": "Übersetzung für ضَلَٰل fehlt"
+    },
+    {
+        "id": "303",
+        "arabic": "عَزِيز",
+        "frequency": 38,
+        "partOfSpeech": "Adjective",
+        "percentage": 71.85,
+        "meaningDE": "Übersetzung für عَزِيز fehlt"
+    },
+    {
+        "id": "304",
+        "arabic": "مُحْسِن",
+        "frequency": 38,
+        "partOfSpeech": "Noun",
+        "percentage": 71.9,
+        "meaningDE": "Übersetzung für مُحْسِن fehlt"
+    },
+    {
+        "id": "305",
+        "arabic": "بُشِّرَ",
+        "frequency": 38,
+        "partOfSpeech": "Verb",
+        "percentage": 71.95,
+        "meaningDE": "Übersetzung für بُشِّرَ fehlt"
+    },
+    {
+        "id": "306",
+        "arabic": "رَّضِىَ",
+        "frequency": 38,
+        "partOfSpeech": "Verb",
+        "percentage": 72.0,
+        "meaningDE": "Übersetzung für رَّضِىَ fehlt"
+    },
+    {
+        "id": "307",
+        "arabic": "بَشَر",
+        "frequency": 37,
+        "partOfSpeech": "Noun",
+        "percentage": 72.05,
+        "meaningDE": "Übersetzung für بَشَر fehlt"
+    },
+    {
+        "id": "308",
+        "arabic": "ذَنب",
+        "frequency": 37,
+        "partOfSpeech": "Noun",
+        "percentage": 72.1,
+        "meaningDE": "Übersetzung für ذَنب fehlt"
+    },
+    {
+        "id": "309",
+        "arabic": "سُلْطَٰن",
+        "frequency": 37,
+        "partOfSpeech": "Noun",
+        "percentage": 72.15,
+        "meaningDE": "Übersetzung für سُلْطَٰن fehlt"
+    },
+    {
+        "id": "310",
+        "arabic": "عِند",
+        "frequency": 37,
+        "partOfSpeech": "Noun",
+        "percentage": 72.2,
+        "meaningDE": "Übersetzung für عِند fehlt"
+    },
+    {
+        "id": "311",
+        "arabic": "كُفْر",
+        "frequency": 37,
+        "partOfSpeech": "Noun",
+        "percentage": 72.25,
+        "meaningDE": "Übersetzung für كُفْر fehlt"
+    },
+    {
+        "id": "312",
+        "arabic": "يَحْزُن",
+        "frequency": 37,
+        "partOfSpeech": "Verb",
+        "percentage": 72.3,
+        "meaningDE": "Übersetzung für يَحْزُن fehlt"
+    },
+    {
+        "id": "313",
+        "arabic": "حَشَرَ",
+        "frequency": 37,
+        "partOfSpeech": "Verb",
+        "percentage": 72.35,
+        "meaningDE": "Übersetzung für حَشَرَ fehlt"
+    },
+    {
+        "id": "314",
+        "arabic": "صَدَّ",
+        "frequency": 37,
+        "partOfSpeech": "Verb",
+        "percentage": 72.4,
+        "meaningDE": "Übersetzung für صَدَّ fehlt"
+    },
+    {
+        "id": "315",
+        "arabic": "نَجَّىٰ",
+        "frequency": 37,
+        "partOfSpeech": "Verb",
+        "percentage": 72.45,
+        "meaningDE": "Übersetzung für نَجَّىٰ fehlt"
+    },
+    {
+        "id": "316",
+        "arabic": "سَيِّـَٔات",
+        "frequency": 36,
+        "partOfSpeech": "Noun",
+        "percentage": 72.5,
+        "meaningDE": "Übersetzung für سَيِّـَٔات fehlt"
+    },
+    {
+        "id": "317",
+        "arabic": "شَدِيد",
+        "frequency": 36,
+        "partOfSpeech": "Adjective",
+        "percentage": 72.55,
+        "meaningDE": "Übersetzung für شَدِيد fehlt"
+    },
+    {
+        "id": "318",
+        "arabic": "ذَاقُ",
+        "frequency": 36,
+        "partOfSpeech": "Verb",
+        "percentage": 72.6,
+        "meaningDE": "Übersetzung für ذَاقُ fehlt"
+    },
+    {
+        "id": "319",
+        "arabic": "رَدَّ",
+        "frequency": 36,
+        "partOfSpeech": "Verb",
+        "percentage": 72.64,
+        "meaningDE": "Übersetzung für رَدَّ fehlt"
+    },
+    {
+        "id": "320",
+        "arabic": "إِثْم",
+        "frequency": 35,
+        "partOfSpeech": "Noun",
+        "percentage": 72.69,
+        "meaningDE": "Übersetzung für إِثْم fehlt"
+    },
+    {
+        "id": "321",
+        "arabic": "أَحْسَن",
+        "frequency": 35,
+        "partOfSpeech": "Noun",
+        "percentage": 72.74,
+        "meaningDE": "Übersetzung für أَحْسَن fehlt"
+    },
+    {
+        "id": "322",
+        "arabic": "أَىّ",
+        "frequency": 35,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 72.79,
+        "meaningDE": "Übersetzung für أَىّ fehlt"
+    },
+    {
+        "id": "323",
+        "arabic": "لَوْلَآ",
+        "frequency": 35,
+        "partOfSpeech": "Conditional particle",
+        "percentage": 72.83,
+        "meaningDE": "Übersetzung für لَوْلَآ fehlt"
+    },
+    {
+        "id": "324",
+        "arabic": "مَتَٰع",
+        "frequency": 35,
+        "partOfSpeech": "Noun",
+        "percentage": 72.88,
+        "meaningDE": "Übersetzung für مَتَٰع fehlt"
+    },
+    {
+        "id": "325",
+        "arabic": "بَيَّنُ",
+        "frequency": 35,
+        "partOfSpeech": "Verb",
+        "percentage": 72.93,
+        "meaningDE": "Übersetzung für بَيَّنُ fehlt"
+    },
+    {
+        "id": "326",
+        "arabic": "ٱخْتَلَفَ",
+        "frequency": 35,
+        "partOfSpeech": "Verb",
+        "percentage": 72.97,
+        "meaningDE": "Übersetzung für ٱخْتَلَفَ fehlt"
+    },
+    {
+        "id": "327",
+        "arabic": "ذَهَبَ",
+        "frequency": 35,
+        "partOfSpeech": "Verb",
+        "percentage": 73.02,
+        "meaningDE": "Übersetzung für ذَهَبَ fehlt"
+    },
+    {
+        "id": "328",
+        "arabic": "سَجَدَ",
+        "frequency": 35,
+        "partOfSpeech": "Verb",
+        "percentage": 73.07,
+        "meaningDE": "Übersetzung für سَجَدَ fehlt"
+    },
+    {
+        "id": "329",
+        "arabic": "ٱسْتَوَىٰٓ",
+        "frequency": 35,
+        "partOfSpeech": "Verb",
+        "percentage": 73.12,
+        "meaningDE": "Übersetzung für ٱسْتَوَىٰٓ fehlt"
+    },
+    {
+        "id": "330",
+        "arabic": "نَسِىَ",
+        "frequency": 35,
+        "partOfSpeech": "Verb",
+        "percentage": 73.16,
+        "meaningDE": "Übersetzung für نَسِىَ fehlt"
+    },
+    {
+        "id": "331",
+        "arabic": "أُمّ",
+        "frequency": 34,
+        "partOfSpeech": "Noun",
+        "percentage": 73.21,
+        "meaningDE": "Übersetzung für أُمّ fehlt"
+    },
+    {
+        "id": "332",
+        "arabic": "فِتْنَة",
+        "frequency": 34,
+        "partOfSpeech": "Noun",
+        "percentage": 73.25,
+        "meaningDE": "Übersetzung für فِتْنَة fehlt"
+    },
+    {
+        "id": "333",
+        "arabic": "مُّرْسَل",
+        "frequency": 34,
+        "partOfSpeech": "Noun",
+        "percentage": 73.3,
+        "meaningDE": "Übersetzung für مُّرْسَل fehlt"
+    },
+    {
+        "id": "334",
+        "arabic": "مَرْيَم",
+        "frequency": 34,
+        "partOfSpeech": "Proper noun",
+        "percentage": 73.35,
+        "meaningDE": "Übersetzung für مَرْيَم fehlt"
+    },
+    {
+        "id": "335",
+        "arabic": "مَّعْرُوف",
+        "frequency": 34,
+        "partOfSpeech": "Noun",
+        "percentage": 73.39,
+        "meaningDE": "Übersetzung für مَّعْرُوف fehlt"
+    },
+    {
+        "id": "336",
+        "arabic": "مَن",
+        "frequency": 34,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 73.44,
+        "meaningDE": "Übersetzung für مَن fehlt"
+    },
+    {
+        "id": "337",
+        "arabic": "مَّيِّت",
+        "frequency": 34,
+        "partOfSpeech": "Noun",
+        "percentage": 73.48,
+        "meaningDE": "Übersetzung für مَّيِّت fehlt"
+    },
+    {
+        "id": "338",
+        "arabic": "نَصِير",
+        "frequency": 34,
+        "partOfSpeech": "Noun",
+        "percentage": 73.53,
+        "meaningDE": "Übersetzung für نَصِير fehlt"
+    },
+    {
+        "id": "339",
+        "arabic": "ءَالَآء",
+        "frequency": 34,
+        "partOfSpeech": "Noun",
+        "percentage": 73.58,
+        "meaningDE": "Übersetzung für ءَالَآء fehlt"
+    },
+    {
+        "id": "340",
+        "arabic": "ٱبْتَغَىٰ",
+        "frequency": 34,
+        "partOfSpeech": "Verb",
+        "percentage": 73.62,
+        "meaningDE": "Übersetzung für ٱبْتَغَىٰ fehlt"
+    },
+    {
+        "id": "341",
+        "arabic": "أَعْلَم",
+        "frequency": 33,
+        "partOfSpeech": "Noun",
+        "percentage": 73.67,
+        "meaningDE": "Übersetzung für أَعْلَم fehlt"
+    },
+    {
+        "id": "342",
+        "arabic": "شَمْس",
+        "frequency": 33,
+        "partOfSpeech": "Noun",
+        "percentage": 73.71,
+        "meaningDE": "Übersetzung für شَمْس fehlt"
+    },
+    {
+        "id": "343",
+        "arabic": "فَرِيق",
+        "frequency": 33,
+        "partOfSpeech": "Noun",
+        "percentage": 73.76,
+        "meaningDE": "Übersetzung für فَرِيق fehlt"
+    },
+    {
+        "id": "344",
+        "arabic": "كَذِب",
+        "frequency": 33,
+        "partOfSpeech": "Noun",
+        "percentage": 73.8,
+        "meaningDE": "Übersetzung für كَذِب fehlt"
+    },
+    {
+        "id": "345",
+        "arabic": "كَلَّا",
+        "frequency": 33,
+        "partOfSpeech": "Aversion particle",
+        "percentage": 73.84,
+        "meaningDE": "Übersetzung für كَلَّا fehlt"
+    },
+    {
+        "id": "346",
+        "arabic": "نَّعَم",
+        "frequency": 33,
+        "partOfSpeech": "Noun",
+        "percentage": 73.89,
+        "meaningDE": "Übersetzung für نَّعَم fehlt"
+    },
+    {
+        "id": "347",
+        "arabic": "قَامَ",
+        "frequency": 33,
+        "partOfSpeech": "Verb",
+        "percentage": 73.93,
+        "meaningDE": "Übersetzung für قَامَ fehlt"
+    },
+    {
+        "id": "348",
+        "arabic": "خَٰسِرِين",
+        "frequency": 32,
+        "partOfSpeech": "Noun",
+        "percentage": 73.98,
+        "meaningDE": "Übersetzung für خَٰسِرِين fehlt"
+    },
+    {
+        "id": "349",
+        "arabic": "زَكَوٰة",
+        "frequency": 32,
+        "partOfSpeech": "Noun",
+        "percentage": 74.02,
+        "meaningDE": "Übersetzung für زَكَوٰة fehlt"
+    },
+    {
+        "id": "350",
+        "arabic": "عَٰقِبَة",
+        "frequency": 32,
+        "partOfSpeech": "Noun",
+        "percentage": 74.06,
+        "meaningDE": "Übersetzung für عَٰقِبَة fehlt"
+    },
+    {
+        "id": "351",
+        "arabic": "كَبِير",
+        "frequency": 32,
+        "partOfSpeech": "Adjective",
+        "percentage": 74.11,
+        "meaningDE": "Übersetzung für كَبِير fehlt"
+    },
+    {
+        "id": "352",
+        "arabic": "أَعْرَضَ",
+        "frequency": 32,
+        "partOfSpeech": "Verb",
+        "percentage": 74.15,
+        "meaningDE": "Übersetzung für أَعْرَضَ fehlt"
+    },
+    {
+        "id": "353",
+        "arabic": "كَفَىٰ",
+        "frequency": 32,
+        "partOfSpeech": "Verb",
+        "percentage": 74.19,
+        "meaningDE": "Übersetzung für كَفَىٰ fehlt"
+    },
+    {
+        "id": "354",
+        "arabic": "نَهَىٰ",
+        "frequency": 32,
+        "partOfSpeech": "Verb",
+        "percentage": 74.24,
+        "meaningDE": "Übersetzung für نَهَىٰ fehlt"
+    },
+    {
+        "id": "355",
+        "arabic": "بَصِير",
+        "frequency": 31,
+        "partOfSpeech": "Noun",
+        "percentage": 74.28,
+        "meaningDE": "Übersetzung für بَصِير fehlt"
+    },
+    {
+        "id": "356",
+        "arabic": "حِين",
+        "frequency": 31,
+        "partOfSpeech": "Noun",
+        "percentage": 74.32,
+        "meaningDE": "Übersetzung für حِين fehlt"
+    },
+    {
+        "id": "357",
+        "arabic": "كَٰذِب",
+        "frequency": 31,
+        "partOfSpeech": "Noun",
+        "percentage": 74.36,
+        "meaningDE": "Übersetzung für كَٰذِب fehlt"
+    },
+    {
+        "id": "358",
+        "arabic": "نَفَعَ",
+        "frequency": 31,
+        "partOfSpeech": "Verb",
+        "percentage": 74.4,
+        "meaningDE": "Übersetzung für نَفَعَ fehlt"
+    },
+    {
+        "id": "359",
+        "arabic": "حُكْم",
+        "frequency": 30,
+        "partOfSpeech": "Noun",
+        "percentage": 74.44,
+        "meaningDE": "Übersetzung für حُكْم fehlt"
+    },
+    {
+        "id": "360",
+        "arabic": "خَيْر",
+        "frequency": 30,
+        "partOfSpeech": "Adjective",
+        "percentage": 74.48,
+        "meaningDE": "Übersetzung für خَيْر fehlt"
+    },
+    {
+        "id": "361",
+        "arabic": "شَرّ",
+        "frequency": 30,
+        "partOfSpeech": "Noun",
+        "percentage": 74.52,
+        "meaningDE": "Übersetzung für شَرّ fehlt"
+    },
+    {
+        "id": "362",
+        "arabic": "قُوَّة",
+        "frequency": 30,
+        "partOfSpeech": "Noun",
+        "percentage": 74.56,
+        "meaningDE": "Übersetzung für قُوَّة fehlt"
+    },
+    {
+        "id": "363",
+        "arabic": "مَلَأ",
+        "frequency": 30,
+        "partOfSpeech": "Noun",
+        "percentage": 74.61,
+        "meaningDE": "Übersetzung für مَلَأ fehlt"
+    },
+    {
+        "id": "364",
+        "arabic": "سَآءَ",
+        "frequency": 30,
+        "partOfSpeech": "Verb",
+        "percentage": 74.65,
+        "meaningDE": "Übersetzung für سَآءَ fehlt"
+    },
+    {
+        "id": "365",
+        "arabic": "عَسَى",
+        "frequency": 30,
+        "partOfSpeech": "Verb",
+        "percentage": 74.69,
+        "meaningDE": "Übersetzung für عَسَى fehlt"
+    },
+    {
+        "id": "366",
+        "arabic": "لَبِثَ",
+        "frequency": 30,
+        "partOfSpeech": "Verb",
+        "percentage": 74.73,
+        "meaningDE": "Übersetzung für لَبِثَ fehlt"
+    },
+    {
+        "id": "367",
+        "arabic": "وَلَّىٰ",
+        "frequency": 30,
+        "partOfSpeech": "Verb",
+        "percentage": 74.77,
+        "meaningDE": "Übersetzung für وَلَّىٰ fehlt"
+    },
+    {
+        "id": "368",
+        "arabic": "جُند",
+        "frequency": 29,
+        "partOfSpeech": "Noun",
+        "percentage": 74.81,
+        "meaningDE": "Übersetzung für جُند fehlt"
+    },
+    {
+        "id": "369",
+        "arabic": "رَجُل",
+        "frequency": 29,
+        "partOfSpeech": "Noun",
+        "percentage": 74.85,
+        "meaningDE": "Übersetzung für رَجُل fehlt"
+    },
+    {
+        "id": "370",
+        "arabic": "رِيح",
+        "frequency": 29,
+        "partOfSpeech": "Noun",
+        "percentage": 74.88,
+        "meaningDE": "Übersetzung für رِيح fehlt"
+    },
+    {
+        "id": "371",
+        "arabic": "عَرْش",
+        "frequency": 29,
+        "partOfSpeech": "Noun",
+        "percentage": 74.92,
+        "meaningDE": "Übersetzung für عَرْش fehlt"
+    },
+    {
+        "id": "372",
+        "arabic": "عَهْد",
+        "frequency": 29,
+        "partOfSpeech": "Noun",
+        "percentage": 74.96,
+        "meaningDE": "Übersetzung für عَهْد fehlt"
+    },
+    {
+        "id": "373",
+        "arabic": "غَفُور",
+        "frequency": 29,
+        "partOfSpeech": "Adjective",
+        "percentage": 75.0,
+        "meaningDE": "Übersetzung für غَفُور fehlt"
+    },
+    {
+        "id": "374",
+        "arabic": "كَأَنّ",
+        "frequency": 29,
+        "partOfSpeech": "Accusative particle",
+        "percentage": 75.04,
+        "meaningDE": "Übersetzung für كَأَنّ fehlt"
+    },
+    {
+        "id": "375",
+        "arabic": "نَبَأ",
+        "frequency": 29,
+        "partOfSpeech": "Noun",
+        "percentage": 75.08,
+        "meaningDE": "Übersetzung für نَبَأ fehlt"
+    },
+    {
+        "id": "376",
+        "arabic": "أَبْصَرَ",
+        "frequency": 29,
+        "partOfSpeech": "Verb",
+        "percentage": 75.12,
+        "meaningDE": "Übersetzung für أَبْصَرَ fehlt"
+    },
+    {
+        "id": "377",
+        "arabic": "أَبَدًا",
+        "frequency": 28,
+        "partOfSpeech": "Time adverb",
+        "percentage": 75.16,
+        "meaningDE": "Übersetzung für أَبَدًا fehlt"
+    },
+    {
+        "id": "378",
+        "arabic": "أَشَدّ",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.19,
+        "meaningDE": "Übersetzung für أَشَدّ fehlt"
+    },
+    {
+        "id": "379",
+        "arabic": "حَدِيث",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.23,
+        "meaningDE": "Übersetzung für حَدِيث fehlt"
+    },
+    {
+        "id": "380",
+        "arabic": "ذُرِّيَّة",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.27,
+        "meaningDE": "Übersetzung für ذُرِّيَّة fehlt"
+    },
+    {
+        "id": "381",
+        "arabic": "رِجَال",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.31,
+        "meaningDE": "Übersetzung für رِجَال fehlt"
+    },
+    {
+        "id": "382",
+        "arabic": "سِحْر",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.35,
+        "meaningDE": "Übersetzung für سِحْر fehlt"
+    },
+    {
+        "id": "383",
+        "arabic": "كَرِيم",
+        "frequency": 28,
+        "partOfSpeech": "Adjective",
+        "percentage": 75.38,
+        "meaningDE": "Übersetzung für كَرِيم fehlt"
+    },
+    {
+        "id": "384",
+        "arabic": "كَلِمَة",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.42,
+        "meaningDE": "Übersetzung für كَلِمَة fehlt"
+    },
+    {
+        "id": "385",
+        "arabic": "مَسْجِد",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.46,
+        "meaningDE": "Übersetzung für مَسْجِد fehlt"
+    },
+    {
+        "id": "386",
+        "arabic": "مَصِير",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.5,
+        "meaningDE": "Übersetzung für مَصِير fehlt"
+    },
+    {
+        "id": "387",
+        "arabic": "مَّغْفِرَة",
+        "frequency": 28,
+        "partOfSpeech": "Noun",
+        "percentage": 75.53,
+        "meaningDE": "Übersetzung für مَّغْفِرَة fehlt"
+    },
+    {
+        "id": "388",
+        "arabic": "ٱسْتَجَابَ",
+        "frequency": 28,
+        "partOfSpeech": "Verb",
+        "percentage": 75.57,
+        "meaningDE": "Übersetzung für ٱسْتَجَابَ fehlt"
+    },
+    {
+        "id": "389",
+        "arabic": "رَّحِمَ",
+        "frequency": 28,
+        "partOfSpeech": "Verb",
+        "percentage": 75.61,
+        "meaningDE": "Übersetzung für رَّحِمَ fehlt"
+    },
+    {
+        "id": "390",
+        "arabic": "أَصْبَحَ",
+        "frequency": 28,
+        "partOfSpeech": "Verb",
+        "percentage": 75.65,
+        "meaningDE": "Übersetzung für أَصْبَحَ fehlt"
+    },
+    {
+        "id": "391",
+        "arabic": "أَصْلَحَ",
+        "frequency": 28,
+        "partOfSpeech": "Verb",
+        "percentage": 75.69,
+        "meaningDE": "Übersetzung für أَصْلَحَ fehlt"
+    },
+    {
+        "id": "392",
+        "arabic": "أَغْنَتْ",
+        "frequency": 28,
+        "partOfSpeech": "Verb",
+        "percentage": 75.72,
+        "meaningDE": "Übersetzung für أَغْنَتْ fehlt"
+    },
+    {
+        "id": "393",
+        "arabic": "أَنَّىٰ",
+        "frequency": 27,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 75.76,
+        "meaningDE": "Übersetzung für أَنَّىٰ fehlt"
+    },
+    {
+        "id": "394",
+        "arabic": "بَاب",
+        "frequency": 27,
+        "partOfSpeech": "Noun",
+        "percentage": 75.8,
+        "meaningDE": "Übersetzung für بَاب fehlt"
+    },
+    {
+        "id": "395",
+        "arabic": "غَٰفِل",
+        "frequency": 27,
+        "partOfSpeech": "Noun",
+        "percentage": 75.83,
+        "meaningDE": "Übersetzung für غَٰفِل fehlt"
+    },
+    {
+        "id": "396",
+        "arabic": "قَلِيل",
+        "frequency": 27,
+        "partOfSpeech": "Adjective",
+        "percentage": 75.87,
+        "meaningDE": "Übersetzung für قَلِيل fehlt"
+    },
+    {
+        "id": "397",
+        "arabic": "قَمَر",
+        "frequency": 27,
+        "partOfSpeech": "Noun",
+        "percentage": 75.91,
+        "meaningDE": "Übersetzung für قَمَر fehlt"
+    },
+    {
+        "id": "398",
+        "arabic": "كَافِر",
+        "frequency": 27,
+        "partOfSpeech": "Noun",
+        "percentage": 75.94,
+        "meaningDE": "Übersetzung für كَافِر fehlt"
+    },
+    {
+        "id": "399",
+        "arabic": "لُوط",
+        "frequency": 27,
+        "partOfSpeech": "Proper noun",
+        "percentage": 75.98,
+        "meaningDE": "Übersetzung für لُوط fehlt"
+    },
+    {
+        "id": "400",
+        "arabic": "مُنَٰفِقُون",
+        "frequency": 27,
+        "partOfSpeech": "Noun",
+        "percentage": 76.02,
+        "meaningDE": "Übersetzung für مُنَٰفِقُون fehlt"
+    },
+    {
+        "id": "401",
+        "arabic": "يُوسُف",
+        "frequency": 27,
+        "partOfSpeech": "Proper noun",
+        "percentage": 76.05,
+        "meaningDE": "Übersetzung für يُوسُف fehlt"
+    },
+    {
+        "id": "402",
+        "arabic": "جَٰهَدَ",
+        "frequency": 27,
+        "partOfSpeech": "Verb",
+        "percentage": 76.09,
+        "meaningDE": "Übersetzung für جَٰهَدَ fehlt"
+    },
+    {
+        "id": "403",
+        "arabic": "عَصَا",
+        "frequency": 27,
+        "partOfSpeech": "Verb",
+        "percentage": 76.12,
+        "meaningDE": "Übersetzung für عَصَا fehlt"
+    },
+    {
+        "id": "404",
+        "arabic": "عَفَا",
+        "frequency": 27,
+        "partOfSpeech": "Verb",
+        "percentage": 76.16,
+        "meaningDE": "Übersetzung für عَفَا fehlt"
+    },
+    {
+        "id": "405",
+        "arabic": "أَفْلَحَ",
+        "frequency": 27,
+        "partOfSpeech": "Verb",
+        "percentage": 76.2,
+        "meaningDE": "Übersetzung für أَفْلَحَ fehlt"
+    },
+    {
+        "id": "406",
+        "arabic": "قَدَّمَ",
+        "frequency": 27,
+        "partOfSpeech": "Verb",
+        "percentage": 76.23,
+        "meaningDE": "Übersetzung für قَدَّمَ fehlt"
+    },
+    {
+        "id": "407",
+        "arabic": "آخَر",
+        "frequency": 26,
+        "partOfSpeech": "Adjective",
+        "percentage": 76.27,
+        "meaningDE": "Übersetzung für آخَر fehlt"
+    },
+    {
+        "id": "408",
+        "arabic": "أَجْمَعِين",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.3,
+        "meaningDE": "Übersetzung für أَجْمَعِين fehlt"
+    },
+    {
+        "id": "409",
+        "arabic": "ٱمْرَأَت",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.34,
+        "meaningDE": "Übersetzung für ٱمْرَأَت fehlt"
+    },
+    {
+        "id": "410",
+        "arabic": "بَٰطِل",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.37,
+        "meaningDE": "Übersetzung für بَٰطِل fehlt"
+    },
+    {
+        "id": "411",
+        "arabic": "ثَمُود",
+        "frequency": 26,
+        "partOfSpeech": "Proper noun",
+        "percentage": 76.41,
+        "meaningDE": "Übersetzung für ثَمُود fehlt"
+    },
+    {
+        "id": "412",
+        "arabic": "جَحِيم",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.44,
+        "meaningDE": "Übersetzung für جَحِيم fehlt"
+    },
+    {
+        "id": "413",
+        "arabic": "خَوْف",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.48,
+        "meaningDE": "Übersetzung für خَوْف fehlt"
+    },
+    {
+        "id": "414",
+        "arabic": "سَوَآء",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.51,
+        "meaningDE": "Übersetzung für سَوَآء fehlt"
+    },
+    {
+        "id": "415",
+        "arabic": "كَيْد",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.55,
+        "meaningDE": "Übersetzung für كَيْد fehlt"
+    },
+    {
+        "id": "416",
+        "arabic": "مَاذَا",
+        "frequency": 26,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 76.58,
+        "meaningDE": "Übersetzung für مَاذَا fehlt"
+    },
+    {
+        "id": "417",
+        "arabic": "ءَال",
+        "frequency": 26,
+        "partOfSpeech": "Noun",
+        "percentage": 76.62,
+        "meaningDE": "Übersetzung für ءَال fehlt"
+    },
+    {
+        "id": "418",
+        "arabic": "زَيَّنَ",
+        "frequency": 26,
+        "partOfSpeech": "Verb",
+        "percentage": 76.65,
+        "meaningDE": "Übersetzung für زَيَّنَ fehlt"
+    },
+    {
+        "id": "419",
+        "arabic": "آدَم",
+        "frequency": 25,
+        "partOfSpeech": "Proper noun",
+        "percentage": 76.69,
+        "meaningDE": "Übersetzung für آدَم fehlt"
+    },
+    {
+        "id": "420",
+        "arabic": "بَأْس",
+        "frequency": 25,
+        "partOfSpeech": "Noun",
+        "percentage": 76.72,
+        "meaningDE": "Übersetzung für بَأْس fehlt"
+    },
+    {
+        "id": "421",
+        "arabic": "جُنَاح",
+        "frequency": 25,
+        "partOfSpeech": "Noun",
+        "percentage": 76.76,
+        "meaningDE": "Übersetzung für جُنَاح fehlt"
+    },
+    {
+        "id": "422",
+        "arabic": "حَسَنَة",
+        "frequency": 25,
+        "partOfSpeech": "Noun",
+        "percentage": 76.79,
+        "meaningDE": "Übersetzung für حَسَنَة fehlt"
+    },
+    {
+        "id": "423",
+        "arabic": "عِيسَى",
+        "frequency": 25,
+        "partOfSpeech": "Proper noun",
+        "percentage": 76.82,
+        "meaningDE": "Übersetzung für عِيسَى fehlt"
+    },
+    {
+        "id": "424",
+        "arabic": "فَوْق",
+        "frequency": 25,
+        "partOfSpeech": "Noun",
+        "percentage": 76.86,
+        "meaningDE": "Übersetzung für فَوْق fehlt"
+    },
+    {
+        "id": "425",
+        "arabic": "لِسَان",
+        "frequency": 25,
+        "partOfSpeech": "Noun",
+        "percentage": 76.89,
+        "meaningDE": "Übersetzung für لِسَان fehlt"
+    },
+    {
+        "id": "426",
+        "arabic": "مَّكَان",
+        "frequency": 25,
+        "partOfSpeech": "Noun",
+        "percentage": 76.92,
+        "meaningDE": "Übersetzung für مَّكَان fehlt"
+    },
+    {
+        "id": "427",
+        "arabic": "مِّيثَٰق",
+        "frequency": 25,
+        "partOfSpeech": "Noun",
+        "percentage": 76.96,
+        "meaningDE": "Übersetzung für مِّيثَٰق fehlt"
+    },
+    {
+        "id": "428",
+        "arabic": "بَغَىٰ",
+        "frequency": 25,
+        "partOfSpeech": "Verb",
+        "percentage": 76.99,
+        "meaningDE": "Übersetzung für بَغَىٰ fehlt"
+    },
+    {
+        "id": "429",
+        "arabic": "جَٰدَلُ",
+        "frequency": 25,
+        "partOfSpeech": "Verb",
+        "percentage": 77.03,
+        "meaningDE": "Übersetzung für جَٰدَلُ fehlt"
+    },
+    {
+        "id": "430",
+        "arabic": "خَلَا",
+        "frequency": 25,
+        "partOfSpeech": "Verb",
+        "percentage": 77.06,
+        "meaningDE": "Übersetzung für خَلَا fehlt"
+    },
+    {
+        "id": "431",
+        "arabic": "يَشْعُرُ",
+        "frequency": 25,
+        "partOfSpeech": "Verb",
+        "percentage": 77.09,
+        "meaningDE": "Übersetzung für يَشْعُرُ fehlt"
+    },
+    {
+        "id": "432",
+        "arabic": "قَدَرَ",
+        "frequency": 25,
+        "partOfSpeech": "Verb",
+        "percentage": 77.13,
+        "meaningDE": "Übersetzung für قَدَرَ fehlt"
+    },
+    {
+        "id": "433",
+        "arabic": "أُنثَىٰ",
+        "frequency": 24,
+        "partOfSpeech": "Noun",
+        "percentage": 77.16,
+        "meaningDE": "Übersetzung für أُنثَىٰ fehlt"
+    },
+    {
+        "id": "434",
+        "arabic": "أَىّ",
+        "frequency": 24,
+        "partOfSpeech": "Noun",
+        "percentage": 77.19,
+        "meaningDE": "Übersetzung für أَىّ fehlt"
+    },
+    {
+        "id": "435",
+        "arabic": "إِيَّا",
+        "frequency": 24,
+        "partOfSpeech": "Personal pronoun",
+        "percentage": 77.22,
+        "meaningDE": "Übersetzung für إِيَّا fehlt"
+    },
+    {
+        "id": "436",
+        "arabic": "طَعَام",
+        "frequency": 24,
+        "partOfSpeech": "Noun",
+        "percentage": 77.26,
+        "meaningDE": "Übersetzung für طَعَام fehlt"
+    },
+    {
+        "id": "437",
+        "arabic": "ظَالِم",
+        "frequency": 24,
+        "partOfSpeech": "Adjective",
+        "percentage": 77.29,
+        "meaningDE": "Übersetzung für ظَالِم fehlt"
+    },
+    {
+        "id": "438",
+        "arabic": "عَاد",
+        "frequency": 24,
+        "partOfSpeech": "Proper noun",
+        "percentage": 77.32,
+        "meaningDE": "Übersetzung für عَاد fehlt"
+    },
+    {
+        "id": "439",
+        "arabic": "فَاسِق",
+        "frequency": 24,
+        "partOfSpeech": "Noun",
+        "percentage": 77.35,
+        "meaningDE": "Übersetzung für فَاسِق fehlt"
+    },
+    {
+        "id": "440",
+        "arabic": "لِقَآء",
+        "frequency": 24,
+        "partOfSpeech": "Noun",
+        "percentage": 77.39,
+        "meaningDE": "Übersetzung für لِقَآء fehlt"
+    },
+    {
+        "id": "441",
+        "arabic": "مُسْلِم",
+        "frequency": 24,
+        "partOfSpeech": "Noun",
+        "percentage": 77.42,
+        "meaningDE": "Übersetzung für مُسْلِم fehlt"
+    },
+    {
+        "id": "442",
+        "arabic": "وَٰحِد",
+        "frequency": 24,
+        "partOfSpeech": "Adjective",
+        "percentage": 77.45,
+        "meaningDE": "Übersetzung für وَٰحِد fehlt"
+    },
+    {
+        "id": "443",
+        "arabic": "وَكِيل",
+        "frequency": 24,
+        "partOfSpeech": "Noun",
+        "percentage": 77.48,
+        "meaningDE": "Übersetzung für وَكِيل fehlt"
+    },
+    {
+        "id": "444",
+        "arabic": "كَادَ",
+        "frequency": 24,
+        "partOfSpeech": "Verb",
+        "percentage": 77.52,
+        "meaningDE": "Übersetzung für كَادَ fehlt"
+    },
+    {
+        "id": "445",
+        "arabic": "تَوَفَّىٰ",
+        "frequency": 24,
+        "partOfSpeech": "Verb",
+        "percentage": 77.55,
+        "meaningDE": "Übersetzung für تَوَفَّىٰ fehlt"
+    },
+    {
+        "id": "446",
+        "arabic": "بَيْن",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.58,
+        "meaningDE": "Übersetzung für بَيْن fehlt"
+    },
+    {
+        "id": "447",
+        "arabic": "حَيّ",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.61,
+        "meaningDE": "Übersetzung für حَيّ fehlt"
+    },
+    {
+        "id": "448",
+        "arabic": "خَبِير",
+        "frequency": 23,
+        "partOfSpeech": "Adjective",
+        "percentage": 77.64,
+        "meaningDE": "Übersetzung für خَبِير fehlt"
+    },
+    {
+        "id": "449",
+        "arabic": "ذِكْرَىٰ",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.67,
+        "meaningDE": "Übersetzung für ذِكْرَىٰ fehlt"
+    },
+    {
+        "id": "450",
+        "arabic": "شَهَٰدَة",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.7,
+        "meaningDE": "Übersetzung für شَهَٰدَة fehlt"
+    },
+    {
+        "id": "451",
+        "arabic": "طَآئِفَة",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.73,
+        "meaningDE": "Übersetzung für طَآئِفَة fehlt"
+    },
+    {
+        "id": "452",
+        "arabic": "فُلْك",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.77,
+        "meaningDE": "Übersetzung für فُلْك fehlt"
+    },
+    {
+        "id": "453",
+        "arabic": "قَرْن",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.8,
+        "meaningDE": "Übersetzung für قَرْن fehlt"
+    },
+    {
+        "id": "454",
+        "arabic": "مَا",
+        "frequency": 23,
+        "partOfSpeech": "Conditional particle",
+        "percentage": 77.83,
+        "meaningDE": "Übersetzung für مَا fehlt"
+    },
+    {
+        "id": "455",
+        "arabic": "مُّسْتَقِيم",
+        "frequency": 23,
+        "partOfSpeech": "Noun",
+        "percentage": 77.86,
+        "meaningDE": "Übersetzung für مُّسْتَقِيم fehlt"
+    },
+    {
+        "id": "456",
+        "arabic": "أَذِنَ",
+        "frequency": 23,
+        "partOfSpeech": "Verb",
+        "percentage": 77.89,
+        "meaningDE": "Übersetzung für أَذِنَ fehlt"
+    },
+    {
+        "id": "457",
+        "arabic": "بَدَّلَ",
+        "frequency": 23,
+        "partOfSpeech": "Verb",
+        "percentage": 77.92,
+        "meaningDE": "Übersetzung für بَدَّلَ fehlt"
+    },
+    {
+        "id": "458",
+        "arabic": "فَتَنُ",
+        "frequency": 23,
+        "partOfSpeech": "Verb",
+        "percentage": 77.95,
+        "meaningDE": "Übersetzung für فَتَنُ fehlt"
+    },
+    {
+        "id": "459",
+        "arabic": "لَعَنَ",
+        "frequency": 23,
+        "partOfSpeech": "Verb",
+        "percentage": 77.98,
+        "meaningDE": "Übersetzung für لَعَنَ fehlt"
+    },
+    {
+        "id": "460",
+        "arabic": "أَنجَىٰ",
+        "frequency": 23,
+        "partOfSpeech": "Verb",
+        "percentage": 78.01,
+        "meaningDE": "Übersetzung für أَنجَىٰ fehlt"
+    },
+    {
+        "id": "461",
+        "arabic": "ٱلَّذِى",
+        "frequency": 22,
+        "partOfSpeech": "Conditional particle",
+        "percentage": 78.04,
+        "meaningDE": "Übersetzung für ٱلَّذِى fehlt"
+    },
+    {
+        "id": "462",
+        "arabic": "إِمَّا",
+        "frequency": 22,
+        "partOfSpeech": "Explanation particle",
+        "percentage": 78.07,
+        "meaningDE": "Übersetzung für إِمَّا fehlt"
+    },
+    {
+        "id": "463",
+        "arabic": "بَلَىٰ",
+        "frequency": 22,
+        "partOfSpeech": "Answer particle",
+        "percentage": 78.1,
+        "meaningDE": "Übersetzung für بَلَىٰ fehlt"
+    },
+    {
+        "id": "464",
+        "arabic": "جِنّ",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.13,
+        "meaningDE": "Übersetzung für جِنّ fehlt"
+    },
+    {
+        "id": "465",
+        "arabic": "خَبِير",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.16,
+        "meaningDE": "Übersetzung für خَبِير fehlt"
+    },
+    {
+        "id": "466",
+        "arabic": "دُعَآء",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.19,
+        "meaningDE": "Übersetzung für دُعَآء fehlt"
+    },
+    {
+        "id": "467",
+        "arabic": "سَٰحِر",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.22,
+        "meaningDE": "Übersetzung für سَٰحِر fehlt"
+    },
+    {
+        "id": "468",
+        "arabic": "سَبْع",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.25,
+        "meaningDE": "Übersetzung für سَبْع fehlt"
+    },
+    {
+        "id": "469",
+        "arabic": "سَمْع",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.28,
+        "meaningDE": "Übersetzung für سَمْع fehlt"
+    },
+    {
+        "id": "470",
+        "arabic": "ظُلُمَٰت",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.31,
+        "meaningDE": "Übersetzung für ظُلُمَٰت fehlt"
+    },
+    {
+        "id": "471",
+        "arabic": "مَأْوَىٰ",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.34,
+        "meaningDE": "Übersetzung für مَأْوَىٰ fehlt"
+    },
+    {
+        "id": "472",
+        "arabic": "مِسْكِين",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.37,
+        "meaningDE": "Übersetzung für مِسْكِين fehlt"
+    },
+    {
+        "id": "473",
+        "arabic": "نَصْر",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.4,
+        "meaningDE": "Übersetzung für نَصْر fehlt"
+    },
+    {
+        "id": "474",
+        "arabic": "وَٰحِدَة",
+        "frequency": 22,
+        "partOfSpeech": "Noun",
+        "percentage": 78.43,
+        "meaningDE": "Übersetzung für وَٰحِدَة fehlt"
+    },
+    {
+        "id": "475",
+        "arabic": "جَمَعَ",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.46,
+        "meaningDE": "Übersetzung für جَمَعَ fehlt"
+    },
+    {
+        "id": "476",
+        "arabic": "أَذَاقَ",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.49,
+        "meaningDE": "Übersetzung für أَذَاقَ fehlt"
+    },
+    {
+        "id": "477",
+        "arabic": "يَرْجُوا۟",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.52,
+        "meaningDE": "Übersetzung für يَرْجُوا۟ fehlt"
+    },
+    {
+        "id": "478",
+        "arabic": "رَفَعَ",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.55,
+        "meaningDE": "Übersetzung für رَفَعَ fehlt"
+    },
+    {
+        "id": "479",
+        "arabic": "سَخَّرَ",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.58,
+        "meaningDE": "Übersetzung für سَخَّرَ fehlt"
+    },
+    {
+        "id": "480",
+        "arabic": "أَسْلَمَ",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.61,
+        "meaningDE": "Übersetzung für أَسْلَمَ fehlt"
+    },
+    {
+        "id": "481",
+        "arabic": "مَكَرَ",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.64,
+        "meaningDE": "Übersetzung für مَكَرَ fehlt"
+    },
+    {
+        "id": "482",
+        "arabic": "وَهَبَ",
+        "frequency": 22,
+        "partOfSpeech": "Verb",
+        "percentage": 78.67,
+        "meaningDE": "Übersetzung für وَهَبَ fehlt"
+    },
+    {
+        "id": "483",
+        "arabic": "آخِر",
+        "frequency": 21,
+        "partOfSpeech": "Adjective",
+        "percentage": 78.69,
+        "meaningDE": "Übersetzung für آخِر fehlt"
+    },
+    {
+        "id": "484",
+        "arabic": "بَرّ",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.72,
+        "meaningDE": "Übersetzung für بَرّ fehlt"
+    },
+    {
+        "id": "485",
+        "arabic": "رُوح",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.75,
+        "meaningDE": "Übersetzung für رُوح fehlt"
+    },
+    {
+        "id": "486",
+        "arabic": "سَيِّئَة",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.78,
+        "meaningDE": "Übersetzung für سَيِّئَة fehlt"
+    },
+    {
+        "id": "487",
+        "arabic": "شَهْر",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.81,
+        "meaningDE": "Übersetzung für شَهْر fehlt"
+    },
+    {
+        "id": "488",
+        "arabic": "طَيِّبَٰت",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.84,
+        "meaningDE": "Übersetzung für طَيِّبَٰت fehlt"
+    },
+    {
+        "id": "489",
+        "arabic": "ظَنّ",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.86,
+        "meaningDE": "Übersetzung für ظَنّ fehlt"
+    },
+    {
+        "id": "490",
+        "arabic": "كَثِير",
+        "frequency": 21,
+        "partOfSpeech": "Adjective",
+        "percentage": 78.89,
+        "meaningDE": "Übersetzung für كَثِير fehlt"
+    },
+    {
+        "id": "491",
+        "arabic": "مُفْسِد",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.92,
+        "meaningDE": "Übersetzung für مُفْسِد fehlt"
+    },
+    {
+        "id": "492",
+        "arabic": "مُّكَذِّبِين",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.95,
+        "meaningDE": "Übersetzung für مُّكَذِّبِين fehlt"
+    },
+    {
+        "id": "493",
+        "arabic": "نَصِيب",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 78.98,
+        "meaningDE": "Übersetzung für نَصِيب fehlt"
+    },
+    {
+        "id": "494",
+        "arabic": "يَتِيم",
+        "frequency": 21,
+        "partOfSpeech": "Noun",
+        "percentage": 79.01,
+        "meaningDE": "Übersetzung für يَتِيم fehlt"
+    },
+    {
+        "id": "495",
+        "arabic": "أَحْسَنَ",
+        "frequency": 21,
+        "partOfSpeech": "Verb",
+        "percentage": 79.03,
+        "meaningDE": "Übersetzung für أَحْسَنَ fehlt"
+    },
+    {
+        "id": "496",
+        "arabic": "ٱشْتَرَىٰ",
+        "frequency": 21,
+        "partOfSpeech": "Verb",
+        "percentage": 79.06,
+        "meaningDE": "Übersetzung für ٱشْتَرَىٰ fehlt"
+    },
+    {
+        "id": "497",
+        "arabic": "كَتَمَ",
+        "frequency": 21,
+        "partOfSpeech": "Verb",
+        "percentage": 79.09,
+        "meaningDE": "Übersetzung für كَتَمَ fehlt"
+    },
+    {
+        "id": "498",
+        "arabic": "مَّشَ",
+        "frequency": 21,
+        "partOfSpeech": "Verb",
+        "percentage": 79.12,
+        "meaningDE": "Übersetzung für مَّشَ fehlt"
+    },
+    {
+        "id": "499",
+        "arabic": "أَمَاتَ",
+        "frequency": 21,
+        "partOfSpeech": "Verb",
+        "percentage": 79.15,
+        "meaningDE": "Übersetzung für أَمَاتَ fehlt"
+    },
+    {
+        "id": "500",
+        "arabic": "ٱسْتُهْزِئَ",
+        "frequency": 21,
+        "partOfSpeech": "Verb",
+        "percentage": 79.18,
+        "meaningDE": "Übersetzung für ٱسْتُهْزِئَ fehlt"
+    },
+    {
+        "id": "501",
+        "arabic": "وَضَعَ",
+        "frequency": 21,
+        "partOfSpeech": "Verb",
+        "percentage": 79.2,
+        "meaningDE": "Übersetzung für وَضَعَ fehlt"
+    },
+    {
+        "id": "502",
+        "arabic": "بَصِير",
+        "frequency": 20,
+        "partOfSpeech": "Adjective",
+        "percentage": 79.23,
+        "meaningDE": "Übersetzung für بَصِير fehlt"
+    },
+    {
+        "id": "503",
+        "arabic": "بَعِيد",
+        "frequency": 20,
+        "partOfSpeech": "Adjective",
+        "percentage": 79.26,
+        "meaningDE": "Übersetzung für بَعِيد fehlt"
+    },
+    {
+        "id": "504",
+        "arabic": "حِزْب",
+        "frequency": 20,
+        "partOfSpeech": "Noun",
+        "percentage": 79.29,
+        "meaningDE": "Übersetzung für حِزْب fehlt"
+    },
+    {
+        "id": "505",
+        "arabic": "حَسَن",
+        "frequency": 20,
+        "partOfSpeech": "Adjective",
+        "percentage": 79.31,
+        "meaningDE": "Übersetzung für حَسَن fehlt"
+    },
+    {
+        "id": "506",
+        "arabic": "حِكْمَة",
+        "frequency": 20,
+        "partOfSpeech": "Noun",
+        "percentage": 79.34,
+        "meaningDE": "Übersetzung für حِكْمَة fehlt"
+    },
+    {
+        "id": "507",
+        "arabic": "شَدِيد",
+        "frequency": 20,
+        "partOfSpeech": "Noun",
+        "percentage": 79.37,
+        "meaningDE": "Übersetzung für شَدِيد fehlt"
+    },
+    {
+        "id": "508",
+        "arabic": "ظُلْم",
+        "frequency": 20,
+        "partOfSpeech": "Noun",
+        "percentage": 79.39,
+        "meaningDE": "Übersetzung für ظُلْم fehlt"
+    },
+    {
+        "id": "509",
+        "arabic": "عِقَاب",
+        "frequency": 20,
+        "partOfSpeech": "Noun",
+        "percentage": 79.42,
+        "meaningDE": "Übersetzung für عِقَاب fehlt"
+    },
+    {
+        "id": "510",
+        "arabic": "غَنِىّ",
+        "frequency": 20,
+        "partOfSpeech": "Noun",
+        "percentage": 79.45,
+        "meaningDE": "Übersetzung für غَنِىّ fehlt"
+    },
+    {
+        "id": "511",
+        "arabic": "كَم",
+        "frequency": 20,
+        "partOfSpeech": "Interogative particle",
+        "percentage": 79.47,
+        "meaningDE": "Übersetzung für كَم fehlt"
+    },
+    {
+        "id": "512",
+        "arabic": "لَدَي",
+        "frequency": 20,
+        "partOfSpeech": "Location adverb",
+        "percentage": 79.5,
+        "meaningDE": "Übersetzung für لَدَي fehlt"
+    },
+    {
+        "id": "513",
+        "arabic": "هَٰرُون",
+        "frequency": 20,
+        "partOfSpeech": "Proper noun",
+        "percentage": 79.53,
+        "meaningDE": "Übersetzung für هَٰرُون fehlt"
+    },
+    {
+        "id": "514",
+        "arabic": "أَمِنَ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.56,
+        "meaningDE": "Übersetzung für أَمِنَ fehlt"
+    },
+    {
+        "id": "515",
+        "arabic": "بَلَوْ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.58,
+        "meaningDE": "Übersetzung für بَلَوْ fehlt"
+    },
+    {
+        "id": "516",
+        "arabic": "حَقَّ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.61,
+        "meaningDE": "Übersetzung für حَقَّ fehlt"
+    },
+    {
+        "id": "517",
+        "arabic": "أَحَلَّ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.64,
+        "meaningDE": "Übersetzung für أَحَلَّ fehlt"
+    },
+    {
+        "id": "518",
+        "arabic": "سَبَقَ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.66,
+        "meaningDE": "Übersetzung für سَبَقَ fehlt"
+    },
+    {
+        "id": "519",
+        "arabic": "سَعَىٰ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.69,
+        "meaningDE": "Übersetzung für سَعَىٰ fehlt"
+    },
+    {
+        "id": "520",
+        "arabic": "أَعَدَّ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.72,
+        "meaningDE": "Übersetzung für أَعَدَّ fehlt"
+    },
+    {
+        "id": "521",
+        "arabic": "عَرَفَ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.74,
+        "meaningDE": "Übersetzung für عَرَفَ fehlt"
+    },
+    {
+        "id": "522",
+        "arabic": "تَعَٰلَىٰ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.77,
+        "meaningDE": "Übersetzung für تَعَٰلَىٰ fehlt"
+    },
+    {
+        "id": "523",
+        "arabic": "أَقْسَمُ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.8,
+        "meaningDE": "Übersetzung für أَقْسَمُ fehlt"
+    },
+    {
+        "id": "524",
+        "arabic": "قَصَّ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.83,
+        "meaningDE": "Übersetzung für قَصَّ fehlt"
+    },
+    {
+        "id": "525",
+        "arabic": "كَلَّمَ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.85,
+        "meaningDE": "Übersetzung für كَلَّمَ fehlt"
+    },
+    {
+        "id": "526",
+        "arabic": "أَنشَأَ",
+        "frequency": 20,
+        "partOfSpeech": "Verb",
+        "percentage": 79.88,
+        "meaningDE": "Übersetzung für أَنشَأَ fehlt"
+    },
+    {
+        "id": "527",
+        "arabic": "أَوَّل",
+        "frequency": 19,
+        "partOfSpeech": "Adjective",
+        "percentage": 79.9,
+        "meaningDE": "Übersetzung für أَوَّل fehlt"
+    },
+    {
+        "id": "528",
+        "arabic": "زِينَة",
+        "frequency": 19,
+        "partOfSpeech": "Noun",
+        "percentage": 79.93,
+        "meaningDE": "Übersetzung für زِينَة fehlt"
+    },
+    {
+        "id": "529",
+        "arabic": "شَاهِد",
+        "frequency": 19,
+        "partOfSpeech": "Noun",
+        "percentage": 79.96,
+        "meaningDE": "Übersetzung für شَاهِد fehlt"
+    },
+    {
+        "id": "530",
+        "arabic": "شَجَرَة",
+        "frequency": 19,
+        "partOfSpeech": "Noun",
+        "percentage": 79.98,
+        "meaningDE": "Übersetzung für شَجَرَة fehlt"
+    }
+]

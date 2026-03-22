@@ -2,12 +2,17 @@
 //  AppState.swift
 //  DeenApp
 //
+<<<<<<< HEAD
 //  Globaler App-Zustand (z. B. ausgewählter Tab, Nutzername, Sprache, Standort, Onboarding).
+=======
+//  Globaler App-Zustand (z. B. ausgewählter Tab, Nutzername)
+>>>>>>> origin/claude/adoring-banach
 //
 
 import SwiftUI
 import Combine
 
+<<<<<<< HEAD
 private enum UserDefaultsKeys {
     static let onboardingCompleted = "dailydee.onboardingCompleted"
     static let userName = "dailydee.userName"
@@ -231,6 +236,11 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
         case .dark: return .dark
         }
     }
+=======
+final class AppState: ObservableObject {
+    @Published var selectedTab: MainTab = .start
+    @Published var userName: String = "Berat"
+>>>>>>> origin/claude/adoring-banach
 }
 
 enum MainTab: Int, CaseIterable {
@@ -238,6 +248,7 @@ enum MainTab: Int, CaseIterable {
     case quran
     case lernen
     case gebet
+<<<<<<< HEAD
 
     func title(lang: AppLanguage) -> String {
         switch self {
@@ -245,15 +256,34 @@ enum MainTab: Int, CaseIterable {
         case .quran: return L10n.tabQuran(lang)
         case .lernen: return L10n.tabLernen(lang)
         case .gebet: return L10n.tabGebet(lang)
+=======
+    case hifz
+
+    var title: String {
+        switch self {
+        case .start:  return "Start"
+        case .quran:  return "Quran"
+        case .lernen: return "Lernen"
+        case .gebet:  return "Gebet"
+        case .hifz:   return "Hifz"
+>>>>>>> origin/claude/adoring-banach
         }
     }
 
     var iconName: String {
         switch self {
+<<<<<<< HEAD
         case .start: return "house.fill"
         case .quran: return "book.fill"
         case .lernen: return "graduationcap.fill"
         case .gebet: return "heart.fill"
+=======
+        case .start:  return "house.fill"
+        case .quran:  return "book.fill"
+        case .lernen: return "graduationcap.fill"
+        case .gebet:  return "heart.fill"
+        case .hifz:   return "brain.head.profile"
+>>>>>>> origin/claude/adoring-banach
         }
     }
 }

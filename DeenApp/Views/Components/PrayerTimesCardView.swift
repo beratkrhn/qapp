@@ -8,6 +8,7 @@ import SwiftUI
 struct PrayerTimesCardView: View {
     let prayers: [PrayerTime]
     let nextPrayer: PrayerTime?
+<<<<<<< HEAD
     var kerahatTimes: [PrayerKind: String] = [:]
     var language: AppLanguage = .german
 
@@ -86,23 +87,33 @@ struct PrayerTimesCardView: View {
     }
 
     // MARK: - Body
+=======
+>>>>>>> origin/claude/adoring-banach
 
     var body: some View {
         CardContainer {
             VStack(alignment: .leading, spacing: 0) {
+<<<<<<< HEAD
 
                 // Section header
                 Text(L10n.todayPrayerTimes(language))
+=======
+                Text("HEUTIGE GEBETSZEITEN")
+>>>>>>> origin/claude/adoring-banach
                     .font(.caption.weight(.medium))
                     .tracking(0.8)
                     .foregroundColor(Theme.textSection)
                     .padding(.bottom, 14)
 
+<<<<<<< HEAD
                 // Prayer rows
+=======
+>>>>>>> origin/claude/adoring-banach
                 VStack(spacing: 0) {
                     ForEach(Array(prayers.enumerated()), id: \.element.id) { index, prayer in
                         PrayerRowView(
                             prayer: prayer,
+<<<<<<< HEAD
                             isNext: nextPrayer?.id == prayer.id,
                             language: language,
                             kerahatTimeString: kerahatTimes[prayer.kind]
@@ -229,6 +240,25 @@ struct PrayerRowView: View {
     /// Kerahat (disliked) period start time for prayers that have one (Dhuhr, Maghrib).
     /// Displayed in small red text immediately before the prayer time.
     var kerahatTimeString: String? = nil
+=======
+                            isNext: nextPrayer?.id == prayer.id
+                        )
+                        if index < prayers.count - 1 {
+                            Divider()
+                                .background(Theme.textSecondary.opacity(0.3))
+                                .padding(.vertical, 6)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct PrayerRowView: View {
+    let prayer: PrayerTime
+    let isNext: Bool
+>>>>>>> origin/claude/adoring-banach
 
     var body: some View {
         HStack(spacing: 12) {
@@ -237,12 +267,17 @@ struct PrayerRowView: View {
                 .foregroundColor(prayer.kind.iconColor)
                 .frame(width: 24, alignment: .center)
 
+<<<<<<< HEAD
             Text(L10n.prayerName(prayer.kind, language))
+=======
+            Text(prayer.kind.displayName)
+>>>>>>> origin/claude/adoring-banach
                 .font(.subheadline.weight(isNext ? .semibold : .regular))
                 .foregroundColor(Theme.textPrimary)
 
             Spacer()
 
+<<<<<<< HEAD
             if let kerahat = kerahatTimeString {
                 Text(kerahat)
                     .font(.caption2.weight(.medium).monospacedDigit())
@@ -253,16 +288,26 @@ struct PrayerRowView: View {
             Text(prayer.timeString)
                 .font(.subheadline.monospacedDigit())
                 .foregroundColor(isNext ? Theme.accent : Theme.textPrimary)
+=======
+            Text(prayer.timeString)
+                .font(.subheadline.monospacedDigit())
+                .foregroundColor(Theme.textPrimary)
+>>>>>>> origin/claude/adoring-banach
         }
         .padding(.vertical, 10)
         .padding(.horizontal, 12)
         .background(
             RoundedRectangle(cornerRadius: 10)
+<<<<<<< HEAD
                 .fill(isNext ? Theme.accent.opacity(0.15) : Color.clear)
+=======
+                .fill(isNext ? Theme.accent.opacity(0.2) : Color.clear)
+>>>>>>> origin/claude/adoring-banach
         )
     }
 }
 
+<<<<<<< HEAD
 // MARK: - Special Time Row
 
 private struct SpecialTimeRow: View {
@@ -303,6 +348,13 @@ private struct SpecialTimeRow: View {
         language: .german
     )
     .environmentObject(AppState())
+=======
+#Preview {
+    PrayerTimesCardView(
+        prayers: PrayerKind.allCases.map { PrayerTime(kind: $0, timeString: "00:00", referenceDate: Date()) },
+        nextPrayer: PrayerTime(kind: .fajr, timeString: "05:22", referenceDate: Date())
+    )
+>>>>>>> origin/claude/adoring-banach
     .padding()
     .background(Theme.background)
 }
