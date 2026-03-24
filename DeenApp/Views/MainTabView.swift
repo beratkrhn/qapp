@@ -25,13 +25,11 @@ struct MainTabView: View {
                 case .quran:
                     QuranView()
                 case .lernen:
-                    LearningDashboardView()
+                    LearnTabView()
                         .environment(srsViewModel)
                 case .gebet:
                     PrayerSelectionView()
                         .environment(prayerTutorialViewModel)
-                case .hifz:
-                    HifzMainView(modelContext: modelContext)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

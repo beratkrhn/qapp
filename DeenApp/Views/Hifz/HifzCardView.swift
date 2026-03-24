@@ -1,110 +1,85 @@
 // DeenApp/Views/Hifz/HifzCardView.swift
 //
-// Premium card that renders Arabic text with word-by-word highlighting.
-// Transitions smoothly between "visible" (read) and "blurred" (recall) states.
+// Glassmorphism card that renders a single Ayah with correct RTL Arabic text.
+// Supports active-ayah highlighting and a blur-based hide/show toggle.
 
 import SwiftUI
 
 struct HifzCardView: View {
 
-    let words: [HifzWord]
-    let activeWordID: UUID?
-    let isBlurred: Bool
+    let ayah: AyahData
+    let isActive: Bool
+    let isTextHidden: Bool
 
     var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            arabicTextFlow
-                .blur(radius: isBlurred ? 10 : 0)
-                .animation(.easeInOut(duration: 0.35), value: isBlurred)
+        VStack(alignment: .trailing, spacing: 12) {
+            ayahNumberBadge
+            arabicTextView
         }
-        .padding(Theme.cardPadding)
-        .frame(maxWidth: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: Theme.cardCornerRadius)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: Theme.cardCornerRadius)
-                        .strokeBorder(Theme.accent.opacity(0.15), lineWidth: 1)
-                )
-        )
-        .shadow(color: Theme.shadowColor, radius: Theme.shadowRadius, x: 0, y: Theme.shadowY)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 24)
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .background(cardBackground)
     }
 
-    // MARK: - Arabic Word Flow
+    // MARK: - Arabic Text (RTL, no truncation)
 
-    /// Lays out words right-to-left with per-word highlight.
-    private var arabicTextFlow: some View {
-        // SwiftUI has no native RTL wrapping FlowLayout, so we use
-        // a simple approach: reverse the word order and let .leading
-        // wrap + environment layoutDirection handle RTL visually.
-        let reversed = words.reversed()
-
-        return VStack(spacing: 8) {
-            FlowLayout(spacing: 6) {
-                ForEach(Array(reversed)) { word in
-                    wordChip(word)
-                }
-            }
-        }
-        .environment(\.layoutDirection, .rightToLeft)
+    private var arabicTextView: some View {
+        Text(ayah.arabicText)
+            .font(.system(size: 28))
+            .multilineTextAlignment(.trailing)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .environment(\.layoutDirection, .rightToLeft)
+            .foregroundStyle(Theme.textPrimary)
+            .blur(radius: isTextHidden ? 12 : 0)
+            .opacity(isTextHidden ? 0.5 : 1.0)
+            .animation(.easeInOut(duration: 0.3), value: isTextHidden)
     }
 
-    @ViewBuilder
-    private func wordChip(_ word: HifzWord) -> some View {
-        let isActive = word.id == activeWordID
+    // MARK: - Verse Number
 
-        Text(word.text)
-            .font(.system(size: 28, weight: .regular, design: .default))
-            .foregroundStyle(isActive ? Theme.accent : Theme.textPrimary.opacity(0.8))
-            .scaleEffect(isActive ? 1.12 : 1.0)
-            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isActive)
+    private var ayahNumberBadge: some View {
+        Text(ayah.ayahNumber.arabicNumerals)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(isActive ? .white : Theme.accent)
+            .frame(width: 32, height: 32)
+            .background(
+                Circle()
+                    .fill(isActive ? Theme.accent : Theme.accent.opacity(0.12))
+            )
+            .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    // MARK: - Card Background
+
+    private var cardBackground: some View {
+        RoundedRectangle(cornerRadius: 16)
+            .fill(.ultraThinMaterial)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(
+                        isActive ? Theme.accent.opacity(0.5) : Theme.accent.opacity(0.1),
+                        lineWidth: isActive ? 1.5 : 1
+                    )
+            )
+            .shadow(
+                color: isActive ? Theme.accent.opacity(0.15) : Theme.shadowColor,
+                radius: isActive ? 12 : Theme.shadowRadius,
+                x: 0,
+                y: isActive ? 4 : Theme.shadowY
+            )
     }
 }
 
-// MARK: - Minimal FlowLayout
+// MARK: - Arabic Numeral Helper
 
-/// A simple left-to-right wrapping layout (direction flipped per environment above).
-private struct FlowLayout: Layout {
-    var spacing: CGFloat = 4
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let maxWidth = proposal.width ?? .infinity
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-        var totalHeight: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > maxWidth, x > 0 {
-                y += rowHeight + spacing
-                totalHeight = y
-                x = 0
-                rowHeight = 0
-            }
-            x += size.width + spacing
-            rowHeight = max(rowHeight, size.height)
-        }
-        totalHeight += rowHeight
-        return CGSize(width: maxWidth, height: totalHeight)
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        var x = bounds.minX
-        var y = bounds.minY
-        var rowHeight: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > bounds.maxX, x > bounds.minX {
-                y += rowHeight + spacing
-                x = bounds.minX
-                rowHeight = 0
-            }
-            subview.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(size))
-            x += size.width + spacing
-            rowHeight = max(rowHeight, size.height)
-        }
+extension Int {
+    var arabicNumerals: String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "ar")
+        return formatter.string(from: NSNumber(value: self)) ?? "\(self)"
     }
 }
 
@@ -113,18 +88,30 @@ private struct FlowLayout: Layout {
 #Preview {
     ZStack {
         Theme.background.ignoresSafeArea()
-        HifzCardView(
-            words: sampleWords,
-            activeWordID: sampleWords[1].id,
-            isBlurred: false
-        )
+        VStack(spacing: 16) {
+            HifzCardView(
+                ayah: .preview,
+                isActive: true,
+                isTextHidden: false
+            )
+            HifzCardView(
+                ayah: .preview,
+                isActive: false,
+                isTextHidden: true
+            )
+        }
         .padding()
     }
 }
 
-private let sampleWords: [HifzWord] = [
-    HifzWord(text: "بِسْمِ",   startTime: 0,   endTime: 0.8),
-    HifzWord(text: "اللَّهِ",  startTime: 0.8, endTime: 1.5),
-    HifzWord(text: "الرَّحْمَٰنِ", startTime: 1.5, endTime: 2.4),
-    HifzWord(text: "الرَّحِيمِ", startTime: 2.4, endTime: 3.2),
-]
+private extension AyahData {
+    static let preview = AyahData(
+        id: 1,
+        verseKey: "1:1",
+        surahNumber: 1,
+        ayahNumber: 1,
+        arabicText: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+        words: [],
+        audioURL: URL(string: "https://example.com/audio.mp3")!
+    )
+}

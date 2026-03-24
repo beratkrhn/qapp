@@ -22,17 +22,15 @@ private struct V4Verse: Codable {
 
 private struct V4Word: Codable {
     let id: Int
-    let text_uthmani: String?    // only present when word_fields=text_uthmani is requested
-    let text: String?            // fallback plain-text field always present
+    let text_uthmani: String?
+    let text: String?
     let audio: V4WordAudio?
-    let char_type_name: String?  // "word" | "end" — guard against missing key
+    let char_type_name: String?
 }
 
 private struct V4WordAudio: Codable {
     let url: String?
     let duration: Double?
-    // Quran.com v4 returns timing as nested `segments` arrays, not flat fields —
-    // kept as optional so decoding never fails if the shape varies.
     let timestamp_from: Int?
     let timestamp_to: Int?
 }
@@ -50,6 +48,11 @@ final class HifzAudioService: NSObject, ObservableObject {
 
     @Published private(set) var activeWordID: UUID?
     @Published private(set) var playbackFinished: Bool = false
+    @Published private(set) var isPlaying: Bool = false
+    @Published private(set) var isPaused: Bool = false
+    @Published private(set) var playbackProgress: Double = 0
+    @Published private(set) var currentTime: Double = 0
+    @Published private(set) var audioDuration: Double = 0
 
     // MARK: - AVFoundation
 
@@ -59,7 +62,6 @@ final class HifzAudioService: NSObject, ObservableObject {
 
     // MARK: - Config
 
-    /// Quran.com reciter ID — Mishari Rashid al-'Afasy (default).
     private let reciterID: Int = 7
 
     private let session: URLSession = {
@@ -71,9 +73,7 @@ final class HifzAudioService: NSObject, ObservableObject {
 
     // MARK: - Public API
 
-    /// Fetch all verses for a Surah, including word-level timestamps.
     func fetchAyat(surahNumber: Int) async throws -> [AyahData] {
-        // Quran.com v4: fields=words,audio; word_fields=audio
         var components = URLComponents(string: "https://api.quran.com/api/v4/verses/by_chapter/\(surahNumber)")!
         components.queryItems = [
             URLQueryItem(name: "language",         value: "ar"),
@@ -93,18 +93,19 @@ final class HifzAudioService: NSObject, ObservableObject {
         return decoded.verses.compactMap { self.mapVerse($0, surahNumber: surahNumber) }
     }
 
-    /// Begin playback of a single Ayah, firing word-highlight updates.
     func play(ayah: AyahData) {
         stopAndClearObserver()
-        playbackFinished  = false
-        currentWords      = ayah.words
-        activeWordID      = nil
+        playbackFinished = false
+        currentWords     = ayah.words
+        activeWordID     = nil
+        isPaused         = false
+        playbackProgress = 0
+        currentTime      = 0
 
-        guard let asset = AVURLAsset(url: ayah.audioURL) as AVURLAsset? else { return }
-        let item   = AVPlayerItem(asset: asset)
-        player     = AVPlayer(playerItem: item)
+        let asset = AVURLAsset(url: ayah.audioURL)
+        let item  = AVPlayerItem(asset: asset)
+        player    = AVPlayer(playerItem: item)
 
-        // Register for playback-did-end
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(playerDidFinish),
@@ -112,24 +113,48 @@ final class HifzAudioService: NSObject, ObservableObject {
             object: item
         )
 
-        // Periodic observer every 50 ms for word highlighting
         let interval = CMTime(seconds: 0.05, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserverToken = player?.addPeriodicTimeObserver(
             forInterval: interval,
             queue: .main
         ) { [weak self] time in
-            self?.updateActiveWord(at: time.seconds)
+            guard let self else { return }
+            let secs = time.seconds
+            self.updateActiveWord(at: secs)
+            self.currentTime = secs
+            if let dur = self.player?.currentItem?.duration.seconds, dur.isFinite, dur > 0 {
+                self.audioDuration = dur
+                self.playbackProgress = secs / dur
+            }
         }
 
         configureAudioSession()
         player?.play()
+        isPlaying = true
     }
 
-    /// Stop playback and release resources.
+    func pause() {
+        player?.pause()
+        isPlaying = false
+        isPaused  = true
+    }
+
+    func resume() {
+        guard isPaused, player != nil else { return }
+        player?.play()
+        isPlaying = true
+        isPaused  = false
+    }
+
     func stop() {
         stopAndClearObserver()
         activeWordID     = nil
         playbackFinished = false
+        isPlaying        = false
+        isPaused         = false
+        playbackProgress = 0
+        currentTime      = 0
+        audioDuration    = 0
     }
 
     // MARK: - Private
@@ -144,7 +169,17 @@ final class HifzAudioService: NSObject, ObservableObject {
     }
 
     @objc private func playerDidFinish() {
-        stopAndClearObserver()
+        isPlaying        = false
+        isPaused         = false
+        playbackProgress = 1.0
+
+        if let token = timeObserverToken {
+            player?.removeTimeObserver(token)
+            timeObserverToken = nil
+        }
+        NotificationCenter.default.removeObserver(self,
+            name: .AVPlayerItemDidPlayToEndTime, object: nil)
+
         playbackFinished = true
     }
 
@@ -169,17 +204,14 @@ final class HifzAudioService: NSObject, ObservableObject {
     private func mapVerse(_ verse: V4Verse, surahNumber: Int) -> AyahData? {
         guard let audioPath = verse.audio?.url else { return nil }
 
-        // Resolve relative paths returned by the API
         let audioURLString = audioPath.hasPrefix("http")
             ? audioPath
             : "https://verses.quran.com/\(audioPath)"
         guard let audioURL = URL(string: audioURLString) else { return nil }
 
-        // Build HifzWord array from API words (skip punctuation / end markers)
         let hifzWords: [HifzWord] = verse.words
             .filter { ($0.char_type_name ?? "word") == "word" }
             .compactMap { w -> HifzWord? in
-                // text_uthmani is requested via word_fields; fall back to plain text
                 let arabic = w.text_uthmani ?? w.text ?? ""
                 guard !arabic.isEmpty else { return nil }
                 let start = Double(w.audio?.timestamp_from ?? 0) / 1000.0

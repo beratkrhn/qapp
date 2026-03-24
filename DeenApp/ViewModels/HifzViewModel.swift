@@ -1,7 +1,13 @@
 // DeenApp/ViewModels/HifzViewModel.swift
 //
-// State-machine driver for the 3×3 Memorisation Method.
-// Coordinates the audio service, SRS persistence, and heatmap logging.
+// State driver for the Hifz (memorisation) reader using the 3×3 Method.
+//
+// Phase 1 — Listen & Repeat:  Play the current Ayah 3 times.
+// Phase 2 — Connect:          Play Ayahs 1…N together, 3 times.
+// Then advance to the next Ayah and repeat.
+//
+// Also manages global text-visibility (eye toggle), manual loop override,
+// play/pause audio control, and SwiftData persistence.
 
 import Foundation
 import Combine
@@ -10,44 +16,83 @@ import SwiftData
 @MainActor
 final class HifzViewModel: ObservableObject {
 
+    // MARK: - 3×3 Phase
+
+    enum MemorizationPhase: Equatable {
+        case listenAndRepeat
+        case connect
+    }
+
     // MARK: - Published State
 
-    @Published private(set) var phase: HifzPhase = .idle
-    @Published private(set) var currentChunk: HifzChunk?
+    @Published private(set) var allAyat: [AyahData] = []
+    @Published private(set) var currentAyahIndex: Int = 0
+    @Published private(set) var playingAyahIndex: Int = 0
+    @Published private(set) var surahNumber: Int = 0
+    @Published private(set) var surahName: String = ""
     @Published private(set) var isLoading: Bool = false
-    @Published private(set) var activeWordID: UUID?          // for word-by-word highlight
     @Published private(set) var errorMessage: String?
+
+    @Published private(set) var activeWordID: UUID?
+    @Published private(set) var isPlaying: Bool = false
+    @Published private(set) var playbackProgress: Double = 0
+
+    @Published private(set) var currentPhase: MemorizationPhase = .listenAndRepeat
+    @Published private(set) var phaseRepeatCount: Int = 0
+
+    @Published var isTextHidden: Bool = false
+    @Published var isLooping: Bool = false
+
+    // MARK: - Computed
+
+    var totalAyahCount: Int { allAyat.count }
+    var isInSession: Bool { !allAyat.isEmpty }
+
+    var currentAyah: AyahData? {
+        allAyat.indices.contains(currentAyahIndex) ? allAyat[currentAyahIndex] : nil
+    }
+
+    var canGoNext: Bool { currentAyahIndex < allAyat.count - 1 }
+    var canGoPrevious: Bool { currentAyahIndex > 0 }
+
+    var phaseDisplayLabel: String {
+        switch currentPhase {
+        case .listenAndRepeat: return "Listen & Repeat"
+        case .connect:         return "Connect"
+        }
+    }
+
+    var phaseDisplayIcon: String {
+        switch currentPhase {
+        case .listenAndRepeat: return "ear.fill"
+        case .connect:         return "link"
+        }
+    }
+
+    /// Human-readable "Ayah 1 → 3" range label for the Connect phase.
+    var connectRangeLabel: String? {
+        guard currentPhase == .connect else { return nil }
+        return "Ayah 1 → \(currentAyahIndex + 1)"
+    }
 
     // MARK: - Dependencies
 
     private let audioService: HifzAudioService
     private let modelContext: ModelContext
-
-    // MARK: - Internal Bookkeeping
-
-    /// The index (0-based) of the verse currently being worked on within the chunk.
-    private var currentVerseIndex: Int = 0
-
-    /// Tracks how many times the user has read/recalled the current verse.
-    private var verseReadCount: Int = 0
-    private var verseRecallCount: Int = 0
-
-    /// How many times the full block has been recalled in State 4.
-    private var blockRecallCount: Int = 0
-
     private var cancellables = Set<AnyCancellable>()
+    private let chunkSize = 3
+    private let maxRepeats = 3
 
-    // MARK: - Constants
+    // MARK: - Connection Queue (Phase 2)
 
-    private let requiredReads: Int    = 3
-    private let requiredRecalls: Int  = 3
-    private let chunkSize: Int        = 3
+    private var connectionQueue: [Int] = []
+    private var connectionPlaybackIndex: Int = 0
 
     // MARK: - Init
 
     init(audioService: HifzAudioService, modelContext: ModelContext) {
         self.audioService = audioService
-        self.modelContext = modelContext
+        self.modelContext  = modelContext
         bindAudioService()
     }
 
@@ -58,6 +103,14 @@ final class HifzViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .assign(to: &$activeWordID)
 
+        audioService.$isPlaying
+            .receive(on: RunLoop.main)
+            .assign(to: &$isPlaying)
+
+        audioService.$playbackProgress
+            .receive(on: RunLoop.main)
+            .assign(to: &$playbackProgress)
+
         audioService.$playbackFinished
             .receive(on: RunLoop.main)
             .sink { [weak self] finished in
@@ -67,219 +120,210 @@ final class HifzViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    // MARK: - Public API
+    // MARK: - Session Lifecycle
 
-    /// Load a Surah and begin from the correct chunk (based on persisted progress).
-    func startSession(surahNumber: Int) {
-        phase     = .idle
-        isLoading = true
+    func startSession(surahNumber: Int, surahName: String) {
+        self.surahNumber = surahNumber
+        self.surahName   = surahName
+        isLoading    = true
         errorMessage = nil
 
         Task {
             do {
                 let ayat = try await audioService.fetchAyat(surahNumber: surahNumber)
-                let chunks = buildChunks(surahNumber: surahNumber, ayat: ayat)
-
-                // Upsert progress record
-                let chunkIndex = resolvedChunkIndex(surahNumber: surahNumber,
-                                                    totalChunks: chunks.count)
-                guard chunkIndex < chunks.count else {
-                    phase     = .complete
-                    isLoading = false
+                guard !ayat.isEmpty else {
+                    isLoading    = false
+                    errorMessage = "No verses found for this Surah."
                     return
                 }
-
-                currentChunk = chunks[chunkIndex]
-                isLoading    = false
-                beginVerseLoop(verseIndex: 0)
+                allAyat          = ayat
+                currentAyahIndex = 0
+                isLoading        = false
+                beginListenAndRepeat()
             } catch {
                 isLoading    = false
-                phase        = .error(error.localizedDescription)
                 errorMessage = error.localizedDescription
             }
         }
     }
 
-    // MARK: State 2a — Read & Listen
-
-    /// Called by the UI "Play" button (or automatically on state entry).
-    func playCurrentVerse() {
-        guard case .readAndListen(let vi, _) = phase,
-              let chunk = currentChunk,
-              vi < chunk.ayat.count else { return }
-
-        audioService.play(ayah: chunk.ayat[vi])
-    }
-
-    /// Called when the user taps "Done listening" or audio finishes.
-    func confirmRead() {
-        guard case .readAndListen(let vi, let count) = phase else { return }
+    func endSession() {
+        persistProgress()
         audioService.stop()
+        allAyat               = []
+        currentAyahIndex      = 0
+        playingAyahIndex      = 0
+        surahNumber           = 0
+        surahName             = ""
+        currentPhase          = .listenAndRepeat
+        phaseRepeatCount      = 0
+        connectionQueue       = []
+        connectionPlaybackIndex = 0
+        isTextHidden          = false
+        isLooping             = false
+        errorMessage          = nil
+    }
 
-        let next = count + 1
-        if next >= requiredReads {
-            // Transition to active recall
-            verseRecallCount = 0
-            phase = .activeRecall(verseIndex: vi, recallCount: 0)
-        } else {
-            verseReadCount = next
-            phase = .readAndListen(verseIndex: vi, readCount: next)
-            playCurrentVerse()
+    // MARK: - 3×3 Phase Control
+
+    private func beginListenAndRepeat() {
+        currentPhase     = .listenAndRepeat
+        phaseRepeatCount = 0
+        playAyahAt(currentAyahIndex)
+    }
+
+    private func beginConnectPhase() {
+        currentPhase          = .connect
+        phaseRepeatCount      = 0
+        connectionQueue       = Array(0...currentAyahIndex)
+        connectionPlaybackIndex = 0
+        playAyahAt(connectionQueue[0])
+    }
+
+    private func advanceToNextAyah() {
+        if canGoNext {
+            currentAyahIndex += 1
+            beginListenAndRepeat()
         }
     }
 
-    // MARK: State 2b — Active Recall
-
-    /// Called when the user taps "I recalled it correctly".
-    func confirmRecall() {
-        guard case .activeRecall(let vi, let count) = phase else { return }
-
-        let next = count + 1
-        if next >= requiredRecalls {
-            advanceToNextVerse(after: vi)
-        } else {
-            verseRecallCount = next
-            phase = .activeRecall(verseIndex: vi, recallCount: next)
-        }
-    }
-
-    /// Called when the user taps "I made a mistake".
-    func reportMistake() {
-        guard case .activeRecall(let vi, _) = phase else { return }
-        // Reset this verse's counters entirely — back to State 2a, read 0
-        verseReadCount   = 0
-        verseRecallCount = 0
-        phase = .readAndListen(verseIndex: vi, readCount: 0)
-        playCurrentVerse()
-    }
-
-    // MARK: State 3 — Concatenation
-
-    /// User acknowledges the full concatenated block; advance to State 4.
-    func confirmConcatenation() {
-        guard case .concatenation = phase else { return }
-        blockRecallCount = 0
-        phase = .commitToMemory(recallCount: 0)
-    }
-
-    // MARK: State 4 — Commit to Memory
-
-    /// Called when user successfully recalls the whole block.
-    func confirmBlockRecall() {
-        guard case .commitToMemory(let count) = phase else { return }
-
-        let next = count + 1
-        if next >= requiredRecalls {
-            phase = .saving
-            persistCompletion()
-        } else {
-            blockRecallCount = next
-            phase = .commitToMemory(recallCount: next)
-        }
-    }
-
-    /// Called when user mistakes on full-block recall — restart from State 4 recall 0.
-    func reportBlockMistake() {
-        guard case .commitToMemory(_) = phase else { return }
-        blockRecallCount = 0
-        phase = .commitToMemory(recallCount: 0)
-    }
-
-    // MARK: - Private Helpers
-
-    private func beginVerseLoop(verseIndex: Int) {
-        verseReadCount   = 0
-        verseRecallCount = 0
-        currentVerseIndex = verseIndex
-        phase = .readAndListen(verseIndex: verseIndex, readCount: 0)
-        playCurrentVerse()
-    }
-
-    private func advanceToNextVerse(after vi: Int) {
-        guard let chunk = currentChunk else { return }
-
-        let nextIndex = vi + 1
-        if nextIndex < chunk.ayat.count {
-            beginVerseLoop(verseIndex: nextIndex)
-        } else {
-            // All verses done → concatenation phase
-            phase = .concatenation
-        }
-    }
+    // MARK: - Playback Events (3×3 State Machine)
 
     private func handlePlaybackFinished() {
-        // Auto-advance read count when audio ends
-        guard case .readAndListen = phase else { return }
-        confirmRead()
+        if isLooping {
+            playAyahAt(playingAyahIndex)
+            return
+        }
+
+        switch currentPhase {
+
+        case .listenAndRepeat:
+            if phaseRepeatCount < maxRepeats - 1 {
+                phaseRepeatCount += 1
+                playAyahAt(currentAyahIndex)
+            } else {
+                if currentAyahIndex == 0 {
+                    advanceToNextAyah()
+                } else {
+                    beginConnectPhase()
+                }
+            }
+
+        case .connect:
+            if connectionPlaybackIndex < connectionQueue.count - 1 {
+                connectionPlaybackIndex += 1
+                playAyahAt(connectionQueue[connectionPlaybackIndex])
+            } else if phaseRepeatCount < maxRepeats - 1 {
+                phaseRepeatCount += 1
+                connectionPlaybackIndex = 0
+                playAyahAt(connectionQueue[0])
+            } else {
+                advanceToNextAyah()
+            }
+        }
     }
 
-    // MARK: - Chunking
+    // MARK: - Navigation (manual — resets 3×3 for target Ayah)
 
-    private func buildChunks(surahNumber: Int, ayat: [AyahData]) -> [HifzChunk] {
-        stride(from: 0, to: ayat.count, by: chunkSize).enumerated().map { idx, start in
-            let slice = Array(ayat[start..<min(start + chunkSize, ayat.count)])
-            return HifzChunk(surahNumber: surahNumber, chunkIndex: idx, ayat: slice)
+    func goToNextAyah() {
+        guard canGoNext else { return }
+        audioService.stop()
+        currentAyahIndex += 1
+        beginListenAndRepeat()
+    }
+
+    func goToPreviousAyah() {
+        guard canGoPrevious else { return }
+        audioService.stop()
+        currentAyahIndex -= 1
+        beginListenAndRepeat()
+    }
+
+    func jumpToAyah(at index: Int) {
+        guard allAyat.indices.contains(index) else { return }
+        audioService.stop()
+        currentAyahIndex = index
+        beginListenAndRepeat()
+    }
+
+    // MARK: - Audio Control
+
+    func togglePlayPause() {
+        if isPlaying {
+            audioService.pause()
+        } else if audioService.isPaused {
+            audioService.resume()
+        } else {
+            playAyahAt(playingAyahIndex)
         }
+    }
+
+    func playCurrentAyah() {
+        playAyahAt(currentAyahIndex)
+    }
+
+    private func playAyahAt(_ index: Int) {
+        guard allAyat.indices.contains(index) else { return }
+        playingAyahIndex = index
+        audioService.play(ayah: allAyat[index])
+    }
+
+    // MARK: - Toggles
+
+    func toggleTextVisibility() {
+        isTextHidden.toggle()
+    }
+
+    func toggleLoop() {
+        isLooping.toggle()
     }
 
     // MARK: - Persistence
 
-    private func resolvedChunkIndex(surahNumber: Int, totalChunks: Int) -> Int {
-        let descriptor = FetchDescriptor<HifzProgress>(
-            predicate: #Predicate { $0.surahNumber == surahNumber }
-        )
-        if let existing = try? modelContext.fetch(descriptor).first {
-            existing.totalChunks = totalChunks
-            return existing.currentChunkIndex
-        }
-        let progress = HifzProgress(surahNumber: surahNumber, totalChunks: totalChunks)
-        modelContext.insert(progress)
-        return 0
-    }
+    private func persistProgress() {
+        guard surahNumber > 0 else { return }
+        let surahNum    = surahNumber
+        let totalChunks = (allAyat.count + chunkSize - 1) / chunkSize
+        let chunkIdx    = currentAyahIndex / chunkSize
+        let ayatCount   = min(chunkSize, allAyat.count - chunkIdx * chunkSize)
 
-    private func persistCompletion() {
-        guard let chunk = currentChunk else {
-            phase = .complete
-            return
-        }
-
-        // 1. Save / update SRSItem
         let sDescriptor = FetchDescriptor<SRSItem>(
             predicate: #Predicate {
-                $0.surahNumber == chunk.surahNumber &&
-                $0.chunkIndex  == chunk.chunkIndex
+                $0.surahNumber == surahNum &&
+                $0.chunkIndex  == chunkIdx
             }
         )
         if let existing = try? modelContext.fetch(sDescriptor).first {
             existing.markReviewed()
         } else {
-            modelContext.insert(SRSItem(surahNumber: chunk.surahNumber,
-                                        chunkIndex: chunk.chunkIndex))
+            modelContext.insert(SRSItem(surahNumber: surahNum, chunkIndex: chunkIdx))
         }
 
-        // 2. Upsert DailyActivity for today
         let today = DailyActivity.normalise(.now)
         let aDescriptor = FetchDescriptor<DailyActivity>(
             predicate: #Predicate { $0.date == today }
         )
         if let activity = try? modelContext.fetch(aDescriptor).first {
             activity.loopsCompleted += 1
-            activity.ayatMemorized  += chunk.ayat.count
+            activity.ayatMemorized  += ayatCount
         } else {
             modelContext.insert(DailyActivity(date: today,
                                               loopsCompleted: 1,
-                                              ayatMemorized: chunk.ayat.count))
+                                              ayatMemorized: ayatCount))
         }
 
-        // 3. Advance HifzProgress
         let pDescriptor = FetchDescriptor<HifzProgress>(
-            predicate: #Predicate { $0.surahNumber == chunk.surahNumber }
+            predicate: #Predicate { $0.surahNumber == surahNum }
         )
-        try? modelContext.fetch(pDescriptor).first?.advanceChunk()
+        if let progress = try? modelContext.fetch(pDescriptor).first {
+            progress.currentChunkIndex = chunkIdx
+            progress.totalChunks       = totalChunks
+        } else {
+            let p = HifzProgress(surahNumber: surahNum, totalChunks: totalChunks)
+            p.currentChunkIndex = chunkIdx
+            modelContext.insert(p)
+        }
 
-        // 4. Commit
         try? modelContext.save()
-
-        phase = .complete
     }
 }

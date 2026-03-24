@@ -235,7 +235,6 @@ enum MainTab: Int, CaseIterable {
     case quran
     case lernen
     case gebet
-    case hifz
 
     func title(lang: AppLanguage) -> String {
         switch self {
@@ -243,7 +242,6 @@ enum MainTab: Int, CaseIterable {
         case .quran: return L10n.tabQuran(lang)
         case .lernen: return L10n.tabLernen(lang)
         case .gebet: return L10n.tabGebet(lang)
-        case .hifz: return "Hifz"
         }
     }
 
@@ -253,7 +251,6 @@ enum MainTab: Int, CaseIterable {
         case .quran:  return "book.fill"
         case .lernen: return "graduationcap.fill"
         case .gebet:  return "heart.fill"
-        case .hifz:   return "brain.head.profile"
         }
     }
 }

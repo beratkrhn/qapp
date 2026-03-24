@@ -13,10 +13,16 @@ struct LearningDashboardView: View {
     @Environment(SRSViewModel.self) private var srsViewModel
     @EnvironmentObject var appState: AppState
 
+    var onBack: (() -> Void)? = nil
+
     @State private var activeSessionType: LearningSessionType?
     @State private var showResetAlert = false
     @State private var pdfExportURL: URL?
     @State private var showWordStatusList = false
+
+    init(onBack: (() -> Void)? = nil) {
+        self.onBack = onBack
+    }
 
     var body: some View {
         NavigationStack {
@@ -35,11 +41,24 @@ struct LearningDashboardView: View {
                 .padding(.bottom, 140)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle(L10n.tabLernen(appState.appLanguage))
+            .navigationTitle("Quran Words")
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Theme.background.opacity(0.95), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
+                if let onBack {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: onBack) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "chevron.left")
+                                    .font(.body.weight(.semibold))
+                                Text(L10n.tabLernen(appState.appLanguage))
+                                    .font(.subheadline.weight(.medium))
+                            }
+                            .foregroundStyle(Theme.accent)
+                        }
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showResetAlert = true

@@ -1,7 +1,8 @@
 // DeenApp/Views/Hifz/HifzMainView.swift
 //
-// Root view for the Hifz tab. Presents surah selection when idle,
-// then delegates to the active session view for all memorisation phases.
+// Root view for the Hifz feature (nested under Learn tab).
+// Presents surah selection when idle, then a full-page Ayah reader
+// with audio playback, navigation, eye toggle, and loop controls.
 
 import SwiftUI
 import SwiftData
@@ -9,9 +10,10 @@ import SwiftData
 struct HifzMainView: View {
 
     @StateObject private var viewModel: HifzViewModel
-    @Query(sort: \DailyActivity.date, order: .reverse) private var activities: [DailyActivity]
+    let onBack: () -> Void
 
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, onBack: @escaping () -> Void) {
+        self.onBack = onBack
         let audio = HifzAudioService()
         _viewModel = StateObject(wrappedValue: HifzViewModel(
             audioService: audio,
@@ -23,135 +25,326 @@ struct HifzMainView: View {
         ZStack {
             Theme.background.ignoresSafeArea()
 
-            ScrollView {
-                VStack(spacing: Theme.sectionSpacing) {
-                    headerSection
-                    heatmapSection
-                    sessionSection
+            if viewModel.isInSession {
+                sessionView
+            } else if viewModel.isLoading {
+                loadingView
+            } else if let error = viewModel.errorMessage {
+                errorView(message: error)
+            } else {
+                idleView
+            }
+        }
+    }
+
+    // MARK: - Idle (Surah Picker)
+
+    private var idleView: some View {
+        ScrollView {
+            VStack(spacing: Theme.sectionSpacing) {
+                idleHeader
+
+                SurahPickerCard { number, name in
+                    viewModel.startSession(surahNumber: number, surahName: name)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 20)
-                .padding(.bottom, 40)
             }
+            .padding(.horizontal, 16)
+            .padding(.top, 20)
+            .padding(.bottom, 120)
         }
     }
 
-    // MARK: - Header
-
-    private var headerSection: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Hifz Mode")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Theme.textPrimary)
-                Text("3×3 Memorisation Method")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.textSecondary)
-            }
-            Spacer()
-            Image(systemName: "brain.head.profile")
-                .font(.title2)
-                .foregroundStyle(Theme.accent)
-        }
-    }
-
-    // MARK: - Heatmap
-
-    private var heatmapSection: some View {
-        ContributionHeatmapView(activities: activities, title: "Your Activity")
-    }
-
-    // MARK: - Session
-
-    @ViewBuilder
-    private var sessionSection: some View {
-        switch viewModel.phase {
-        case .idle:
-            SurahPickerCard { surahNumber in
-                viewModel.startSession(surahNumber: surahNumber)
-            }
-
-        case .readAndListen, .activeRecall, .concatenation, .commitToMemory:
-            if let chunk = viewModel.currentChunk {
-                HifzSessionView(viewModel: viewModel, chunk: chunk)
-            }
-
-        case .saving:
-            savingView
-
-        case .complete:
-            completeView { viewModel.phase = .idle }
-
-        case .error(let msg):
-            errorView(message: msg) { viewModel.phase = .idle }
-        }
-    }
-
-    // MARK: - Terminal State Views
-
-    private var savingView: some View {
-        CardContainer {
-            HStack(spacing: 12) {
-                ProgressView()
-                    .tint(Theme.accent)
-                Text("Saving progress…")
-                    .foregroundStyle(Theme.textSecondary)
-                    .font(.subheadline)
-            }
-            .frame(maxWidth: .infinity, alignment: .center)
-        }
-    }
-
-    private func completeView(onContinue: @escaping () -> Void) -> some View {
-        CardContainer {
-            VStack(spacing: 16) {
-                Image(systemName: "checkmark.seal.fill")
-                    .font(.system(size: 48))
+    private var idleHeader: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                            .font(.body.weight(.semibold))
+                        Text("Learn")
+                            .font(.subheadline.weight(.medium))
+                    }
                     .foregroundStyle(Theme.accent)
-
-                Text("Block Complete!")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Theme.textPrimary)
-
-                Text("Chunk saved for SRS review. Keep going!")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.textSecondary)
-                    .multilineTextAlignment(.center)
-
-                Button("Next Chunk", action: onContinue)
-                    .buttonStyle(PrimaryButtonStyle())
+                }
+                Spacer()
             }
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity)
+
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Hifz Mode")
+                        .font(.title2.bold())
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("Memorise the Quran, Ayah by Ayah")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textSecondary)
+                }
+                Spacer()
+                Image(systemName: "brain.head.profile")
+                    .font(.title2)
+                    .foregroundStyle(Theme.accent)
+            }
         }
     }
 
-    private func errorView(message: String, onRetry: @escaping () -> Void) -> some View {
-        CardContainer {
-            VStack(spacing: 16) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 40))
-                    .foregroundStyle(.orange)
+    // MARK: - Session View
 
-                Text(message)
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.textSecondary)
-                    .multilineTextAlignment(.center)
+    private var sessionView: some View {
+        VStack(spacing: 0) {
+            topBar
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
 
-                Button("Retry", action: onRetry)
-                    .buttonStyle(PrimaryButtonStyle())
+            phaseIndicator
+                .padding(.top, 4)
+                .padding(.bottom, 2)
+
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        ForEach(Array(viewModel.allAyat.enumerated()), id: \.element.id) { index, ayah in
+                            HifzCardView(
+                                ayah: ayah,
+                                isActive: index == viewModel.playingAyahIndex,
+                                isTextHidden: viewModel.isTextHidden
+                            )
+                            .id(ayah.id)
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    viewModel.jumpToAyah(at: index)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 100)
+                }
+                .onChange(of: viewModel.playingAyahIndex) { _, newIndex in
+                    guard let ayah = viewModel.allAyat[safe: newIndex] else { return }
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        proxy.scrollTo(ayah.id, anchor: .center)
+                    }
+                }
             }
-            .frame(maxWidth: .infinity)
         }
+        .overlay(alignment: .bottom) {
+            bottomPill
+                .padding(.horizontal, 40)
+                .padding(.bottom, 16)
+        }
+    }
+
+    // MARK: - Phase Indicator
+
+    private var phaseIndicator: some View {
+        HStack(spacing: 10) {
+            Image(systemName: viewModel.phaseDisplayIcon)
+                .font(.caption2)
+                .foregroundStyle(Theme.accent)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(viewModel.phaseDisplayLabel)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+
+                if let range = viewModel.connectRangeLabel {
+                    Text(range)
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecondary)
+                }
+            }
+
+            Spacer()
+
+            HStack(spacing: 5) {
+                ForEach(0..<3, id: \.self) { i in
+                    Circle()
+                        .fill(i <= viewModel.phaseRepeatCount
+                              ? Theme.accent
+                              : Theme.textSecondary.opacity(0.3))
+                        .frame(width: 7, height: 7)
+                        .animation(.spring(response: 0.3), value: viewModel.phaseRepeatCount)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Theme.cardBackground.opacity(0.7))
+        )
+        .padding(.horizontal, 16)
+    }
+
+    // MARK: - Top Bar
+
+    private var topBar: some View {
+        HStack(spacing: 12) {
+            Button {
+                viewModel.endSession()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 36, height: 36)
+                    .background(Circle().fill(Theme.cardBackground))
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(viewModel.surahName)
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(1)
+
+                Text("Ayah \(viewModel.currentAyahIndex + 1) / \(viewModel.totalAyahCount)")
+                    .font(.caption)
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textSecondary)
+            }
+
+            revelationBadge
+
+            Spacer()
+
+            playPauseButton
+        }
+    }
+
+    private var revelationBadge: some View {
+        Text(SurahMetadata.revelationType(for: viewModel.surahNumber))
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(Theme.accent)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(
+                Capsule().fill(Theme.accent.opacity(0.12))
+            )
+    }
+
+    private var playPauseButton: some View {
+        Button(action: { viewModel.togglePlayPause() }) {
+            ZStack {
+                Circle()
+                    .stroke(Theme.textSecondary.opacity(0.2), lineWidth: 3)
+                    .frame(width: 44, height: 44)
+
+                Circle()
+                    .trim(from: 0, to: viewModel.playbackProgress)
+                    .stroke(Theme.accent, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                    .frame(width: 44, height: 44)
+                    .rotationEffect(.degrees(-90))
+                    .animation(.linear(duration: 0.1), value: viewModel.playbackProgress)
+
+                Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+            }
+        }
+    }
+
+    // MARK: - Bottom Floating Pill
+
+    private var bottomPill: some View {
+        HStack(spacing: 28) {
+            Button(action: { viewModel.goToPreviousAyah() }) {
+                Image(systemName: "chevron.left")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(viewModel.canGoPrevious ? Theme.textPrimary : Theme.textSecondary.opacity(0.3))
+            }
+            .disabled(!viewModel.canGoPrevious)
+
+            Button(action: { viewModel.toggleTextVisibility() }) {
+                Image(systemName: viewModel.isTextHidden ? "eye.slash" : "eye")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(viewModel.isTextHidden ? Theme.accent : Theme.textPrimary)
+            }
+
+            Button(action: { viewModel.toggleLoop() }) {
+                Image(systemName: "repeat")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(viewModel.isLooping ? Theme.accent : Theme.textPrimary)
+                    .overlay(alignment: .topTrailing) {
+                        if viewModel.isLooping {
+                            Circle()
+                                .fill(Theme.accent)
+                                .frame(width: 6, height: 6)
+                                .offset(x: 2, y: -2)
+                        }
+                    }
+            }
+
+            Button(action: { viewModel.goToNextAyah() }) {
+                Image(systemName: "chevron.right")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(viewModel.canGoNext ? Theme.textPrimary : Theme.textSecondary.opacity(0.3))
+            }
+            .disabled(!viewModel.canGoNext)
+        }
+        .padding(.horizontal, 32)
+        .padding(.vertical, 14)
+        .background(
+            Capsule()
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    Capsule()
+                        .strokeBorder(Theme.accent.opacity(0.15), lineWidth: 1)
+                )
+                .shadow(color: Theme.shadowColor, radius: 16, x: 0, y: 8)
+        )
+    }
+
+    // MARK: - Loading / Error
+
+    private var loadingView: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .tint(Theme.accent)
+                .scaleEffect(1.2)
+            Text("Loading Surah…")
+                .font(.subheadline)
+                .foregroundStyle(Theme.textSecondary)
+        }
+    }
+
+    private func errorView(message: String) -> some View {
+        VStack(spacing: 20) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 40))
+                .foregroundStyle(.orange)
+
+            Text(message)
+                .font(.subheadline)
+                .foregroundStyle(Theme.textSecondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+
+            Button("Retry") {
+                viewModel.endSession()
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .frame(width: 160)
+        }
+    }
+}
+
+// MARK: - Surah Metadata
+
+private enum SurahMetadata {
+    static let medinanSurahs: Set<Int> = [
+        2, 3, 4, 5, 8, 9, 22, 24, 33, 47, 48, 49,
+        55, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 76, 98, 110
+    ]
+
+    static func revelationType(for surahNumber: Int) -> String {
+        medinanSurahs.contains(surahNumber) ? "Medinan" : "Meccan"
     }
 }
 
 // MARK: - Surah Picker Card
 
 private struct SurahPickerCard: View {
-    let onSelect: (Int) -> Void
+    let onSelect: (Int, String) -> Void
     @State private var selectedSurah: SurahEntry = SurahEntry.all[0]
     @State private var showPicker = false
 
@@ -192,7 +385,7 @@ private struct SurahPickerCard: View {
                 .buttonStyle(.plain)
 
                 Button("Begin Session") {
-                    onSelect(selectedSurah.number)
+                    onSelect(selectedSurah.number, selectedSurah.name)
                 }
                 .buttonStyle(PrimaryButtonStyle())
             }
@@ -392,182 +585,6 @@ private struct SurahEntry: Identifiable {
         SurahEntry(id: 113, name: "Al-Falaq"),
         SurahEntry(id: 114, name: "An-Nas"),
     ]
-}
-
-// MARK: - Session View (phases 2a / 2b / 3 / 4)
-
-private struct HifzSessionView: View {
-    @ObservedObject var viewModel: HifzViewModel
-    let chunk: HifzChunk
-
-    var body: some View {
-        VStack(spacing: 16) {
-            progressHeader
-            phaseCard
-            actionButtons
-        }
-    }
-
-    // MARK: Progress Header
-
-    private var progressHeader: some View {
-        HStack {
-            Label(phaseLabel, systemImage: phaseIcon)
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(Theme.accent)
-            Spacer()
-            Text("Surah \(chunk.surahNumber) · Chunk \(chunk.chunkIndex + 1)")
-                .font(.caption)
-                .foregroundStyle(Theme.textSecondary)
-        }
-        .padding(.horizontal, 4)
-    }
-
-    // MARK: Phase Card
-
-    @ViewBuilder
-    private var phaseCard: some View {
-        switch viewModel.phase {
-
-        case .readAndListen(let vi, let count):
-            let ayah = chunk.ayat[safe: vi]
-            VStack(spacing: 12) {
-                verseKeyLabel(ayah?.verseKey)
-                HifzCardView(
-                    words: ayah?.words ?? [],
-                    activeWordID: viewModel.activeWordID,
-                    isBlurred: false
-                )
-                readDots(count: count, total: 3, label: "Read")
-            }
-
-        case .activeRecall(let vi, let count):
-            let ayah = chunk.ayat[safe: vi]
-            VStack(spacing: 12) {
-                verseKeyLabel(ayah?.verseKey)
-                HifzCardView(
-                    words: ayah?.words ?? [],
-                    activeWordID: nil,
-                    isBlurred: true
-                )
-                readDots(count: count, total: 3, label: "Recall")
-            }
-
-        case .concatenation:
-            VStack(spacing: 12) {
-                Text("Full Block Review")
-                    .font(.caption)
-                    .foregroundStyle(Theme.textSecondary)
-                ForEach(chunk.ayat) { ayah in
-                    HifzCardView(words: ayah.words, activeWordID: nil, isBlurred: false)
-                }
-            }
-
-        case .commitToMemory(let count):
-            VStack(spacing: 12) {
-                Text("Commit to Memory")
-                    .font(.caption)
-                    .foregroundStyle(Theme.textSecondary)
-                ForEach(chunk.ayat) { ayah in
-                    HifzCardView(words: ayah.words, activeWordID: nil, isBlurred: true)
-                }
-                readDots(count: count, total: 3, label: "Block Recall")
-            }
-
-        default:
-            EmptyView()
-        }
-    }
-
-    // MARK: Action Buttons
-
-    @ViewBuilder
-    private var actionButtons: some View {
-        switch viewModel.phase {
-
-        case .readAndListen:
-            VStack(spacing: 10) {
-                Button("Play Again") { viewModel.playCurrentVerse() }
-                    .buttonStyle(SecondaryButtonStyle())
-                Button("I Read It ✓") { viewModel.confirmRead() }
-                    .buttonStyle(PrimaryButtonStyle())
-            }
-
-        case .activeRecall:
-            VStack(spacing: 10) {
-                Button("I Recalled It ✓") { viewModel.confirmRecall() }
-                    .buttonStyle(PrimaryButtonStyle())
-                Button("I Made a Mistake") { viewModel.reportMistake() }
-                    .buttonStyle(DestructiveButtonStyle())
-            }
-
-        case .concatenation:
-            Button("I've Read The Block →") { viewModel.confirmConcatenation() }
-                .buttonStyle(PrimaryButtonStyle())
-
-        case .commitToMemory:
-            VStack(spacing: 10) {
-                Button("I Recalled The Block ✓") { viewModel.confirmBlockRecall() }
-                    .buttonStyle(PrimaryButtonStyle())
-                Button("I Made a Mistake") { viewModel.reportBlockMistake() }
-                    .buttonStyle(DestructiveButtonStyle())
-            }
-
-        default:
-            EmptyView()
-        }
-    }
-
-    // MARK: Helpers
-
-    @ViewBuilder
-    private func verseKeyLabel(_ key: String?) -> some View {
-        if let key {
-            Text(key)
-                .font(.caption2)
-                .foregroundStyle(Theme.textSecondary)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }
-    }
-
-    private func readDots(count: Int, total: Int, label: String) -> some View {
-        HStack(spacing: 6) {
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(Theme.textSecondary)
-            Spacer()
-            HStack(spacing: 5) {
-                ForEach(0..<total, id: \.self) { i in
-                    Circle()
-                        .fill(i < count ? Theme.accent : Theme.textSecondary.opacity(0.3))
-                        .frame(width: 9, height: 9)
-                        .animation(.spring(response: 0.3), value: count)
-                }
-            }
-        }
-        .padding(.horizontal, 4)
-    }
-
-    private var phaseLabel: String {
-        switch viewModel.phase {
-        case .readAndListen:  return "Read & Listen"
-        case .activeRecall:   return "Active Recall"
-        case .concatenation:  return "Block Review"
-        case .commitToMemory: return "Commit to Memory"
-        default:              return ""
-        }
-    }
-
-    private var phaseIcon: String {
-        switch viewModel.phase {
-        case .readAndListen:  return "ear.fill"
-        case .activeRecall:   return "eye.slash.fill"
-        case .concatenation:  return "list.bullet"
-        case .commitToMemory: return "brain.head.profile"
-        default:              return "circle"
-        }
-    }
 }
 
 // MARK: - Button Styles
