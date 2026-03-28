@@ -33,22 +33,21 @@ struct DashboardView: View {
 
                 HeaderView(userName: appState.userName, cityName: appState.selectedCity.displayName)
 
-                if prayerTimeManager.isLoading {
+                locationBar
+
+                if prayerTimeManager.isLoading || prayerTimeManager.isLocatingUser {
                     loadingCard
                 } else if let next = prayerTimeManager.nextPrayer {
                     NextPrayerCard(
                         prayer: next,
-                        countdown: prayerTimeManager.countdownString,
-                        language: appState.appLanguage
+                        countdown: prayerTimeManager.countdownString
                     )
                 }
 
                 if !prayerTimeManager.prayerTimes.isEmpty {
                     PrayerTimesCardView(
                         prayers: prayerTimeManager.prayerTimes,
-                        nextPrayer: prayerTimeManager.nextPrayer,
-                        kerahatTimes: prayerTimeManager.kerahatStartTimes,
-                        language: appState.appLanguage
+                        nextPrayer: prayerTimeManager.nextPrayer
                     )
                 }
 
@@ -61,6 +60,52 @@ struct DashboardView: View {
             .padding(.bottom, 120)
         }
         .background(Theme.background)
+    }
+
+    // MARK: - Location Bar
+
+    private var locationBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "location.fill")
+                .font(.caption2)
+                .foregroundColor(Theme.accent.opacity(0.75))
+
+            Text(prayerTimeManager.isLocatingUser
+                 ? "Standort wird ermittelt…"
+                 : appState.selectedCity.displayName)
+                .font(.caption.weight(.medium))
+                .foregroundColor(Theme.textSecondary)
+                .lineLimit(1)
+
+            Spacer()
+
+            Button(action: { prayerTimeManager.useCurrentLocation() }) {
+                HStack(spacing: 4) {
+                    if prayerTimeManager.isLocatingUser {
+                        ProgressView()
+                            .scaleEffect(0.65)
+                            .tint(Theme.accent)
+                    } else {
+                        Image(systemName: "location.circle.fill")
+                            .font(.caption)
+                            .foregroundColor(Theme.accent)
+                    }
+                    Text("GPS nutzen")
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(Theme.accent)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(
+                    Capsule()
+                        .fill(Theme.accent.opacity(0.12))
+                        .overlay(Capsule().stroke(Theme.accent.opacity(0.25), lineWidth: 0.5))
+                )
+            }
+            .buttonStyle(.plain)
+            .disabled(prayerTimeManager.isLocatingUser)
+        }
+        .padding(.horizontal, 4)
     }
 
     private var loadingCard: some View {

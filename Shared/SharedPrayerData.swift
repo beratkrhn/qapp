@@ -77,8 +77,8 @@ struct SharedPrayerData: Codable {
 
     var allSlots: [(label: String, time: String, icon: String)] {
         [
-            ("Fajr",    fajr,    "sunrise.fill"),
-            ("Sunrise", sunrise, "sun.horizon.fill"),
+            ("İmsak",   fajr,    "moon.haze.fill"),
+            ("Güneş",   sunrise, "sunrise.fill"),
             ("Dhuhr",   dhuhr,   "sun.max.fill"),
             ("Asr",     asr,     "cloud.sun.fill"),
             ("Maghrib", maghrib, "sunset.fill"),

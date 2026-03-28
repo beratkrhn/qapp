@@ -8,12 +8,11 @@ import SwiftUI
 struct NextPrayerCard: View {
     let prayer: PrayerTime
     let countdown: String
-    var language: AppLanguage = .german
 
     var body: some View {
         CardContainer(useHighlightBackground: true) {
             VStack(alignment: .leading, spacing: 12) {
-                Text(L10n.nextPrayer(language))
+                Text("NÄCHSTES GEBET")
                     .font(.caption.weight(.medium))
                     .tracking(0.8)
                     .foregroundColor(Theme.textSection)
@@ -23,12 +22,12 @@ struct NextPrayerCard: View {
                         Image(systemName: prayer.kind.iconName)
                             .font(.body)
                             .foregroundColor(prayer.kind.iconColor)
-                        Text(L10n.prayerName(prayer.kind, language))
+                        Text(prayer.kind.displayName)
                             .font(.title3.weight(.semibold))
                             .foregroundColor(Theme.textPrimary)
                     }
                     Spacer()
-                    Text("\(prayer.timeString) \(L10n.oClock(language))")
+                    Text("\(prayer.timeString) Uhr")
                         .font(.subheadline)
                         .foregroundColor(Theme.textSecondary)
                 }
@@ -48,7 +47,7 @@ struct NextPrayerCard: View {
 
 #Preview {
     NextPrayerCard(
-        prayer: PrayerTime(kind: .fajr, timeString: "05:22", referenceDate: Date()),
+        prayer: PrayerTime(kind: .imsak, timeString: "05:22", referenceDate: Date()),
         countdown: "05:05:37"
     )
     .padding()

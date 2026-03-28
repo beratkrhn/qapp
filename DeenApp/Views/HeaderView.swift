@@ -43,12 +43,12 @@ struct HeaderView: View {
                     .animation(nil, value: fontIndex)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(height: 50)
+            .frame(height: 40)
             .clipped()
 
-            // User name — large, bold
+            // User name
             Text(userName)
-                .font(.largeTitle.weight(.bold))
+                .font(.title2.weight(.bold))
                 .foregroundColor(Theme.textPrimary)
                 .multilineTextAlignment(.center)
 

@@ -20,6 +20,7 @@ final class PrayerTimeManager: NSObject, ObservableObject {
     @Published private(set) var countdownString: String = "--:--:--"
     @Published private(set) var timezoneIdentifier: String = "Europe/Berlin"
     @Published private(set) var isLoading = false
+    @Published private(set) var isLocatingUser = false
     @Published private(set) var errorMessage: String?
 
     // MARK: - Private
@@ -30,10 +31,15 @@ final class PrayerTimeManager: NSObject, ObservableObject {
     private var currentLocation: CLLocationCoordinate2D?
     private var lastLoadedCityName = "Berlin"
 
+    // Tracks coordinates / method used in the latest Aladhan fetch for widget sync
+    private var pendingLatitude: Double = 52.52
+    private var pendingLongitude: Double = 13.405
+    private var pendingMethodId: Int = 13
+
     override init() {
         super.init()
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
     }
 
     // MARK: - Kerahat (Makruh) start times per prayer kind
@@ -63,6 +69,8 @@ final class PrayerTimeManager: NSObject, ObservableObject {
         isLoading = true
         errorMessage = nil
         lastLoadedCityName = city.displayName
+        SharedPrayerData.saveCity(city.displayName)
+        SharedPrayerData.saveLocation(latitude: city.latitude, longitude: city.longitude, methodId: pendingMethodId)
 
         switch provider {
         case .ditib:
@@ -75,6 +83,9 @@ final class PrayerTimeManager: NSObject, ObservableObject {
     // MARK: - DITIB provider
 
     private func loadFromDitib(city: AppCity) {
+        pendingLatitude  = city.latitude
+        pendingLongitude = city.longitude
+        pendingMethodId  = 13 // DITIB/Diyanet
         Task {
             do {
                 let districtId = await DitibAPIService.shared.resolveDistrictId(for: city.rawValue)
@@ -92,7 +103,6 @@ final class PrayerTimeManager: NSObject, ObservableObject {
         timezoneIdentifier = "Europe/Berlin"
         prayerTimes = [
             PrayerTime(kind: .imsak, timeString: t.imsak, referenceDate: ref),
-            PrayerTime(kind: .fajr, timeString: t.imsak, referenceDate: ref),
             PrayerTime(kind: .shuruuq, timeString: t.gunes, referenceDate: ref),
             PrayerTime(kind: .dhuhr, timeString: t.ogle, referenceDate: ref),
             PrayerTime(kind: .asr, timeString: t.ikindi, referenceDate: ref),
@@ -109,7 +119,10 @@ final class PrayerTimeManager: NSObject, ObservableObject {
             maghrib: t.aksam, isha: t.yatsi,
             dateString: formatter.string(from: ref),
             timezone: timezoneIdentifier,
-            cityName: lastLoadedCityName
+            cityName: lastLoadedCityName,
+            latitude: pendingLatitude,
+            longitude: pendingLongitude,
+            methodId: pendingMethodId
         ))
         WidgetCenter.shared.reloadAllTimelines()
 
@@ -120,6 +133,9 @@ final class PrayerTimeManager: NSObject, ObservableObject {
     // MARK: - Aladhan provider
 
     private func loadFromAladhan(city: AppCity, calculation: PrayerCalculationSettings) {
+        pendingLatitude  = city.latitude
+        pendingLongitude = city.longitude
+
         let dateFmt = DateFormatter()
         dateFmt.dateFormat = "dd-MM-yyyy"
         let dateString = dateFmt.string(from: Date())
@@ -128,11 +144,13 @@ final class PrayerTimeManager: NSObject, ObservableObject {
 
         switch calculation {
         case .preset(let preset):
+            pendingMethodId = preset.aladhanMethodId
             urlString += "&method=\(preset.aladhanMethodId)"
             if preset == .fazilet {
                 urlString += "&methodSettings=18,null,17"
             }
         case .custom(let params):
+            pendingMethodId = 99
             urlString += "&method=99"
             urlString += "&methodSettings=\(params.methodSettingsQueryValue)"
             urlString += "&tune=\(params.tuneQueryValue)"
@@ -162,6 +180,8 @@ final class PrayerTimeManager: NSObject, ObservableObject {
     func loadPrayerTimes(address: String) {
         isLoading = true
         errorMessage = nil
+        lastLoadedCityName = address
+        SharedPrayerData.saveCity(address)
         guard let encoded = address.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let url = URL(string: "\(baseURL)/timingsByAddress?address=\(encoded)") else {
             isLoading = false
@@ -184,14 +204,22 @@ final class PrayerTimeManager: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
 
-    /// Fallback: load by coordinates (used by location delegate)
-    func loadPrayerTimes(latitude: Double, longitude: Double) {
+    /// GPS-based load: coordinates + optional reverse-geocoded city name.
+    func loadPrayerTimes(latitude: Double, longitude: Double, cityName: String? = nil) {
+        if let name = cityName {
+            lastLoadedCityName = name
+            SharedPrayerData.saveCity(name)
+        }
+        SharedPrayerData.saveLocation(latitude: latitude, longitude: longitude, methodId: pendingMethodId)
+        pendingLatitude  = latitude
+        pendingLongitude = longitude
+        // Keep pendingMethodId from the last Aladhan load, or use DITIB default
         isLoading = true
         errorMessage = nil
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
         let dateString = formatter.string(from: Date())
-        guard let url = URL(string: "\(baseURL)/timings/\(dateString)?latitude=\(latitude)&longitude=\(longitude)") else {
+        guard let url = URL(string: "\(baseURL)/timings/\(dateString)?latitude=\(latitude)&longitude=\(longitude)&method=\(pendingMethodId)") else {
             isLoading = false
             return
         }
@@ -221,7 +249,6 @@ final class PrayerTimeManager: NSObject, ObservableObject {
         timezoneIdentifier = response.data.meta?.timezone ?? "Europe/Berlin"
         prayerTimes = [
             PrayerTime(kind: .imsak, timeString: t.imsak, referenceDate: ref),
-            PrayerTime(kind: .fajr, timeString: t.fajr, referenceDate: ref),
             PrayerTime(kind: .shuruuq, timeString: t.sunrise, referenceDate: ref),
             PrayerTime(kind: .dhuhr, timeString: t.dhuhr, referenceDate: ref),
             PrayerTime(kind: .asr, timeString: t.asr, referenceDate: ref),
@@ -232,12 +259,15 @@ final class PrayerTimeManager: NSObject, ObservableObject {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         SharedPrayerData.save(SharedPrayerData(
-            fajr: t.fajr, sunrise: t.sunrise,
+            fajr: t.imsak, sunrise: t.sunrise,
             dhuhr: t.dhuhr, asr: t.asr,
             maghrib: t.maghrib, isha: t.isha,
             dateString: formatter.string(from: ref),
             timezone: timezoneIdentifier,
-            cityName: lastLoadedCityName
+            cityName: lastLoadedCityName,
+            latitude: pendingLatitude,
+            longitude: pendingLongitude,
+            methodId: pendingMethodId
         ))
         WidgetCenter.shared.reloadAllTimelines()
 
@@ -286,6 +316,24 @@ final class PrayerTimeManager: NSObject, ObservableObject {
         }
     }
 
+    // MARK: - Current Location
+
+    /// Requests the device's GPS location, reverse-geocodes to a city name,
+    /// then fetches prayer times and syncs widgets automatically.
+    func useCurrentLocation() {
+        isLocatingUser = true
+        errorMessage = nil
+        switch locationManager.authorizationStatus {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.requestLocation()
+        default:
+            isLocatingUser = false
+            errorMessage = "Standortzugriff nicht erlaubt. Bitte in den Einstellungen aktivieren."
+        }
+    }
+
     deinit {
         countdownTimer?.invalidate()
     }
@@ -296,24 +344,44 @@ final class PrayerTimeManager: NSObject, ObservableObject {
 extension PrayerTimeManager: CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let loc = locations.last else { return }
-        Task { @MainActor in
-            currentLocation = loc.coordinate
-            loadPrayerTimes(latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude)
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(loc) { placemarks, _ in
+            let pm = placemarks?.first
+            let resolved = pm?.locality
+                ?? pm?.subLocality
+                ?? pm?.subAdministrativeArea
+                ?? pm?.administrativeArea
+                ?? "Aktueller Standort"
+            Task { @MainActor in
+                self.currentLocation = loc.coordinate
+                self.isLocatingUser = false
+                self.loadPrayerTimes(
+                    latitude: loc.coordinate.latitude,
+                    longitude: loc.coordinate.longitude,
+                    cityName: resolved
+                )
+            }
         }
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Task { @MainActor in
+            isLocatingUser = false
             loadPrayerTimes(address: "Berlin")
         }
     }
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         Task { @MainActor in
-            if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
-                manager.requestLocation()
-            } else {
+            switch manager.authorizationStatus {
+            case .authorizedWhenInUse, .authorizedAlways:
+                // If this authorization change was triggered by useCurrentLocation(), proceed
+                if isLocatingUser { manager.requestLocation() }
+            case .denied, .restricted:
+                isLocatingUser = false
                 loadPrayerTimes(address: "Berlin")
+            default:
+                break
             }
         }
     }

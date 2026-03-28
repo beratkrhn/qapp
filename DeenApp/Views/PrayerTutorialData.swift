@@ -15,7 +15,8 @@ enum PrayerTutorialData {
 
     static func steps(for prayer: PrayerKind) -> [PrayerStep] {
         switch prayer {
-        case .fajr:    return fajrSteps
+        case .imsak:   return fajrSteps
+        case .shuruuq: return []
         case .dhuhr:   return dhuhrSteps
         case .asr:     return asrSteps
         case .maghrib: return maghribSteps

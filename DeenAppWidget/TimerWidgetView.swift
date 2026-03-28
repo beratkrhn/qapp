@@ -52,44 +52,58 @@ struct TimerWidgetView: View {
     }
 
     // =========================================================================
-    // MARK: - Home Screen: Small
+    // MARK: - Home Screen: Small (minimalist — prayer + timer + city)
     // =========================================================================
 
     private var smallView: some View {
-        VStack(spacing: 6) {
-            Image(systemName: "moon.stars.fill")
-                .font(.caption)
-                .foregroundStyle(accent)
-
+        VStack(spacing: 4) {
             if let next = entry.nextSlot {
-                Image(systemName: next.icon)
-                    .font(.title3)
-                    .foregroundStyle(accent)
-
-                Text(next.label)
-                    .font(.callout.weight(.semibold))
-                    .foregroundStyle(accent)
+                HStack(spacing: 4) {
+                    Image(systemName: next.icon)
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(accent)
+                    Text(next.label)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(accent)
+                        .lineLimit(1)
+                }
             }
 
             if let target = entry.nextPrayerDate {
                 let now = Date()
                 if target > now {
                     Text(timerInterval: now...target, countsDown: true)
-                        .font(.title3.weight(.bold).monospacedDigit())
+                        .font(.system(size: 24, weight: .bold, design: .rounded).monospacedDigit())
                         .foregroundStyle(textPrimary)
                         .multilineTextAlignment(.center)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
                 } else {
                     Text("--:--")
-                        .font(.title3.weight(.bold).monospacedDigit())
+                        .font(.system(size: 24, weight: .bold, design: .rounded).monospacedDigit())
                         .foregroundStyle(textSecondary)
                 }
             }
 
             if let next = entry.nextSlot {
-                Text("at \(next.time)")
-                    .font(.caption2)
+                Text(next.time)
+                    .font(.system(size: 10).monospacedDigit())
                     .foregroundStyle(textSecondary)
             }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .bottom) {
+            HStack(spacing: 3) {
+                Image(systemName: "location.fill")
+                    .font(.system(size: 7))
+                    .foregroundStyle(textSecondary.opacity(0.7))
+                Text(entry.cityName)
+                    .font(.system(size: 8, weight: .medium))
+                    .foregroundStyle(textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            .padding(.bottom, 2)
         }
         .padding(12)
     }
@@ -148,9 +162,15 @@ struct TimerWidgetView: View {
 
     private var fallbackRectangular: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text("DailyDeen")
-                .font(.headline)
-                .widgetAccentable()
+            HStack(spacing: 4) {
+                Text("DailyDeen")
+                    .font(.headline)
+                    .widgetAccentable()
+                Spacer()
+                Text(entry.cityName)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
             ForEach(entry.upcomingSlots) { slot in
                 HStack(spacing: 4) {
                     Text(slot.label)

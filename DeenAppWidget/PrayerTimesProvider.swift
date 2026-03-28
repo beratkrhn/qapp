@@ -42,12 +42,22 @@ struct PrayerTimesProvider: TimelineProvider {
         return makeEntry(from: data, at: .now)
     }
 
-    // MARK: - API Fallback (uses the user's saved city, not a blind default)
+    // MARK: - API Fallback (uses the user's saved coordinates + method)
 
     private func fetchFromAPI(completion: @escaping (PrayerTimesEntry) -> Void) {
-        let city = SharedPrayerData.load()?.cityName ?? "Berlin"
-        let encoded = city.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "Berlin"
-        guard let url = URL(string: "https://api.aladhan.com/v1/timingsByAddress?address=\(encoded)") else {
+        let cached  = SharedPrayerData.load()
+        let loc     = SharedPrayerData.loadLocation()
+        let city    = SharedPrayerData.loadCity() ?? cached?.cityName ?? "Berlin"
+        let lat     = loc?.lat    ?? cached?.latitude  ?? 52.52
+        let lon     = loc?.lon    ?? cached?.longitude ?? 13.405
+        let method  = loc?.method ?? cached?.methodId  ?? 13
+
+        let dateFmt = DateFormatter()
+        dateFmt.dateFormat = "dd-MM-yyyy"
+        let dateStr = dateFmt.string(from: .now)
+
+        // Prefer coordinate-based lookup (exact method, city-agnostic)
+        guard let url = URL(string: "https://api.aladhan.com/v1/timings/\(dateStr)?latitude=\(lat)&longitude=\(lon)&method=\(method)") else {
             completion(.placeholder)
             return
         }
@@ -70,7 +80,9 @@ struct PrayerTimesProvider: TimelineProvider {
                 maghrib: t.Maghrib, isha: t.Isha,
                 dateString: fmt.string(from: .now),
                 timezone: response.data.meta?.timezone ?? "Europe/Berlin",
-                cityName: city
+                cityName: city,
+                latitude: lat, longitude: lon,
+                methodId: method
             )
             SharedPrayerData.save(shared)
             completion(self.makeEntry(from: shared, at: .now))
@@ -92,10 +104,14 @@ struct PrayerTimesProvider: TimelineProvider {
             data.dateFrom(timeString: data.allSlots[$0].time)
         }
 
+        // Always prefer the standalone city key (updated instantly by the main app)
+        let resolvedCity = SharedPrayerData.loadCity() ?? data.cityName
+
         return PrayerTimesEntry(
             date: date,
             slots: slots,
             dayLabel: dayFmt.string(from: .now),
+            cityName: resolvedCity,
             isPlaceholder: false,
             nextPrayerDate: nextPrayerDate
         )

@@ -38,7 +38,7 @@ final class PrayerTutorialViewModel {
     func loadSteps(for prayer: String) {
         selectedPrayer = prayer
         switch prayer {
-        case "fajr_fard":    steps = PrayerTutorialData.steps(for: .fajr)
+        case "fajr_fard":    steps = PrayerTutorialData.steps(for: .imsak)
         case "dhuhr_fard":   steps = PrayerTutorialData.steps(for: .dhuhr)
         case "asr_fard":     steps = PrayerTutorialData.steps(for: .asr)
         case "maghrib_fard": steps = PrayerTutorialData.steps(for: .maghrib)

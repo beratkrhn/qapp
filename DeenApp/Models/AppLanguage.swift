@@ -11,7 +11,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case german = "de"
     case english = "en"
     case turkish = "tr"
-    case germanArabic = "de_ar"   // Deutsch + islamische Begriffe lateinisch (Dhuhr, Wudu …)
+    case germanArabic = "de_ar"   // Deutsch + islamische Begriffe lateinisch (Fajr, Dhuhr …)
     case germanTurkish = "de_tr"  // Deutsch + türkische Begriffe (Sabah, Öğle, …)
 
     var id: String { rawValue }

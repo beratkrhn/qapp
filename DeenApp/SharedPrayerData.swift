@@ -17,14 +17,53 @@ struct SharedPrayerData: Codable {
     let isha: String
     let dateString: String      // "yyyy-MM-dd"
     let timezone: String        // e.g. "Europe/Berlin"
-    let cityName: String        // User's selected city for API fallback
+    let cityName: String        // User's selected city / reverse-geocoded name
+    let latitude: Double        // Coordinates used for the last fetch
+    let longitude: Double
+    let methodId: Int           // Aladhan method ID (13 = DITIB default)
 
     static let suiteName = "group.d.DailyDee"
     static let key = "widgetPrayerTimes"
+    static let cityKey = "widgetCityName"
+    static let latKey  = "widgetLatitude"
+    static let lonKey  = "widgetLongitude"
+    static let methodKey = "widgetMethodId"
+
+    // MARK: - Standalone Sync (readable by widget even without full prayer data)
+
+    static func saveCity(_ name: String) {
+        guard let defaults = UserDefaults(suiteName: suiteName) else { return }
+        defaults.set(name, forKey: cityKey)
+        defaults.synchronize()
+    }
+
+    static func loadCity() -> String? {
+        guard let defaults = UserDefaults(suiteName: suiteName) else { return nil }
+        return defaults.string(forKey: cityKey)
+    }
+
+    static func saveLocation(latitude: Double, longitude: Double, methodId: Int) {
+        guard let defaults = UserDefaults(suiteName: suiteName) else { return }
+        defaults.set(latitude, forKey: latKey)
+        defaults.set(longitude, forKey: lonKey)
+        defaults.set(methodId, forKey: methodKey)
+        defaults.synchronize()
+    }
+
+    static func loadLocation() -> (lat: Double, lon: Double, method: Int)? {
+        guard let defaults = UserDefaults(suiteName: suiteName) else { return nil }
+        let lat = defaults.double(forKey: latKey)
+        let lon = defaults.double(forKey: lonKey)
+        let method = defaults.integer(forKey: methodKey)
+        guard lat != 0 || lon != 0 else { return nil }
+        return (lat, lon, method)
+    }
 
     init(fajr: String, sunrise: String, dhuhr: String, asr: String,
          maghrib: String, isha: String, dateString: String, timezone: String,
-         cityName: String = "Berlin") {
+         cityName: String = "Berlin",
+         latitude: Double = 52.52, longitude: Double = 13.405,
+         methodId: Int = 13) {
         self.fajr = fajr
         self.sunrise = sunrise
         self.dhuhr = dhuhr
@@ -34,24 +73,31 @@ struct SharedPrayerData: Codable {
         self.dateString = dateString
         self.timezone = timezone
         self.cityName = cityName
+        self.latitude = latitude
+        self.longitude = longitude
+        self.methodId = methodId
     }
 
-    // Backward-compatible decoder — old cached data may lack cityName
+    // Backward-compatible decoder — old cached data may lack newer fields
     enum CodingKeys: String, CodingKey {
-        case fajr, sunrise, dhuhr, asr, maghrib, isha, dateString, timezone, cityName
+        case fajr, sunrise, dhuhr, asr, maghrib, isha, dateString, timezone,
+             cityName, latitude, longitude, methodId
     }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        fajr      = try c.decode(String.self, forKey: .fajr)
-        sunrise   = try c.decode(String.self, forKey: .sunrise)
-        dhuhr     = try c.decode(String.self, forKey: .dhuhr)
-        asr       = try c.decode(String.self, forKey: .asr)
-        maghrib   = try c.decode(String.self, forKey: .maghrib)
-        isha      = try c.decode(String.self, forKey: .isha)
+        fajr       = try c.decode(String.self, forKey: .fajr)
+        sunrise    = try c.decode(String.self, forKey: .sunrise)
+        dhuhr      = try c.decode(String.self, forKey: .dhuhr)
+        asr        = try c.decode(String.self, forKey: .asr)
+        maghrib    = try c.decode(String.self, forKey: .maghrib)
+        isha       = try c.decode(String.self, forKey: .isha)
         dateString = try c.decode(String.self, forKey: .dateString)
-        timezone  = try c.decode(String.self, forKey: .timezone)
-        cityName  = (try? c.decode(String.self, forKey: .cityName)) ?? "Berlin"
+        timezone   = try c.decode(String.self, forKey: .timezone)
+        cityName   = (try? c.decode(String.self, forKey: .cityName))  ?? "Berlin"
+        latitude   = (try? c.decode(Double.self, forKey: .latitude))  ?? 52.52
+        longitude  = (try? c.decode(Double.self, forKey: .longitude)) ?? 13.405
+        methodId   = (try? c.decode(Int.self,    forKey: .methodId))  ?? 13
     }
 
     // MARK: - Persistence
@@ -59,6 +105,7 @@ struct SharedPrayerData: Codable {
     static func save(_ data: SharedPrayerData) {
         guard let defaults = UserDefaults(suiteName: suiteName) else { return }
         defaults.set(try? JSONEncoder().encode(data), forKey: key)
+        defaults.synchronize()
     }
 
     static func load() -> SharedPrayerData? {
@@ -77,8 +124,8 @@ struct SharedPrayerData: Codable {
 
     var allSlots: [(label: String, time: String, icon: String)] {
         [
-            ("Fajr",    fajr,    "sunrise.fill"),
-            ("Sunrise", sunrise, "sun.horizon.fill"),
+            ("İmsak",   fajr,    "moon.haze.fill"),
+            ("Güneş",   sunrise, "sunrise.fill"),
             ("Dhuhr",   dhuhr,   "sun.max.fill"),
             ("Asr",     asr,     "cloud.sun.fill"),
             ("Maghrib", maghrib, "sunset.fill"),

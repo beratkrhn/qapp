@@ -116,6 +116,9 @@ final class AppState: ObservableObject {
             self.dailyReadPages = 0
             UserDefaults.standard.set(0, forKey: UserDefaultsKeys.dailyReadPages)
         }
+
+        // Sync city to App Group so widgets always know the current city
+        SharedPrayerData.saveCity(self.selectedCity.displayName)
     }
 
     // MARK: - Daily Reading Actions
@@ -154,6 +157,7 @@ final class AppState: ObservableObject {
     func updateCity(_ city: AppCity) {
         selectedCity = city
         UserDefaults.standard.set(city.rawValue, forKey: UserDefaultsKeys.selectedCity)
+        SharedPrayerData.saveCity(city.displayName)
     }
 
     func updatePrayerCalculation(_ settings: PrayerCalculationSettings) {

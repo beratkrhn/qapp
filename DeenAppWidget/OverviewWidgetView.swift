@@ -63,33 +63,39 @@ struct OverviewWidgetView: View {
     // =========================================================================
 
     private var mediumView: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 4) {
             mediumHeader
-            HStack(spacing: 8) {
-                VStack(spacing: 6) {
+            HStack(spacing: 6) {
+                VStack(spacing: 4) {
                     ForEach(Array(entry.slots.prefix(3))) { slot in
                         glassCell(slot)
                     }
                 }
-                VStack(spacing: 6) {
+                VStack(spacing: 4) {
                     ForEach(Array(entry.slots.suffix(3))) { slot in
                         glassCell(slot)
                     }
                 }
             }
         }
-        .padding(14)
+        .padding(12)
     }
 
     private var mediumHeader: some View {
         HStack {
-            HStack(spacing: 5) {
+            HStack(spacing: 4) {
                 Image(systemName: "moon.stars.fill")
-                    .font(.caption2)
+                    .font(.system(size: 9))
                     .foregroundStyle(accent)
                 Text("DailyDeen")
-                    .font(.caption.weight(.semibold))
+                    .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(textPrimary)
+                    .lineLimit(1)
+                Text("· \(entry.cityName)")
+                    .font(.system(size: 10))
+                    .foregroundStyle(textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
 
             Spacer()
@@ -97,13 +103,16 @@ struct OverviewWidgetView: View {
             if let next = entry.nextSlot, let target = entry.nextPrayerDate {
                 let now = Date()
                 if target > now {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Text(next.label)
-                            .font(.caption2.weight(.medium))
+                            .font(.system(size: 10, weight: .medium))
+                            .lineLimit(1)
                         Text(timerInterval: now...target, countsDown: true)
-                            .font(.caption.weight(.bold).monospacedDigit())
+                            .font(.system(size: 11, weight: .bold).monospacedDigit())
+                            .lineLimit(1)
                     }
                     .foregroundStyle(accent)
+                    .minimumScaleFactor(0.6)
                 }
             }
         }
@@ -112,25 +121,27 @@ struct OverviewWidgetView: View {
     // MARK: - Glass Cell (shared by medium grid)
 
     private func glassCell(_ slot: PrayerSlot) -> some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 5) {
             Image(systemName: slot.icon)
-                .font(.system(size: 10))
+                .font(.system(size: 9))
                 .foregroundStyle(slot.isNext ? accent : textSecondary)
-                .frame(width: 14)
+                .frame(width: 12)
 
             Text(slot.label)
-                .font(.caption2.weight(.medium))
+                .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(slot.isNext ? accent : textSecondary)
                 .lineLimit(1)
+                .minimumScaleFactor(0.6)
 
             Spacer()
 
             Text(slot.time)
-                .font(.caption.weight(.semibold).monospacedDigit())
+                .font(.system(size: 11, weight: .semibold).monospacedDigit())
                 .foregroundStyle(slot.isNext ? accent : textPrimary)
+                .lineLimit(1)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 7)
+        .padding(.vertical, 5)
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(slot.isNext ? accent.opacity(0.14) : Color.white.opacity(0.06))
@@ -151,48 +162,56 @@ struct OverviewWidgetView: View {
     }
 
     // =========================================================================
-    // MARK: - Large: Countdown Card + Full Glass List
+    // MARK: - Large: Compact Countdown Card + Full Prayer List
     // =========================================================================
 
     private var largeView: some View {
         VStack(spacing: 0) {
             largeHeader
-                .padding(.bottom, 10)
-
-            countdownCard
-                .padding(.bottom, 10)
-
-            glassDivider
                 .padding(.bottom, 6)
 
-            VStack(spacing: 0) {
+            countdownCard
+                .padding(.bottom, 6)
+
+            glassDivider
+                .padding(.bottom, 4)
+
+            // All 6 prayer rows
+            VStack(spacing: 2) {
                 ForEach(entry.slots) { slot in
                     glassLargeRow(slot)
-                    if slot.id < entry.slots.count - 1 {
-                        glassDivider.padding(.leading, 44)
-                    }
                 }
             }
 
             Spacer(minLength: 0)
         }
-        .padding(16)
+        .padding(12)
     }
 
     private var largeHeader: some View {
-        HStack {
-            HStack(spacing: 5) {
-                Image(systemName: "moon.stars.fill")
-                    .font(.caption2)
-                    .foregroundStyle(accent)
-                Text("DailyDeen")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(textPrimary)
-            }
+        HStack(spacing: 5) {
+            Image(systemName: "moon.stars.fill")
+                .font(.system(size: 10))
+                .foregroundStyle(accent)
+            Text("DailyDeen")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(textPrimary)
+            Text("·")
+                .font(.system(size: 10))
+                .foregroundStyle(textSecondary)
+            Image(systemName: "location.fill")
+                .font(.system(size: 7))
+                .foregroundStyle(textSecondary)
+            Text(entry.cityName)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
             Spacer()
             Text(entry.dayLabel)
-                .font(.caption2.weight(.medium))
+                .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(textSecondary)
+                .lineLimit(1)
         }
     }
 
@@ -201,26 +220,40 @@ struct OverviewWidgetView: View {
         if let next = entry.nextSlot, let target = entry.nextPrayerDate {
             let now = Date()
             if target > now {
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Next Prayer")
-                            .font(.caption2.weight(.medium))
+                HStack(spacing: 8) {
+                    Image(systemName: next.icon)
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(accent)
+                        .frame(width: 24)
+
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Nächstes Gebet")
+                            .font(.system(size: 8, weight: .medium))
                             .foregroundStyle(textSecondary)
                         Text(next.label)
-                            .font(.title3.weight(.semibold))
+                            .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(accent)
+                            .lineLimit(1)
                     }
                     Spacer()
-                    Text(timerInterval: now...target, countsDown: true)
-                        .font(.title2.weight(.bold).monospacedDigit())
-                        .foregroundStyle(accent)
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text(timerInterval: now...target, countsDown: true)
+                            .font(.system(size: 15, weight: .bold).monospacedDigit())
+                            .foregroundStyle(accent)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                        Text("um \(next.time)")
+                            .font(.system(size: 8))
+                            .foregroundStyle(textSecondary)
+                    }
                 }
-                .padding(12)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 7)
                 .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
                         .fill(accent.opacity(0.10))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            RoundedRectangle(cornerRadius: 9, style: .continuous)
                                 .stroke(accent.opacity(0.25), lineWidth: 0.5)
                         )
                 )
@@ -228,47 +261,51 @@ struct OverviewWidgetView: View {
         }
     }
 
-    // MARK: - Large Row
+    // MARK: - Large Row (compact — no inter-row dividers)
 
     private func glassLargeRow(_ slot: PrayerSlot) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .fill(slot.isNext ? accent.opacity(0.15) : Color.white.opacity(0.06))
+                    .fill(slot.isNext ? accent.opacity(0.15) : Color.white.opacity(0.05))
                     .overlay(
                         Circle().stroke(
-                            slot.isNext ? accent.opacity(0.3) : Color.white.opacity(0.08),
+                            slot.isNext ? accent.opacity(0.3) : Color.white.opacity(0.07),
                             lineWidth: 0.5
                         )
                     )
                 Image(systemName: slot.icon)
-                    .font(.system(size: 12))
+                    .font(.system(size: 10))
                     .foregroundStyle(slot.isNext ? accent : textSecondary)
             }
-            .frame(width: 32, height: 32)
+            .frame(width: 24, height: 24)
 
             Text(slot.label)
-                .font(.subheadline.weight(.medium))
+                .font(.system(size: 12, weight: slot.isNext ? .semibold : .regular))
                 .foregroundStyle(slot.isNext ? accent : textPrimary)
+                .lineLimit(1)
 
             Spacer()
 
             Text(slot.time)
-                .font(.callout.weight(.semibold).monospacedDigit())
+                .font(.system(size: 12, weight: .semibold).monospacedDigit())
                 .foregroundStyle(slot.isNext ? accent : textPrimary)
+                .lineLimit(1)
 
             if slot.isNext {
-                Circle().fill(accent).frame(width: 6, height: 6)
+                Circle().fill(accent).frame(width: 4, height: 4)
+            } else {
+                Circle().fill(Color.clear).frame(width: 4, height: 4)
             }
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .padding(.horizontal, 7)
         .background {
             if slot.isNext {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
                     .fill(accent.opacity(0.10))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        RoundedRectangle(cornerRadius: 7, style: .continuous)
                             .stroke(accent.opacity(0.18), lineWidth: 0.5)
                     )
             }

@@ -88,43 +88,6 @@ struct SettingsView: View {
                             }
                         }
 
-                        // MARK: - Erscheinungsbild (Light / Dark)
-                        settingsCard {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Label {
-                                    Text("Erscheinungsbild")
-                                        .font(.headline)
-                                        .foregroundColor(Theme.textPrimary)
-                                } icon: {
-                                    Image(systemName: "circle.lefthalf.filled")
-                                        .foregroundColor(Theme.accent)
-                                }
-
-                                ForEach(AppearanceMode.allCases) { mode in
-                                    Button(action: { appState.updateAppearanceMode(mode) }) {
-                                        HStack {
-                                            Text(mode.displayName)
-                                                .font(.body)
-                                                .foregroundColor(Theme.textPrimary)
-                                            Spacer()
-                                            if appState.appearanceMode == mode {
-                                                Image(systemName: "checkmark.circle.fill")
-                                                    .foregroundColor(Theme.accent)
-                                            } else {
-                                                Image(systemName: "circle")
-                                                    .foregroundColor(Theme.textSecondary.opacity(0.5))
-                                            }
-                                        }
-                                        .padding(.vertical, 8)
-                                        .padding(.horizontal, 4)
-                                    }
-                                    if mode != AppearanceMode.allCases.last {
-                                        Divider().overlay(Theme.textSecondary.opacity(0.2))
-                                    }
-                                }
-                            }
-                        }
-
                         // MARK: - App Theme (Akzentfarbe)
                         settingsCard {
                             VStack(alignment: .leading, spacing: 16) {
