@@ -43,21 +43,25 @@ struct PrayerRowView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: prayer.kind.iconName)
-                .font(.body)
+                .font(.title3)
                 .foregroundColor(prayer.kind.iconColor)
-                .frame(width: 24, alignment: .center)
+                .frame(width: 28, alignment: .center)
 
             Text(prayer.kind.displayName)
-                .font(.subheadline.weight(isNext ? .semibold : .regular))
+                .font(.body.weight(isNext ? .semibold : .regular))
                 .foregroundColor(Theme.textPrimary)
+                .minimumScaleFactor(0.85)
+                .lineLimit(1)
 
             Spacer()
 
             Text(prayer.timeString)
-                .font(.subheadline.monospacedDigit())
+                .font(.body.weight(.medium).monospacedDigit())
                 .foregroundColor(Theme.textPrimary)
+                .minimumScaleFactor(0.85)
+                .lineLimit(1)
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 11)
         .padding(.horizontal, 12)
         .background(
             RoundedRectangle(cornerRadius: 10)

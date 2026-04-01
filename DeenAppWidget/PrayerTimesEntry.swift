@@ -43,7 +43,7 @@ struct PrayerTimesEntry: TimelineEntry {
             PrayerSlot(id: 5, label: "Isha",    time: "21:15", icon: "moon.stars.fill",  isNext: false),
         ],
         dayLabel: "24 March",
-        cityName: "Berlin",
+        cityName: "Error!",
         isPlaceholder: true,
         nextPrayerDate: Calendar.current.date(byAdding: .hour, value: 2, to: .now)
     )

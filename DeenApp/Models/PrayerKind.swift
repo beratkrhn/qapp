@@ -37,10 +37,53 @@ enum PrayerKind: String, CaseIterable, Codable {
         }
     }
 
-    var iconColor: Color {
+    var iconColor: Color { .gray }
+
+    /// Latin transcription of Arabic prayer names (used in Deutsch/Arabisch mode)
+    var latinArabicName: String {
         switch self {
-        case .shuruuq: return .orange
-        default:       return Theme.textSecondary
+        case .imsak:   return "Fajr"
+        case .shuruuq: return "Schuruq"
+        case .dhuhr:   return "Dhuhr"
+        case .asr:     return "Asr"
+        case .maghrib: return "Maghrib"
+        case .isha:    return "Ischa"
+        }
+    }
+
+    /// Turkish prayer names (used in Turkish and Deutsch/Türkisch modes)
+    var turkishName: String {
+        switch self {
+        case .imsak:   return "İmsak"
+        case .shuruuq: return "Güneş"
+        case .dhuhr:   return "Öğle"
+        case .asr:     return "İkindi"
+        case .maghrib: return "Akşam"
+        case .isha:    return "Yatsı"
+        }
+    }
+
+    /// German prayer names
+    var germanName: String {
+        switch self {
+        case .imsak:   return "Imsak"
+        case .shuruuq: return "Sonnenaufgang"
+        case .dhuhr:   return "Mittagsgebet"
+        case .asr:     return "Nachmittagsgebet"
+        case .maghrib: return "Abendgebet"
+        case .isha:    return "Nachtgebet"
+        }
+    }
+
+    /// English prayer names
+    var englishName: String {
+        switch self {
+        case .imsak:   return "Fajr"
+        case .shuruuq: return "Sunrise"
+        case .dhuhr:   return "Dhuhr"
+        case .asr:     return "Asr"
+        case .maghrib: return "Maghrib"
+        case .isha:    return "Isha"
         }
     }
 }

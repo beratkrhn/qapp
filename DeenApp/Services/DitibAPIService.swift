@@ -38,7 +38,66 @@ actor DitibAPIService {
         self.session = URLSession(configuration: config)
     }
 
-    // MARK: - Public API
+    // MARK: - Full Germany City List
+
+    /// Attempts to load every DITIB district in Germany in one call.
+    /// Endpoint: GET /api/locations/districts?country_id=13
+    /// Throws `DitibError.httpError` if the endpoint doesn't exist (404),
+    /// letting the caller fall back to search-as-you-type mode.
+    func tryLoadAllGermanCities() async throws -> [DitibCity] {
+        guard let url = URL(string: "\(baseURL)/locations/districts?country_id=\(germanyCountryId)") else {
+            throw DitibError.invalidURL
+        }
+        let (data, response) = try await session.data(from: url)
+        if let http = response as? HTTPURLResponse, http.statusCode != 200 {
+            throw DitibError.httpError(statusCode: http.statusCode)
+        }
+        let decoded = try JSONDecoder().decode(DitibAPIResponse<DitibDistrict>.self, from: data)
+        return decoded.data
+            .filter { $0.countryId == germanyCountryId }
+            .map { DitibCity(id: $0.id, name: $0.name, stateId: $0.stateId ?? "") }
+            .sorted { $0.name < $1.name }
+    }
+
+    // MARK: - Cities for a Specific Diyanet State
+
+    /// Loads all districts for a single Diyanet state ID.
+    /// Endpoint: GET /api/locations/districts?state_id=<id>
+    func loadCitiesForDiyanetState(stateId: String) async throws -> [DitibCity] {
+        guard let url = URL(string: "\(baseURL)/locations/districts?state_id=\(stateId)") else {
+            throw DitibError.invalidURL
+        }
+        let (data, response) = try await session.data(from: url)
+        if let http = response as? HTTPURLResponse, http.statusCode != 200 {
+            throw DitibError.httpError(statusCode: http.statusCode)
+        }
+        let decoded = try JSONDecoder().decode(DitibAPIResponse<DitibDistrict>.self, from: data)
+        return decoded.data
+            .map { DitibCity(id: $0.id, name: $0.name, stateId: $0.stateId ?? "") }
+            .sorted { $0.name < $1.name }
+    }
+
+    // MARK: - City Search (Germany)
+
+    /// Searches DITIB districts by name, filtered to Germany (country_id = 13).
+    /// Uses the confirmed-working search endpoint. Minimum 2-character query.
+    func searchCitiesInGermany(query: String) async throws -> [DitibCity] {
+        guard query.count >= 2,
+              let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "\(baseURL)/locations/search/districts?q=\(encoded)")
+        else { throw DitibError.invalidURL }
+
+        let (data, response) = try await session.data(from: url)
+        if let http = response as? HTTPURLResponse, http.statusCode != 200 {
+            throw DitibError.httpError(statusCode: http.statusCode)
+        }
+        let decoded = try JSONDecoder().decode(DitibAPIResponse<DitibDistrict>.self, from: data)
+        return decoded.data
+            .filter { $0.countryId == germanyCountryId }
+            .map { DitibCity(id: $0.id, name: $0.name, stateId: $0.stateId ?? "") }
+    }
+
+    // MARK: - Public API (legacy)
 
     /// Returns the Diyanet district ID for the given city key.
     /// Tries the hardcoded map first, then falls back to a live search.

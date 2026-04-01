@@ -13,7 +13,7 @@ import SwiftUI
 // MARK: - Widget A: Full Overview
 
 struct DailyDeenOverviewWidget: Widget {
-    let kind = "DailyDeenOverview"
+    let kind = "DailyDeenOverview_v2"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: PrayerTimesProvider()) { entry in

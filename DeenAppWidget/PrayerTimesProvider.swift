@@ -2,8 +2,8 @@
 //  PrayerTimesProvider.swift
 //  DailyDeen Widget
 //
-//  Reads cached SharedPrayerData written by the main app (DITIB / Aladhan).
-//  Falls back to a lightweight Aladhan API call using the user's saved city.
+//  Reads cached SharedPrayerData written exclusively by the main app (DITIB).
+//  NO fallback APIs. NO cache overwriting.
 //
 
 import WidgetKit
@@ -18,7 +18,11 @@ struct PrayerTimesProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (PrayerTimesEntry) -> Void) {
-        completion(entryFromCache() ?? .placeholder)
+        if let data = SharedPrayerData.load() {
+            completion(makeEntry(from: data, at: .now))
+        } else {
+            completion(.placeholder)
+        }
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<PrayerTimesEntry>) -> Void) {
@@ -26,67 +30,15 @@ struct PrayerTimesProvider: TimelineProvider {
             for: Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
         )
 
-        if let cached = entryFromCache() {
-            completion(Timeline(entries: timelineEntries(from: cached), policy: .after(midnight)))
+        if let data = SharedPrayerData.load() {
+            let baseEntry = makeEntry(from: data, at: .now)
+            let entries = timelineEntries(from: baseEntry, using: data)
+            completion(Timeline(entries: entries, policy: .after(midnight)))
         } else {
-            fetchFromAPI { entry in
-                completion(Timeline(entries: self.timelineEntries(from: entry), policy: .after(midnight)))
-            }
+            // Wenn kein Cache da ist, zeige den Placeholder.
+            // Die Haupt-App zwingt das Widget zum Reload, sobald sie geöffnet wird.
+            completion(Timeline(entries: [.placeholder], policy: .after(midnight)))
         }
-    }
-
-    // MARK: - Cache
-
-    private func entryFromCache() -> PrayerTimesEntry? {
-        guard let data = SharedPrayerData.load(), data.isToday else { return nil }
-        return makeEntry(from: data, at: .now)
-    }
-
-    // MARK: - API Fallback (uses the user's saved coordinates + method)
-
-    private func fetchFromAPI(completion: @escaping (PrayerTimesEntry) -> Void) {
-        let cached  = SharedPrayerData.load()
-        let loc     = SharedPrayerData.loadLocation()
-        let city    = SharedPrayerData.loadCity() ?? cached?.cityName ?? "Berlin"
-        let lat     = loc?.lat    ?? cached?.latitude  ?? 52.52
-        let lon     = loc?.lon    ?? cached?.longitude ?? 13.405
-        let method  = loc?.method ?? cached?.methodId  ?? 13
-
-        let dateFmt = DateFormatter()
-        dateFmt.dateFormat = "dd-MM-yyyy"
-        let dateStr = dateFmt.string(from: .now)
-
-        // Prefer coordinate-based lookup (exact method, city-agnostic)
-        guard let url = URL(string: "https://api.aladhan.com/v1/timings/\(dateStr)?latitude=\(lat)&longitude=\(lon)&method=\(method)") else {
-            completion(.placeholder)
-            return
-        }
-
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data, error == nil,
-                  let response = try? JSONDecoder().decode(WidgetAladhanResponse.self, from: data),
-                  response.code == 200
-            else {
-                completion(.placeholder)
-                return
-            }
-
-            let t = response.data.timings
-            let fmt = DateFormatter()
-            fmt.dateFormat = "yyyy-MM-dd"
-            let shared = SharedPrayerData(
-                fajr: t.Fajr, sunrise: t.Sunrise,
-                dhuhr: t.Dhuhr, asr: t.Asr,
-                maghrib: t.Maghrib, isha: t.Isha,
-                dateString: fmt.string(from: .now),
-                timezone: response.data.meta?.timezone ?? "Europe/Berlin",
-                cityName: city,
-                latitude: lat, longitude: lon,
-                methodId: method
-            )
-            SharedPrayerData.save(shared)
-            completion(self.makeEntry(from: shared, at: .now))
-        }.resume()
     }
 
     // MARK: - Entry Building
@@ -109,7 +61,7 @@ struct PrayerTimesProvider: TimelineProvider {
 
         return PrayerTimesEntry(
             date: date,
-            slots: slots,
+            slots: slots,          
             dayLabel: dayFmt.string(from: .now),
             cityName: resolvedCity,
             isPlaceholder: false,
@@ -118,8 +70,7 @@ struct PrayerTimesProvider: TimelineProvider {
     }
 
     /// One entry per remaining prayer so the "next" indicator auto-advances.
-    private func timelineEntries(from base: PrayerTimesEntry) -> [PrayerTimesEntry] {
-        guard let data = SharedPrayerData.load() else { return [base] }
+    private func timelineEntries(from base: PrayerTimesEntry, using data: SharedPrayerData) -> [PrayerTimesEntry] {
         var entries = [base]
 
         for slot in data.allSlots {
@@ -129,29 +80,4 @@ struct PrayerTimesProvider: TimelineProvider {
         }
         return entries
     }
-}
-
-// MARK: - Minimal Codable models (widget-only, no main app dependency)
-
-private struct WidgetAladhanResponse: Decodable {
-    let code: Int
-    let data: WidgetAladhanData
-}
-
-private struct WidgetAladhanData: Decodable {
-    let timings: WidgetTimings
-    let meta: WidgetMeta?
-}
-
-private struct WidgetTimings: Decodable {
-    let Fajr: String
-    let Sunrise: String
-    let Dhuhr: String
-    let Asr: String
-    let Maghrib: String
-    let Isha: String
-}
-
-private struct WidgetMeta: Decodable {
-    let timezone: String?
 }

@@ -76,11 +76,9 @@ struct CustomPrayerCalculationView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Übernehmen") {
                     appState.updatePrayerCalculation(.custom(draft))
-                    prayerTimeManager.loadPrayerTimes(
-                        for: appState.selectedCity,
-                        calculation: .custom(draft),
-                        provider: appState.prayerTimeProvider
-                    )
+                    if let city = appState.selectedDitibCity {
+                        prayerTimeManager.loadPrayerTimes(ditibCity: city)
+                    }
                     dismiss()
                 }
                 .foregroundColor(Theme.accent)

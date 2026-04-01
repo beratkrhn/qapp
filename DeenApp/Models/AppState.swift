@@ -16,6 +16,7 @@ private enum UserDefaultsKeys {
     static let calculationMethodLegacy = "dailydee.calculationMethod"
     static let prayerCalculation = "dailydee.prayerCalculation_v1"
     static let prayerTimeProvider = "dailydee.prayerTimeProvider"
+    static let selectedDitibCity = "dailydee.selectedDitibCity"
     static let appearanceMode = "dailydee.appearanceMode"
     static let dailyReadPages = "dailydee.dailyReadPages"
     static let dailyGoalPages = "dailydee.dailyGoalPages"
@@ -35,6 +36,17 @@ final class AppState: ObservableObject {
         didSet { Self.persistPrayerCalculation(prayerCalculation) }
     }
     @Published var prayerTimeProvider: PrayerTimeProvider
+
+    /// The dynamically selected DITIB city (replaces the static `AppCity` enum for location).
+    /// Persisted as JSON. `nil` means no city has been manually picked yet.
+    @Published var selectedDitibCity: DitibCity? {
+        didSet {
+            guard let city = selectedDitibCity,
+                  let data = try? JSONEncoder().encode(city) else { return }
+            UserDefaults.standard.set(data, forKey: UserDefaultsKeys.selectedDitibCity)
+            SharedPrayerData.saveCity(city.name)
+        }
+    }
 
     /// Light / Dark / System — steuert `preferredColorScheme` in der App.
     @Published var appearanceMode: AppearanceMode {
@@ -117,8 +129,17 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(0, forKey: UserDefaultsKeys.dailyReadPages)
         }
 
+        // Load dynamically persisted DITIB city
+        if let data = UserDefaults.standard.data(forKey: UserDefaultsKeys.selectedDitibCity),
+           let ditibCity = try? JSONDecoder().decode(DitibCity.self, from: data) {
+            self.selectedDitibCity = ditibCity
+        } else {
+            self.selectedDitibCity = nil
+        }
+
         // Sync city to App Group so widgets always know the current city
-        SharedPrayerData.saveCity(self.selectedCity.displayName)
+        let cityName = self.selectedDitibCity?.name ?? self.selectedCity.displayName
+        SharedPrayerData.saveCity(cityName)
     }
 
     // MARK: - Daily Reading Actions
@@ -158,6 +179,16 @@ final class AppState: ObservableObject {
         selectedCity = city
         UserDefaults.standard.set(city.rawValue, forKey: UserDefaultsKeys.selectedCity)
         SharedPrayerData.saveCity(city.displayName)
+    }
+
+    /// Persists a dynamically selected DITIB city and syncs the display name.
+    func updateDitibCity(_ city: DitibCity) {
+        selectedDitibCity = city
+    }
+
+    /// Reactive display name: DITIB city if set, otherwise the legacy static city.
+    var currentCityName: String {
+        selectedDitibCity?.name ?? selectedCity.displayName
     }
 
     func updatePrayerCalculation(_ settings: PrayerCalculationSettings) {

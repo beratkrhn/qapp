@@ -133,14 +133,18 @@ struct SmallInfoCard: View {
         CardContainer {
             VStack(alignment: .leading, spacing: 10) {
                 Image(systemName: icon)
-                    .font(.title3)
+                    .font(.title2)
                     .foregroundColor(iconColor)
                 Text(title)
-                    .font(.headline)
+                    .font(.title3.weight(.semibold))
                     .foregroundColor(Theme.textPrimary)
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
                 Text(subtitle)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundColor(Theme.textSecondary)
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

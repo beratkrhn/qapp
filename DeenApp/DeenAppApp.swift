@@ -25,34 +25,6 @@ struct DeenAppApp: App {
             .environmentObject(prayerTimeManager)
             .environmentObject(appState)
             .preferredColorScheme(appState.preferredSwiftUIColorScheme)
-            .task {
-                prayerTimeManager.loadPrayerTimes(
-                    for: appState.selectedCity,
-                    calculation: appState.prayerCalculation,
-                    provider: appState.prayerTimeProvider
-                )
-            }
-            .onChange(of: appState.selectedCity) { _, newCity in
-                prayerTimeManager.loadPrayerTimes(
-                    for: newCity,
-                    calculation: appState.prayerCalculation,
-                    provider: appState.prayerTimeProvider
-                )
-            }
-            .onChange(of: appState.prayerCalculation) { _, newCalc in
-                prayerTimeManager.loadPrayerTimes(
-                    for: appState.selectedCity,
-                    calculation: newCalc,
-                    provider: appState.prayerTimeProvider
-                )
-            }
-            .onChange(of: appState.prayerTimeProvider) { _, _ in
-                prayerTimeManager.loadPrayerTimes(
-                    for: appState.selectedCity,
-                    calculation: appState.prayerCalculation,
-                    provider: appState.prayerTimeProvider
-                )
-            }
         }
         .modelContainer(for: [
             SRSItem.self,

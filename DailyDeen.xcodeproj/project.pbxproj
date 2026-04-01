@@ -28,7 +28,6 @@
 		0EEA12412F510DEB006DB819 /* PrayerKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12222F510DEB006DB819 /* PrayerKind.swift */; };
 		0EEA12422F510DEB006DB819 /* PrayerTimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12282F510DEB006DB819 /* PrayerTimeManager.swift */; };
 		0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12322F510DEB006DB819 /* TabBarView.swift */; };
-		0EEA12442F510DEB006DB819 /* AladhanResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12202F510DEB006DB819 /* AladhanResponse.swift */; };
 		0EEA12452F510DEB006DB819 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12312F510DEB006DB819 /* MainTabView.swift */; };
 		0EEA12462F510DEB006DB819 /* DeenAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12342F510DEB006DB819 /* DeenAppApp.swift */; };
 		0EEA12472F510DEB006DB819 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EEA12252F510DEB006DB819 /* Assets.xcassets */; };
@@ -52,6 +51,9 @@
 		0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12882F510DEB006DB819 /* WordStatusListView.swift */; };
 		0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12902F510DEB006DB819 /* DitibModels.swift */; };
 		0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA12912F510DEB006DB819 /* DitibAPIService.swift */; };
+		0EF57E762F775D2500936A5F /* LocationSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF57E752F775D2500936A5F /* LocationSearchViewModel.swift */; };
+		0EF57E782F775E0E00936A5F /* StateSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF57E772F775E0E00936A5F /* StateSelectionView.swift */; };
+		0EF57E7A2F775E2400936A5F /* CitySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF57E792F775E2400936A5F /* CitySelectionView.swift */; };
 		A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */; };
 		A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */; };
 		A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */; };
@@ -112,7 +114,6 @@
 		0ECD8B812F71DF7D002CFE34 /* DailyDeen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DailyDeen.xcodeproj; sourceTree = "<group>"; };
 		0ECEF9652F6CCAC700299C6E /* QWords.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = QWords.json; sourceTree = "<group>"; };
 		0EEA12122F510DB8006DB819 /* DailyDee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyDee.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0EEA12202F510DEB006DB819 /* AladhanResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AladhanResponse.swift; sourceTree = "<group>"; };
 		0EEA12212F510DEB006DB819 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		0EEA12222F510DEB006DB819 /* PrayerKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerKind.swift; sourceTree = "<group>"; };
 		0EEA12232F510DEB006DB819 /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
@@ -149,6 +150,9 @@
 		0EEA12882F510DEB006DB819 /* WordStatusListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordStatusListView.swift; sourceTree = "<group>"; };
 		0EEA12902F510DEB006DB819 /* DitibModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibModels.swift; sourceTree = "<group>"; };
 		0EEA12912F510DEB006DB819 /* DitibAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DitibAPIService.swift; sourceTree = "<group>"; };
+		0EF57E752F775D2500936A5F /* LocationSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchViewModel.swift; sourceTree = "<group>"; };
+		0EF57E772F775E0E00936A5F /* StateSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateSelectionView.swift; sourceTree = "<group>"; };
+		0EF57E792F775E2400936A5F /* CitySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySelectionView.swift; sourceTree = "<group>"; };
 		A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCalculationSettings.swift; sourceTree = "<group>"; };
 		A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerWidgetSnapshot.swift; sourceTree = "<group>"; };
 		A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPrayerCalculationView.swift; sourceTree = "<group>"; };
@@ -290,7 +294,6 @@
 		0EEA12242F510DEB006DB819 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				0EEA12202F510DEB006DB819 /* AladhanResponse.swift */,
 				0EEA12212F510DEB006DB819 /* AppState.swift */,
 				0EEA125A2F510DEB006DB819 /* AppLanguage.swift */,
 				0EEA12812F510DEB006DB819 /* AppCity.swift */,
@@ -335,6 +338,7 @@
 				DD00032F510DEB006DB81900 /* SRSViewModel.swift */,
 				DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */,
 				FF0006002F510DEB006DB819 /* HifzViewModel.swift */,
+				0EF57E752F775D2500936A5F /* LocationSearchViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -374,6 +378,8 @@
 				0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */,
 				0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */,
 				A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */,
+				0EF57E772F775E0E00936A5F /* StateSelectionView.swift */,
+				0EF57E792F775E2400936A5F /* CitySelectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -566,6 +572,7 @@
 				0EEA12462F510DEB006DB819 /* DeenAppApp.swift in Sources */,
 				0EEA12372F510DEB006DB819 /* CardContainer.swift in Sources */,
 				0EEA12382F510DEB006DB819 /* Theme.swift in Sources */,
+				0EF57E762F775D2500936A5F /* LocationSearchViewModel.swift in Sources */,
 				0EEA12392F510DEB006DB819 /* PrayerTime.swift in Sources */,
 				0EEA123A2F510DEB006DB819 /* BottomInfoCardsView.swift in Sources */,
 				0EEA123C2F510DEB006DB819 /* DashboardView.swift in Sources */,
@@ -578,7 +585,6 @@
 				0EEA12922F510DEB006DB819 /* DitibModels.swift in Sources */,
 				0EEA12932F510DEB006DB819 /* DitibAPIService.swift in Sources */,
 				0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */,
-				0EEA12442F510DEB006DB819 /* AladhanResponse.swift in Sources */,
 				0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */,
 				0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */,
 				0EEA12452F510DEB006DB819 /* MainTabView.swift in Sources */,
@@ -596,6 +602,7 @@
 				0EEA12722F510DEB006DB819 /* AlquranAPI.swift in Sources */,
 				0EEA12742F510DEB006DB819 /* QuranWord.swift in Sources */,
 				0E21D9A42F73444D00EA990C /* SharedPrayerData.swift in Sources */,
+				0EF57E782F775E0E00936A5F /* StateSelectionView.swift in Sources */,
 				0EEA12762F510DEB006DB819 /* FlashcardView.swift in Sources */,
 				DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */,
 				DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */,
@@ -607,6 +614,7 @@
 				0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */,
 				0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */,
 				DD00092F510DEB006DB81901 /* PrayerTutorialModels.swift in Sources */,
+				0EF57E7A2F775E2400936A5F /* CitySelectionView.swift in Sources */,
 				DD000B2F510DEB006DB81901 /* PrayerTutorialViewModel.swift in Sources */,
 				DD000D2F510DEB006DB81901 /* PrayerSelectionView.swift in Sources */,
 				DD000F2F510DEB006DB81901 /* PrayerTutorialView.swift in Sources */,
@@ -834,6 +842,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DeenApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DailyDeen;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -880,6 +889,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DeenApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DailyDeen;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

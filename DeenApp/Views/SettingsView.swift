@@ -14,6 +14,7 @@ struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     @State private var nameInput: String = ""
+    @StateObject private var locationVM = LocationSearchViewModel()
 
     var body: some View {
         NavigationStack {
@@ -132,7 +133,7 @@ struct SettingsView: View {
                             }
                         }
 
-                        // MARK: - Standort
+                        // MARK: - Standort (Dynamic DITIB picker)
                         settingsCard {
                             VStack(alignment: .leading, spacing: 12) {
                                 Label {
@@ -144,34 +145,77 @@ struct SettingsView: View {
                                         .foregroundColor(Theme.accent)
                                 }
 
-                                ForEach(AppCity.allCases) { city in
-                    Button(action: {
-                        appState.updateCity(city)
-                        prayerTimeManager.loadPrayerTimes(
-                            for: city,
-                            calculation: appState.prayerCalculation,
-                            provider: appState.prayerTimeProvider
-                        )
-                    }) {
-                                        HStack {
-                                            Text(city.displayName)
-                                                .font(.body)
-                                                .foregroundColor(Theme.textPrimary)
-                                            Spacer()
-                                            if appState.selectedCity == city {
-                                                Image(systemName: "checkmark.circle.fill")
-                                                    .foregroundColor(Theme.accent)
-                                            } else {
-                                                Image(systemName: "circle")
-                                                    .foregroundColor(Theme.textSecondary.opacity(0.5))
-                                            }
-                                        }
-                                        .padding(.vertical, 8)
+                                // Current selection
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(appState.selectedDitibCity?.name ?? appState.selectedCity.displayName)
+                                            .font(.body.weight(.semibold))
+                                            .foregroundColor(Theme.textPrimary)
+                                        Text("Aktuell ausgewählt")
+                                            .font(.caption)
+                                            .foregroundColor(Theme.textSecondary)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Theme.accent)
+                                }
+                                .padding(.vertical, 4)
+                                .padding(.horizontal, 4)
+
+                                // Recent cities — shown directly (no hidden button)
+                                if !locationVM.recentCities.isEmpty {
+                                    Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                    Label("Zuletzt verwendet", systemImage: "clock.arrow.circlepath")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundColor(Theme.textSecondary)
                                         .padding(.horizontal, 4)
+
+                                    ForEach(locationVM.recentCities) { city in
+                                        Button(action: {
+                                            locationVM.confirmCity(city, appState: appState, prayerTimeManager: prayerTimeManager)
+                                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                        }) {
+                                            HStack(spacing: 10) {
+                                                Image(systemName: "clock")
+                                                    .font(.system(size: 13))
+                                                    .foregroundColor(Theme.textSecondary.opacity(0.6))
+                                                    .frame(width: 20)
+                                                Text(city.name)
+                                                    .font(.body)
+                                                    .foregroundColor(Theme.textPrimary)
+                                                Spacer()
+                                                if appState.selectedDitibCity?.id == city.id {
+                                                    Image(systemName: "checkmark.circle.fill")
+                                                        .foregroundColor(Theme.accent)
+                                                }
+                                            }
+                                            .padding(.vertical, 6)
+                                            .padding(.horizontal, 4)
+                                        }
+                                        .buttonStyle(.plain)
                                     }
-                                    if city != AppCity.allCases.last {
-                                        Divider().overlay(Theme.textSecondary.opacity(0.2))
+                                }
+
+                                Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                // Navigate to full state → city picker
+                                NavigationLink {
+                                    StateSelectionView(locationVM: locationVM)
+                                        .environmentObject(appState)
+                                        .environmentObject(prayerTimeManager)
+                                } label: {
+                                    HStack {
+                                        Text("Neuen Ort wählen")
+                                            .font(.body)
+                                            .foregroundColor(Theme.accent)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption.weight(.semibold))
+                                            .foregroundColor(Theme.textSecondary.opacity(0.5))
                                     }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 4)
                                 }
                             }
                         }
@@ -191,11 +235,9 @@ struct SettingsView: View {
                                 ForEach(PrayerTimeProvider.allCases) { provider in
                                     Button(action: {
                                         appState.updatePrayerTimeProvider(provider)
-                                        prayerTimeManager.loadPrayerTimes(
-                                            for: appState.selectedCity,
-                                            calculation: appState.prayerCalculation,
-                                            provider: provider
-                                        )
+                                        if let city = appState.selectedDitibCity {
+                                            prayerTimeManager.loadPrayerTimes(ditibCity: city)
+                                        }
                                     }) {
                                         HStack {
                                             Text(provider.displayName)
@@ -241,11 +283,9 @@ struct SettingsView: View {
                                 ForEach(AladhanPresetCalculation.allCases) { preset in
                                     Button(action: {
                                         appState.updatePrayerCalculation(.preset(preset))
-                                        prayerTimeManager.loadPrayerTimes(
-                                            for: appState.selectedCity,
-                                            calculation: .preset(preset),
-                                            provider: appState.prayerTimeProvider
-                                        )
+                                        if let city = appState.selectedDitibCity {
+                                            prayerTimeManager.loadPrayerTimes(ditibCity: city)
+                                        }
                                     }) {
                                         HStack {
                                             Text(preset.displayName)
