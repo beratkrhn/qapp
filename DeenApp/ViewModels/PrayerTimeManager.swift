@@ -125,6 +125,7 @@ final class PrayerTimeManager: ObservableObject {
         WidgetCenter.shared.reloadAllTimelines()
 
         updateNextPrayerAndCountdown()
+        syncWidgetPrayers()
         startCountdownTimer()
     }
 
@@ -143,7 +144,28 @@ final class PrayerTimeManager: ObservableObject {
             PrayerTime(kind: .isha,    timeString: cached.isha,    referenceDate: ref)
         ]
         updateNextPrayerAndCountdown()
+        syncWidgetPrayers()
         startCountdownTimer()
+    }
+
+    // MARK: - Widget Sync
+
+    /// Encodes the 5 display prayers (Sunrise excluded) into the shared App Group
+    /// so the widget extension can build its timeline without reimplementing prayer logic.
+    private func syncWidgetPrayers() {
+        let displayKinds: Set<PrayerKind> = [.imsak, .dhuhr, .asr, .maghrib, .isha]
+        let entries: [WidgetPrayerEntry] = prayerTimes
+            .filter { displayKinds.contains($0.kind) }
+            .map { pt in
+                WidgetPrayerEntry(
+                    kindRaw: pt.kind.rawValue,
+                    name: pt.kind.displayName,
+                    iconName: pt.kind.iconName,
+                    timeString: pt.timeString,
+                    time: pt.time
+                )
+            }
+        SharedPrayerData.saveTodayPrayers(entries)
     }
 
     // MARK: - Countdown

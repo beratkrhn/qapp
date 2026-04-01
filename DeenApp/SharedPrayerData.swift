@@ -8,6 +8,17 @@
 
 import Foundation
 
+// MARK: - Widget Prayer Entry
+// Codable model for the 5 display prayers (excluding Sunrise).
+// Encoded by the main app, decoded by the widget extension.
+struct WidgetPrayerEntry: Codable {
+    let kindRaw: String     // PrayerKind.rawValue
+    let name: String        // Localised display name (e.g. "Akşam")
+    let iconName: String    // SF Symbol identifier
+    let timeString: String  // "HH:mm" string for display
+    let time: Date          // Absolute Date for timer / next-prayer logic
+}
+
 struct SharedPrayerData: Codable {
     let fajr: String
     let sunrise: String
@@ -22,12 +33,13 @@ struct SharedPrayerData: Codable {
     let longitude: Double
     let methodId: Int           // Aladhan method ID (13 = DITIB default)
 
-    static let suiteName = "group.d.DailyDee"
-    static let key = "widgetPrayerTimes"
-    static let cityKey = "widgetCityName"
-    static let latKey  = "widgetLatitude"
-    static let lonKey  = "widgetLongitude"
-    static let methodKey = "widgetMethodId"
+    static let suiteName      = "group.d.DailyDee"
+    static let key            = "widgetPrayerTimes"
+    static let cityKey        = "widgetCityName"
+    static let latKey         = "widgetLatitude"
+    static let lonKey         = "widgetLongitude"
+    static let methodKey      = "widgetMethodId"
+    static let todayPrayersKey = "widgetTodayPrayers"
 
     // MARK: - Standalone Sync (readable by widget even without full prayer data)
 
@@ -145,5 +157,22 @@ struct SharedPrayerData: Codable {
         let now = Date()
         let times = allSlots.map { dateFrom(timeString: $0.time) }
         return times.firstIndex(where: { ($0 ?? .distantPast) > now })
+    }
+
+    // MARK: - Today's 5 Display Prayers (widget-facing)
+
+    /// Persist the 5 display prayers (Fajr/Dhuhr/Asr/Maghrib/Isha – no Sunrise)
+    /// so the widget can decode them directly without reimplementing prayer logic.
+    static func saveTodayPrayers(_ entries: [WidgetPrayerEntry]) {
+        guard let defaults = UserDefaults(suiteName: suiteName),
+              let data = try? JSONEncoder().encode(entries) else { return }
+        defaults.set(data, forKey: todayPrayersKey)
+        defaults.synchronize()
+    }
+
+    static func loadTodayPrayers() -> [WidgetPrayerEntry]? {
+        guard let defaults = UserDefaults(suiteName: suiteName),
+              let data = defaults.data(forKey: todayPrayersKey) else { return nil }
+        return try? JSONDecoder().decode([WidgetPrayerEntry].self, from: data)
     }
 }

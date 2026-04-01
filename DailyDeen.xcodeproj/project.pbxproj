@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E21D9842F7343A000EA990C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9832F7343A000EA990C /* WidgetKit.framework */; };
-		0E21D9862F7343A000EA990C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9852F7343A000EA990C /* SwiftUI.framework */; };
-		0E21D9952F7343A100EA990C /* DeenAppWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0E21D9812F7343A000EA990C /* DeenAppWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		0E21D9A32F73444D00EA990C /* SharedPrayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */; };
 		0E21D9A42F73444D00EA990C /* SharedPrayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */; };
+		0E387EB92F7D2493005C7A70 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9832F7343A000EA990C /* WidgetKit.framework */; };
+		0E387EBA2F7D2493005C7A70 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9852F7343A000EA990C /* SwiftUI.framework */; };
+		0E387EC72F7D2493005C7A70 /* AkhWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */; };
 		0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */; };
 		0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */; };
@@ -79,12 +78,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0E21D9932F7343A100EA990C /* PBXContainerItemProxy */ = {
+		0E387EC52F7D2493005C7A70 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0EEA120A2F510DB8006DB819 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 0E21D9802F7343A000EA990C;
-			remoteInfo = DeenAppWidgetExtension;
+			remoteGlobalIDString = 0E387EB72F7D2493005C7A70;
+			remoteInfo = AkhWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -95,7 +94,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				0E21D9952F7343A100EA990C /* DeenAppWidgetExtension.appex in Embed Foundation Extensions */,
+				0E387EC72F7D2493005C7A70 /* AkhWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -103,10 +102,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0E21D9812F7343A000EA990C /* DeenAppWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DeenAppWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E21D9832F7343A000EA990C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0E21D9852F7343A000EA990C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPrayerData.swift; sourceTree = "<group>"; };
+		0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkhWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E387ECC2F7D24C7005C7A70 /* AkhWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AkhWidgetExtension.entitlements; sourceTree = "<group>"; };
 		0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialData.swift; sourceTree = "<group>"; };
 		0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDisplaySettingsView.swift; sourceTree = "<group>"; };
 		0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerBasmalaPreview.swift; sourceTree = "<group>"; };
@@ -195,22 +195,22 @@
 			);
 			target = 0EEA12112F510DB8006DB819 /* DailyDee */;
 		};
-		0E21D99A2F7343A100EA990C /* Exceptions for "DeenAppWidget" folder in "DeenAppWidgetExtension" target */ = {
+		0E387ECB2F7D2493005C7A70 /* Exceptions for "AkhWidget" folder in "AkhWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 0E21D9802F7343A000EA990C /* DeenAppWidgetExtension */;
+			target = 0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		0E21D9872F7343A000EA990C /* DeenAppWidget */ = {
+		0E387EBB2F7D2493005C7A70 /* AkhWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0E21D99A2F7343A100EA990C /* Exceptions for "DeenAppWidget" folder in "DeenAppWidgetExtension" target */,
+				0E387ECB2F7D2493005C7A70 /* Exceptions for "AkhWidget" folder in "AkhWidgetExtension" target */,
 			);
-			path = DeenAppWidget;
+			path = AkhWidget;
 			sourceTree = "<group>";
 		};
 		0EDE0FC32F525DBC001A0974 /* fonts */ = {
@@ -229,12 +229,12 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0E21D97E2F7343A000EA990C /* Frameworks */ = {
+		0E387EB52F7D2493005C7A70 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E21D9862F7343A000EA990C /* SwiftUI.framework in Frameworks */,
-				0E21D9842F7343A000EA990C /* WidgetKit.framework in Frameworks */,
+				0E387EBA2F7D2493005C7A70 /* SwiftUI.framework in Frameworks */,
+				0E387EB92F7D2493005C7A70 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,9 +274,10 @@
 		0EEA12092F510DB8006DB819 = {
 			isa = PBXGroup;
 			children = (
+				0E387ECC2F7D24C7005C7A70 /* AkhWidgetExtension.entitlements */,
 				0EEA12362F510DEB006DB819 /* DeenApp */,
 				0EEA12142F510DB8006DB819 /* DailyDeen */,
-				0E21D9872F7343A000EA990C /* DeenAppWidget */,
+				0E387EBB2F7D2493005C7A70 /* AkhWidget */,
 				0E21D9822F7343A000EA990C /* Frameworks */,
 				0EEA12132F510DB8006DB819 /* Products */,
 			);
@@ -286,7 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEA12122F510DB8006DB819 /* DailyDee.app */,
-				0E21D9812F7343A000EA990C /* DeenAppWidgetExtension.appex */,
+				0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -441,26 +442,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0E21D9802F7343A000EA990C /* DeenAppWidgetExtension */ = {
+		0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0E21D9992F7343A100EA990C /* Build configuration list for PBXNativeTarget "DeenAppWidgetExtension" */;
+			buildConfigurationList = 0E387EC82F7D2493005C7A70 /* Build configuration list for PBXNativeTarget "AkhWidgetExtension" */;
 			buildPhases = (
-				0E21D97D2F7343A000EA990C /* Sources */,
-				0E21D97E2F7343A000EA990C /* Frameworks */,
-				0E21D97F2F7343A000EA990C /* Resources */,
+				0E387EB42F7D2493005C7A70 /* Sources */,
+				0E387EB52F7D2493005C7A70 /* Frameworks */,
+				0E387EB62F7D2493005C7A70 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				0E21D9872F7343A000EA990C /* DeenAppWidget */,
+				0E387EBB2F7D2493005C7A70 /* AkhWidget */,
 			);
-			name = DeenAppWidgetExtension;
+			name = AkhWidgetExtension;
 			packageProductDependencies = (
 			);
-			productName = DeenAppWidgetExtension;
-			productReference = 0E21D9812F7343A000EA990C /* DeenAppWidgetExtension.appex */;
+			productName = AkhWidgetExtension;
+			productReference = 0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		0EEA12112F510DB8006DB819 /* DailyDee */ = {
@@ -475,7 +476,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				0E21D9942F7343A100EA990C /* PBXTargetDependency */,
+				0E387EC62F7D2493005C7A70 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				0EEA12142F510DB8006DB819 /* DailyDeen */,
@@ -494,11 +495,11 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
-					0E21D9802F7343A000EA990C = {
-						CreatedOnToolsVersion = 26.3;
+					0E387EB72F7D2493005C7A70 = {
+						CreatedOnToolsVersion = 26.4;
 					};
 					0EEA12112F510DB8006DB819 = {
 						CreatedOnToolsVersion = 26.2;
@@ -530,13 +531,13 @@
 			projectRoot = "";
 			targets = (
 				0EEA12112F510DB8006DB819 /* DailyDee */,
-				0E21D9802F7343A000EA990C /* DeenAppWidgetExtension */,
+				0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		0E21D97F2F7343A000EA990C /* Resources */ = {
+		0E387EB62F7D2493005C7A70 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -557,11 +558,10 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		0E21D97D2F7343A000EA990C /* Sources */ = {
+		0E387EB42F7D2493005C7A70 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E21D9A32F73444D00EA990C /* SharedPrayerData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,25 +636,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0E21D9942F7343A100EA990C /* PBXTargetDependency */ = {
+		0E387EC62F7D2493005C7A70 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0E21D9802F7343A000EA990C /* DeenAppWidgetExtension */;
-			targetProxy = 0E21D9932F7343A100EA990C /* PBXContainerItemProxy */;
+			target = 0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */;
+			targetProxy = 0E387EC52F7D2493005C7A70 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0E21D9972F7343A100EA990C /* Debug */ = {
+		0E387EC92F7D2493005C7A70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = AkhWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = DeenAppWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = DeenAppWidget;
+				INFOPLIST_FILE = AkhWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkhWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -663,7 +664,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.DeenAppWidget;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.AkhWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -676,17 +677,18 @@
 			};
 			name = Debug;
 		};
-		0E21D9982F7343A100EA990C /* Release */ = {
+		0E387ECA2F7D2493005C7A70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = AkhWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = DeenAppWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = DeenAppWidget;
+				INFOPLIST_FILE = AkhWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkhWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -695,7 +697,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.DeenAppWidget;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.AkhWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -924,11 +926,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0E21D9992F7343A100EA990C /* Build configuration list for PBXNativeTarget "DeenAppWidgetExtension" */ = {
+		0E387EC82F7D2493005C7A70 /* Build configuration list for PBXNativeTarget "AkhWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0E21D9972F7343A100EA990C /* Debug */,
-				0E21D9982F7343A100EA990C /* Release */,
+				0E387EC92F7D2493005C7A70 /* Debug */,
+				0E387ECA2F7D2493005C7A70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
