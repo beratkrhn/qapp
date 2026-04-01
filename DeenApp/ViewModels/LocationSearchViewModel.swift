@@ -5,11 +5,10 @@
 //
 //  Hierarchical DITIB city selection:
 //
-//  1. Recent locations — persisted in UserDefaults, shown directly in Settings.
-//  2. City search — the Diyanet bulk-list endpoint does not exist (404), so cities
-//     are loaded via search-as-you-type. Each search result is filtered client-side
-//     to the selected Bundesland using the hardcoded Diyanet state_id.
-//     A 350 ms debounce prevents excessive API calls while typing.
+//  1. Recent locations — persisted in UserDefaults, shown at the top of StateSelectionView.
+//  2. Hardcoded city catalogue — cities are shown instantly per Bundesland with no typing.
+//     On selection the VM resolves the Diyanet district ID (baked-in when known; API search
+//     otherwise) and then triggers the prayer-time fetch.
 //
 
 import Foundation
@@ -33,24 +32,13 @@ final class LocationSearchViewModel: ObservableObject {
 
     @Published private(set) var recentCities: [DitibCity] = []
 
-    // MARK: - Search state
+    // MARK: - City confirmation state
 
-    /// Bound to the .searchable modifier; triggers a debounced API call.
-    @Published var searchText: String = ""
+    /// True while the district-ID resolution + prayer-time fetch is in flight.
+    @Published private(set) var isConfirmingCity = false
 
-    /// Results from the last successful search, filtered to the selected state.
-    @Published private(set) var cityList: [DitibCity] = []
-
-    /// True while a search request is in flight.
-    @Published private(set) var isLoadingCityList = false
-
-    /// Set when the latest search request fails; cleared on the next search attempt.
-    @Published private(set) var loadError: String? = nil
-
-    // MARK: - Internals
-
-    private(set) var selectedState: DitibFederalState? = nil
-    private var searchTask: Task<Void, Never>? = nil
+    /// Non-nil when city confirmation fails; cleared automatically on the next attempt.
+    @Published private(set) var confirmationError: String? = nil
 
     // MARK: - Init
 
@@ -58,72 +46,52 @@ final class LocationSearchViewModel: ObservableObject {
         loadRecents()
     }
 
-    // MARK: - Derived
+    // MARK: - Hardcoded catalogue
 
-    /// Cities matching the search text (API already filters, so just return cityList).
-    var displayCities: [DitibCity] { cityList }
-
-    // MARK: - State setup
-
-    /// Called by CitySelectionView.onAppear — resets all search state for the new state.
-    func loadCitiesForState(_ state: DitibFederalState) {
-        selectedState = state
-        searchText    = ""
-        cityList      = []
-        loadError     = nil
-        isLoadingCityList = false
-        searchTask?.cancel()
+    /// Returns the sorted, hardcoded DITIB city list for `state`.
+    func cities(for state: DitibFederalState) -> [DitibHardcodedCity] {
+        state.hardcodedCities
     }
 
-    func clearState() {
-        selectedState = nil
-        searchText    = ""
-        cityList      = []
-        loadError     = nil
-        searchTask?.cancel()
-    }
+    // MARK: - City selection (hardcoded list)
 
-    // MARK: - Search trigger
+    /// Resolves the Diyanet district ID for `city` (uses the cached value when available,
+    /// otherwise performs a single API search), then triggers the prayer-time fetch.
+    /// `onSuccess` is called on the main actor after a successful confirmation.
+    func selectCity(
+        _ city: DitibHardcodedCity,
+        inState state: DitibFederalState,
+        appState: AppState,
+        prayerTimeManager: PrayerTimeManager,
+        onSuccess: @escaping () -> Void
+    ) {
+        isConfirmingCity = true
+        confirmationError = nil
 
-    /// Call this from .onChange(of: searchText) in the view.
-    /// Debounces 350 ms then calls the search API, filtering results to selectedState.
-    func performSearch() {
-        searchTask?.cancel()
-        loadError = nil
+        Task {
+            let districtId: String
 
-        guard searchText.count >= 2, let state = selectedState else {
-            cityList = []
-            isLoadingCityList = false
-            return
-        }
-
-        isLoadingCityList = true
-        let query    = searchText
-        let stateId  = state.diyanetStateId
-
-        searchTask = Task {
-            // Debounce
-            try? await Task.sleep(nanoseconds: 350_000_000)
-            guard !Task.isCancelled else { return }
-
-            do {
-                let results = try await DitibAPIService.shared.searchCitiesInGermany(query: query)
-                let filtered = results
-                    .filter { $0.stateId == stateId }
-                    .sorted { $0.name < $1.name }
-                guard !Task.isCancelled else { return }
-                cityList = filtered
-                isLoadingCityList = false
-            } catch {
-                guard !Task.isCancelled else { return }
-                loadError = "Suche fehlgeschlagen. Bitte erneut versuchen."
-                cityList  = []
-                isLoadingCityList = false
+            if let known = city.districtId {
+                // ID is baked into the catalogue — no API call needed for resolution.
+                districtId = known
+            } else {
+                guard let resolved = try? await DitibAPIService.shared.searchDistrict(name: city.name),
+                      !resolved.isEmpty else {
+                    confirmationError = "Stadt nicht gefunden. Bitte erneut versuchen."
+                    isConfirmingCity = false
+                    return
+                }
+                districtId = resolved
             }
+
+            let resolvedCity = DitibCity(id: districtId, name: city.name, stateId: state.diyanetStateId)
+            confirmCity(resolvedCity, appState: appState, prayerTimeManager: prayerTimeManager)
+            isConfirmingCity = false
+            onSuccess()
         }
     }
 
-    // MARK: - Confirmation
+    // MARK: - Confirmation (used for recent-city re-selection too)
 
     func confirmCity(
         _ city: DitibCity,

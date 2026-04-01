@@ -4,9 +4,10 @@
 //  DeenApp
 //
 //  Step 2 of the hierarchical location picker.
-//  Cities are loaded via search-as-you-type (the Diyanet bulk-list endpoint
-//  is unavailable). Results are filtered server-side via the search API and
-//  then narrowed client-side to the selected Bundesland using its Diyanet state_id.
+//  Displays the hardcoded, scrollable list of DITIB-supported cities for the
+//  selected Bundesland. No search bar — the user scrolls and taps.
+//  A brief confirming overlay appears while the ViewModel resolves the Diyanet
+//  district ID (if not already cached) and triggers the prayer-time fetch.
 //
 
 import SwiftUI
@@ -26,53 +27,49 @@ struct CitySelectionView: View {
         ZStack {
             Theme.background.ignoresSafeArea()
 
-            Group {
-                if locationVM.isLoadingCityList {
-                    loadingOverlay
+            cityListView
+                .animation(.easeInOut(duration: 0.15), value: appState.selectedDitibCity?.id)
 
-                } else if let error = locationVM.loadError {
-                    errorState(message: error)
-
-                } else if locationVM.cityList.isEmpty {
-                    emptyState
-
-                } else {
-                    populatedList(locationVM.displayCities)
-                }
+            if locationVM.isConfirmingCity {
+                confirmingOverlay
+                    .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
-            .animation(.easeInOut(duration: 0.2), value: locationVM.isLoadingCityList)
-            .animation(.easeInOut(duration: 0.15), value: locationVM.cityList.isEmpty)
         }
         .navigationTitle(state.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Theme.cardBackground, for: .navigationBar)
-        .searchable(
-            text: $locationVM.searchText,
-            placement: .navigationBarDrawer(displayMode: .always),
-            prompt: "Stadt suchen…"
-        )
-        .onAppear { locationVM.loadCitiesForState(state) }
-        .onChange(of: locationVM.searchText) {
-            locationVM.performSearch()
+        .alert(
+            "Fehler",
+            isPresented: Binding(
+                get: { locationVM.confirmationError != nil },
+                set: { _ in }   // VM clears the error on the next attempt
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(locationVM.confirmationError ?? "")
         }
     }
 
     // MARK: - City List
 
-    private func populatedList(_ cities: [DitibCity]) -> some View {
-        ScrollView {
+    private var cityListView: some View {
+        let cities = locationVM.cities(for: state)
+        return ScrollView {
             VStack(spacing: 0) {
                 ForEach(Array(cities.enumerated()), id: \.element.id) { index, city in
                     CityRowView(
                         city: city,
-                        isSelected: appState.selectedDitibCity?.id == city.id
+                        isSelected: appState.selectedDitibCity?.name == city.name &&
+                                    appState.selectedDitibCity?.stateId == city.stateId
                     )
                     .onTapGesture { handleSelection(city) }
+                    .disabled(locationVM.isConfirmingCity)
 
                     if index < cities.count - 1 {
                         Divider()
                             .overlay(Theme.textSecondary.opacity(0.12))
-                            .padding(.leading, 16)
+                            .padding(.leading, 52)
                     }
                 }
             }
@@ -86,93 +83,65 @@ struct CitySelectionView: View {
         }
     }
 
-    // MARK: - Supporting Views
+    // MARK: - Confirming Overlay
 
-    private var loadingOverlay: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-                .progressViewStyle(.circular)
-                .tint(Theme.accent)
-                .scaleEffect(1.3)
-            Text("Städte werden gesucht…")
-                .font(.subheadline)
-                .foregroundColor(Theme.textSecondary)
-        }
-    }
+    private var confirmingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.28).ignoresSafeArea()
 
-    private func errorState(message: String) -> some View {
-        VStack(spacing: 14) {
-            Image(systemName: "wifi.exclamationmark")
-                .font(.system(size: 38))
-                .foregroundColor(Theme.textSecondary.opacity(0.5))
-            Text("Suche fehlgeschlagen")
-                .font(.headline)
-                .foregroundColor(Theme.textPrimary)
-            Text(message)
-                .font(.subheadline)
-                .foregroundColor(Theme.textSecondary)
-                .multilineTextAlignment(.center)
-            Button(action: { locationVM.performSearch() }) {
-                Text("Erneut versuchen")
-                    .font(.body.weight(.semibold))
-                    .foregroundColor(Theme.accent)
-            }
-            .padding(.top, 4)
-        }
-        .padding(.horizontal, 32)
-    }
+            VStack(spacing: 14) {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .tint(Theme.accent)
+                    .scaleEffect(1.3)
 
-    private var emptyState: some View {
-        VStack(spacing: 12) {
-            if locationVM.searchText.isEmpty {
-                // No search entered yet — prompt the user
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 38))
-                    .foregroundColor(Theme.accent.opacity(0.6))
-                Text("Stadt eingeben")
-                    .font(.headline)
+                Text("Stadt wird geladen…")
+                    .font(.subheadline.weight(.medium))
                     .foregroundColor(Theme.textPrimary)
-                Text("Tippe oben deinen Stadtnamen ein,\num Städte in \(state.name) zu finden.")
-                    .font(.subheadline)
-                    .foregroundColor(Theme.textSecondary)
-                    .multilineTextAlignment(.center)
-            } else {
-                // Search returned nothing
-                Image(systemName: "xmark.circle")
-                    .font(.system(size: 38))
-                    .foregroundColor(Theme.textSecondary.opacity(0.5))
-                Text("Keine Ergebnisse")
-                    .font(.headline)
-                    .foregroundColor(Theme.textPrimary)
-                Text("Anderen Suchbegriff versuchen")
-                    .font(.subheadline)
-                    .foregroundColor(Theme.textSecondary)
             }
+            .padding(28)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Theme.cardBackground)
+                    .shadow(color: Theme.shadowColor, radius: 24, x: 0, y: 10)
+            )
         }
-        .padding(.horizontal, 32)
     }
 
     // MARK: - Actions
 
-    private func handleSelection(_ city: DitibCity) {
-        locationVM.confirmCity(city, appState: appState, prayerTimeManager: prayerTimeManager)
+    private func handleSelection(_ city: DitibHardcodedCity) {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        onDone()
+        locationVM.selectCity(
+            city,
+            inState: state,
+            appState: appState,
+            prayerTimeManager: prayerTimeManager,
+            onSuccess: onDone
+        )
     }
 }
 
 // MARK: - City Row
 
 private struct CityRowView: View {
-    let city: DitibCity
+    let city: DitibHardcodedCity
     let isSelected: Bool
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
+            Image(systemName: isSelected ? "mappin.circle.fill" : "mappin.circle")
+                .font(.system(size: 20))
+                .foregroundColor(isSelected ? Theme.accent : Theme.textSecondary.opacity(0.35))
+                .frame(width: 28)
+                .animation(.easeInOut(duration: 0.15), value: isSelected)
+
             Text(city.name)
                 .font(.body)
                 .foregroundColor(Theme.textPrimary)
+
             Spacer()
+
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(Theme.accent)

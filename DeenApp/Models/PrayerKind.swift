@@ -32,7 +32,7 @@ enum PrayerKind: String, CaseIterable, Codable {
         case .shuruuq: return "sunrise.fill"
         case .dhuhr:   return "sun.max.fill"
         case .asr:     return "cloud.sun.fill"
-        case .maghrib: return "building.2.fill"
+        case .maghrib: return "sunset.fill"
         case .isha:    return "moon.fill"
         }
     }

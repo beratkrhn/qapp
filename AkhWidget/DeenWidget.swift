@@ -137,8 +137,10 @@ struct DeenProvider: TimelineProvider {
     }
 
     private func loadCity() -> String? {
-        UserDefaults(suiteName: DeenWidgetConst.suiteName)?
-            .string(forKey: DeenWidgetConst.cityKey)
+        guard let city = UserDefaults(suiteName: DeenWidgetConst.suiteName)?
+                .string(forKey: DeenWidgetConst.cityKey),
+              !city.isEmpty else { return nil }
+        return city
     }
 }
 
@@ -147,25 +149,44 @@ struct DeenProvider: TimelineProvider {
 private struct SmallWidgetView: View {
     let entry: DeenEntry
 
-    private var icon: String {
-        entry.prayers.first { $0.name == entry.nextPrayerName }?.iconName
-            ?? "moon.stars.fill"
+    private var nextPrayer: WidgetPrayer? {
+        entry.prayers.first { $0.name == entry.nextPrayerName }
     }
 
     var body: some View {
-        VStack(spacing: 9) {
-            Image(systemName: icon)
-                .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(DeenWidgetConst.accent)
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
 
+            // Icon — same SF Symbol as used in the medium prayer pills
+            Image(systemName: nextPrayer?.iconName ?? "moon.stars.fill")
+                .font(.system(size: 24, weight: .semibold))
+                .foregroundStyle(DeenWidgetConst.accent)
+                .widgetAccentable()
+
+            Spacer().frame(height: 6)
+
+            // Prayer name
             Text(entry.nextPrayerName)
-                .font(.system(size: 17, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundStyle(.primary)
 
+            Spacer().frame(height: 5)
+
+            // Live countdown hh:mm:ss
             Text(entry.nextPrayerDate, style: .timer)
-                .font(.system(size: 14, weight: .semibold, design: .monospaced))
+                .font(.system(size: 17, weight: .semibold, design: .monospaced))
                 .foregroundStyle(DeenWidgetConst.accent)
+                .widgetAccentable()
                 .multilineTextAlignment(.center)
+
+            Spacer().frame(height: 4)
+
+            // Exact prayer time hh:mm
+            Text(nextPrayer?.timeString ?? "")
+                .font(.system(size: 15, weight: .medium, design: .monospaced))
+                .foregroundStyle(Color.primary.opacity(0.5))
+
+            Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -181,17 +202,19 @@ private struct PrayerPill: View {
         VStack(spacing: 3) {
             Image(systemName: prayer.iconName)
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(isNext ? DeenWidgetConst.accent : Color.white.opacity(0.4))
+                .foregroundStyle(isNext ? DeenWidgetConst.accent : Color.primary.opacity(0.4))
+                .widgetAccentable(isNext)
 
             Text(prayer.name)
                 .font(.system(size: 9, weight: isNext ? .bold : .regular))
-                .foregroundStyle(isNext ? .white : Color.white.opacity(0.5))
+                .foregroundStyle(isNext ? Color.primary : Color.primary.opacity(0.5))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
 
             Text(prayer.timeString)
                 .font(.system(size: 11, weight: .semibold, design: .monospaced))
-                .foregroundStyle(isNext ? DeenWidgetConst.accent : Color.white.opacity(0.65))
+                .foregroundStyle(isNext ? DeenWidgetConst.accent : Color.primary.opacity(0.65))
+                .widgetAccentable(isNext)
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 7)
@@ -213,34 +236,29 @@ private struct PrayerPill: View {
 private struct MediumWidgetView: View {
     let entry: DeenEntry
 
-    var body: some View {
+    var body: some View { 
         VStack(alignment: .leading, spacing: 0) {
 
             // ── Header ──────────────────────────────────────────────────────
-            HStack(alignment: .center) {
-                // City
-                HStack(spacing: 4) {
-                    Image(systemName: "location.fill")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundStyle(DeenWidgetConst.accent.opacity(0.8))
-                    Text(entry.cityName)
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .lineLimit(1)
-                }
+            HStack(alignment: .center, spacing: 5) {
+                // City — left side
+                Image(systemName: "location.fill")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(DeenWidgetConst.accent)
+                    .widgetAccentable()
+                Text(entry.cityName)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                    .layoutPriority(1)
 
-                Spacer()
+                Spacer(minLength: 8)
 
-                // Next prayer countdown
-                VStack(alignment: .trailing, spacing: 1) {
-                    Text(entry.nextPrayerName)
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundStyle(Color.white.opacity(0.4))
-                    Text(entry.nextPrayerDate, style: .timer)
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
-                        .foregroundStyle(DeenWidgetConst.accent)
-                        .frame(minWidth: 62, alignment: .trailing)
-                }
+                // Timer — right side
+                Text(entry.nextPrayerDate, style: .timer)
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundStyle(DeenWidgetConst.accent)
+                    .widgetAccentable()
             }
 
             // ── Divider ─────────────────────────────────────────────────────
