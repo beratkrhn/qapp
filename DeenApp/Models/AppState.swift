@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import WidgetKit
 
 private enum UserDefaultsKeys {
     static let onboardingCompleted = "dailydee.onboardingCompleted"
@@ -65,7 +66,12 @@ final class AppState: ObservableObject {
 
     // MARK: - Accent Theme
     @Published var accentTheme: ThemeColor {
-        didSet { UserDefaults.standard.set(accentTheme.rawValue, forKey: UserDefaultsKeys.accentTheme) }
+        didSet {
+            UserDefaults.standard.set(accentTheme.rawValue, forKey: UserDefaultsKeys.accentTheme)
+            // Sync to App Group so the widget extension can read the current theme
+            UserDefaults(suiteName: "group.d.DailyDee")?.set(accentTheme.rawValue, forKey: UserDefaultsKeys.accentTheme)
+            WidgetCenter.shared.reloadAllTimelines()
+        }
     }
 
     // MARK: - Daily Reading Tracker
@@ -111,6 +117,8 @@ final class AppState: ObservableObject {
         }
         let resolvedTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme).flatMap(ThemeColor.init(rawValue:)) ?? .emeraldGreen
         self.accentTheme = resolvedTheme
+        // Sync initial theme to App Group for widget
+        UserDefaults(suiteName: "group.d.DailyDee")?.set(resolvedTheme.rawValue, forKey: UserDefaultsKeys.accentTheme)
 
         let rawAppearance = UserDefaults.standard.string(forKey: UserDefaultsKeys.appearanceMode)
         self.appearanceMode = rawAppearance.flatMap(AppearanceMode.init(rawValue:)) ?? .system

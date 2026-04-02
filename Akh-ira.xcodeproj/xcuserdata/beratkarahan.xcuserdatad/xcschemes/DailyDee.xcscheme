@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0EEA12112F510DB8006DB819"
-               BuildableName = "DailyDee.app"
-               BlueprintName = "DailyDee"
-               ReferencedContainer = "container:DailyDeen.xcodeproj">
+               BuildableName = "Akh-ira.app"
+               BlueprintName = "Akh-ira"
+               ReferencedContainer = "container:Akh-ira.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0EEA12112F510DB8006DB819"
-            BuildableName = "DailyDee.app"
-            BlueprintName = "DailyDee"
-            ReferencedContainer = "container:DailyDeen.xcodeproj">
+            BuildableName = "Akh-ira.app"
+            BlueprintName = "Akh-ira"
+            ReferencedContainer = "container:Akh-ira.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0EEA12112F510DB8006DB819"
-            BuildableName = "DailyDee.app"
-            BlueprintName = "DailyDee"
-            ReferencedContainer = "container:DailyDeen.xcodeproj">
+            BuildableName = "Akh-ira.app"
+            BlueprintName = "Akh-ira"
+            ReferencedContainer = "container:Akh-ira.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

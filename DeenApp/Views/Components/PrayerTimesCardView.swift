@@ -8,10 +8,18 @@ import SwiftUI
 struct PrayerTimesCardView: View {
     let prayers: [PrayerTime]
     let nextPrayer: PrayerTime?
+    var date: Date = Date()
 
     var body: some View {
         CardContainer {
             VStack(alignment: .leading, spacing: 0) {
+                // Today's system date — updates after midnight rollover
+                Text(date, format: .dateTime.weekday(.wide).day().month(.wide).year())
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.accent)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 6)
+
                 Text("HEUTIGE GEBETSZEITEN")
                     .font(.caption.weight(.medium))
                     .tracking(0.8)

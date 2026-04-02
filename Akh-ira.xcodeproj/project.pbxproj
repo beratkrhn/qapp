@@ -113,7 +113,7 @@
 		0ECD865D2F71D2ED002CFE34 /* DailyDeen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DailyDeen.xcodeproj; sourceTree = "<group>"; };
 		0ECD8B812F71DF7D002CFE34 /* DailyDeen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DailyDeen.xcodeproj; sourceTree = "<group>"; };
 		0ECEF9652F6CCAC700299C6E /* QWords.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = QWords.json; sourceTree = "<group>"; };
-		0EEA12122F510DB8006DB819 /* DailyDee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyDee.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0EEA12122F510DB8006DB819 /* Akh-ira.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Akh-ira.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EEA12212F510DEB006DB819 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		0EEA12222F510DEB006DB819 /* PrayerKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerKind.swift; sourceTree = "<group>"; };
 		0EEA12232F510DEB006DB819 /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
@@ -179,7 +179,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "DailyDee" target */ = {
+		0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "Akh-ira" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Alkalami/Alkalami-Regular.ttf",
@@ -193,7 +193,7 @@
 				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Ruwudu/Ruwudu-Regular.ttf",
 				"KFGQPC Uthmanic Script HAFS Regular.otf",
 			);
-			target = 0EEA12112F510DB8006DB819 /* DailyDee */;
+			target = 0EEA12112F510DB8006DB819 /* Akh-ira */;
 		};
 		0E387ECB2F7D2493005C7A70 /* Exceptions for "AkhWidget" folder in "AkhWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -216,7 +216,7 @@
 		0EDE0FC32F525DBC001A0974 /* fonts */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "DailyDee" target */,
+				0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "Akh-ira" target */,
 			);
 			path = fonts;
 			sourceTree = "<group>";
@@ -286,7 +286,7 @@
 		0EEA12132F510DB8006DB819 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0EEA12122F510DB8006DB819 /* DailyDee.app */,
+				0EEA12122F510DB8006DB819 /* Akh-ira.app */,
 				0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */,
 			);
 			name = Products;
@@ -464,9 +464,9 @@
 			productReference = 0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		0EEA12112F510DB8006DB819 /* DailyDee */ = {
+		0EEA12112F510DB8006DB819 /* Akh-ira */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0EEA121D2F510DB9006DB819 /* Build configuration list for PBXNativeTarget "DailyDee" */;
+			buildConfigurationList = 0EEA121D2F510DB9006DB819 /* Build configuration list for PBXNativeTarget "Akh-ira" */;
 			buildPhases = (
 				0EEA120E2F510DB8006DB819 /* Sources */,
 				0EEA120F2F510DB8006DB819 /* Frameworks */,
@@ -481,11 +481,11 @@
 			fileSystemSynchronizedGroups = (
 				0EEA12142F510DB8006DB819 /* DailyDeen */,
 			);
-			name = DailyDee;
+			name = "Akh-ira";
 			packageProductDependencies = (
 			);
 			productName = DailyDee;
-			productReference = 0EEA12122F510DB8006DB819 /* DailyDee.app */;
+			productReference = 0EEA12122F510DB8006DB819 /* Akh-ira.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -506,7 +506,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0EEA120D2F510DB8006DB819 /* Build configuration list for PBXProject "DailyDeen" */;
+			buildConfigurationList = 0EEA120D2F510DB8006DB819 /* Build configuration list for PBXProject "Akh-ira" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -530,7 +530,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				0EEA12112F510DB8006DB819 /* DailyDee */,
+				0EEA12112F510DB8006DB819 /* Akh-ira */,
 				0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */,
 			);
 		};
@@ -834,6 +834,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = DeenApp/DeenApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -844,7 +845,8 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DeenApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = DailyDeen;
+				INFOPLIST_KEY_CFBundleDisplayName = "Akh-ira";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -881,6 +883,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = DeenApp/DeenApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -891,7 +894,8 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DeenApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = DailyDeen;
+				INFOPLIST_KEY_CFBundleDisplayName = "Akh-ira";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -935,7 +939,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0EEA120D2F510DB8006DB819 /* Build configuration list for PBXProject "DailyDeen" */ = {
+		0EEA120D2F510DB8006DB819 /* Build configuration list for PBXProject "Akh-ira" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0EEA121B2F510DB9006DB819 /* Debug */,
@@ -944,7 +948,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0EEA121D2F510DB9006DB819 /* Build configuration list for PBXNativeTarget "DailyDee" */ = {
+		0EEA121D2F510DB9006DB819 /* Build configuration list for PBXNativeTarget "Akh-ira" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0EEA121E2F510DB9006DB819 /* Debug */,

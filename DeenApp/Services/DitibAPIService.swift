@@ -132,7 +132,9 @@ actor DitibAPIService {
     }
 
     /// Fetches today's prayer times for the given district ID.
-    func fetchDailyPrayerTimes(districtId: String) async throws -> DitibTimes {
+    /// Returns the full `DitibDailyData` (including the API's own `date` string)
+    /// so callers can detect UTC-lag cache poisoning.
+    func fetchDailyPrayerTimes(districtId: String) async throws -> DitibDailyData {
         guard let url = URL(string: "\(baseURL)/prayer-times/\(districtId)/daily") else {
             throw DitibError.invalidURL
         }
@@ -144,10 +146,50 @@ actor DitibAPIService {
         }
 
         let decoded = try JSONDecoder().decode(DitibAPIResponse<DitibDailyData>.self, from: data)
-        guard let today = decoded.data.first else {
-            throw DitibError.noDataForToday
+
+        // The /daily endpoint can return a multi-day list (e.g. the rest of the month).
+        // Always prefer the entry whose `date` field matches today in the local timezone —
+        // never blindly take `.first`, which may point to the wrong calendar day.
+        let entry = localTodayEntry(from: decoded.data)
+        guard let entry else { throw DitibError.noDataForToday }
+        return entry
+    }
+
+    /// Returns the element from `days` whose `date` field represents today in the
+    /// device's local calendar.  Tries ISO-8601 prefix matching first, then a
+    /// two-format parse fallback, and finally falls back to `.first` so that the
+    /// app stays functional even when the API changes its date representation.
+    private func localTodayEntry(from days: [DitibDailyData]) -> DitibDailyData? {
+        guard !days.isEmpty else { return nil }
+
+        // Build today's ISO date string in the local timezone ("2026-04-03")
+        let iso = DateFormatter()
+        iso.locale    = Locale(identifier: "en_US_POSIX")
+        iso.dateFormat = "yyyy-MM-dd"
+        let todayISO = iso.string(from: Date())
+
+        // Fast path: API returns ISO dates (most common — covers "2026-04-03" and
+        // "2026-04-03T00:00:00" alike via hasPrefix)
+        if let match = days.first(where: { $0.date.hasPrefix(todayISO) }) {
+            return match
         }
-        return today.times
+
+        // Slow path: try parsing with alternative formats ("dd.MM.yyyy", etc.)
+        let cal = Calendar.current
+        let alternativeFormats = ["dd.MM.yyyy", "MM/dd/yyyy", "yyyy/MM/dd"]
+        for fmt in alternativeFormats {
+            let df = DateFormatter()
+            df.locale     = Locale(identifier: "en_US_POSIX")
+            df.dateFormat = fmt
+            if let match = days.first(where: { entry in
+                let prefix = String(entry.date.prefix(10))
+                if let parsed = df.date(from: prefix) { return cal.isDateInToday(parsed) }
+                return false
+            }) { return match }
+        }
+
+        // Last resort: old behaviour (.first) so the app doesn't crash
+        return days.first
     }
 
     // MARK: - Error

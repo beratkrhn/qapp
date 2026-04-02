@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 import WidgetKit
+import UIKit
 
 @MainActor
 final class PrayerTimeManager: ObservableObject {
@@ -21,10 +22,15 @@ final class PrayerTimeManager: ObservableObject {
     @Published private(set) var timezoneIdentifier: String = "Europe/Berlin"
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
+    /// Always reflects the current calendar day; updates automatically at midnight.
+    @Published private(set) var currentDate: Date = Date()
 
     // MARK: - Private
 
     private var lastLoadedCityName = ""
+    private var midnightTimer: Timer?
+    private var significantTimeObserver: (any NSObjectProtocol)?
+    private var foregroundObserver: (any NSObjectProtocol)?
 
     // MARK: - Init
 
@@ -40,6 +46,9 @@ final class PrayerTimeManager: ObservableObject {
             // hard-coded city string that could silently target the wrong city.
             loadSavedCity()
         }
+        scheduleNextMidnightTimer()
+        observeSignificantTimeChange()
+        observeForeground()
     }
 
     // MARK: - Stale-cache / first-launch reload
@@ -86,8 +95,8 @@ final class PrayerTimeManager: ObservableObject {
         SharedPrayerData.saveCity(ditibCity.name)
         Task {
             do {
-                let times = try await DitibAPIService.shared.fetchDailyPrayerTimes(districtId: ditibCity.id)
-                applyDitibTimes(times)
+                let daily = try await DitibAPIService.shared.fetchDailyPrayerTimes(districtId: ditibCity.id)
+                applyDitibTimes(daily)
             } catch {
                 isLoading = false
                 errorMessage = error.localizedDescription
@@ -97,7 +106,8 @@ final class PrayerTimeManager: ObservableObject {
 
     // MARK: - Apply DITIB response
 
-    private func applyDitibTimes(_ t: DitibTimes) {
+    private func applyDitibTimes(_ daily: DitibDailyData) {
+        let t   = daily.times
         let ref = Date()
         timezoneIdentifier = "Europe/Berlin"
         prayerTimes = [
@@ -110,14 +120,25 @@ final class PrayerTimeManager: ObservableObject {
         ]
         isLoading = false
 
+        // Stamp the cache with the API's own date string (normalised to ISO-8601).
+        // This prevents UTC-lag poisoning: if the API returns yesterday's entry at
+        // Berlin midnight (because the server clock is UTC), the cache gets marked
+        // with YESTERDAY's date so isToday correctly returns false on next launch.
+        let localISO = DateFormatter()
+        localISO.locale     = Locale(identifier: "en_US_POSIX")
+        localISO.dateFormat = "yyyy-MM-dd"
+        let todayLocal  = localISO.string(from: ref)
+        // Take the first 10 chars of the API date to strip any time component,
+        // then verify it looks like an ISO date; fall back to the local date if not.
+        let apiPrefix   = String(daily.date.prefix(10))
+        let cachedDate  = (localISO.date(from: apiPrefix) != nil) ? apiPrefix : todayLocal
+
         // Persist to the shared App Group so the widget reads the same data.
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
         SharedPrayerData.save(SharedPrayerData(
             fajr: t.imsak, sunrise: t.gunes,
             dhuhr: t.ogle, asr: t.ikindi,
             maghrib: t.aksam, isha: t.yatsi,
-            dateString: formatter.string(from: ref),
+            dateString: cachedDate,
             timezone: timezoneIdentifier,
             cityName: lastLoadedCityName
         ))
@@ -214,7 +235,76 @@ final class PrayerTimeManager: ObservableObject {
         }
     }
 
+    // MARK: - Midnight Rollover
+
+    /// Schedules a one-shot timer that fires 2 seconds after the next midnight,
+    /// triggering a fresh prayer-time fetch for the new day.
+    private func scheduleNextMidnightTimer() {
+        midnightTimer?.invalidate()
+        let calendar = Calendar.current
+        guard let nextMidnight = calendar.nextDate(
+            after: Date(),
+            matching: DateComponents(hour: 0, minute: 0, second: 0),
+            matchingPolicy: .nextTime
+        ) else { return }
+        let fireDate = nextMidnight.addingTimeInterval(2)
+        let timer = Timer(fire: fireDate, interval: 0, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.handleMidnightRollover()
+            }
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        midnightTimer = timer
+    }
+
+    /// Subscribes to UIKit's significant-time-change notification, which fires at
+    /// midnight and on DST changes — a reliable system-level midnight trigger.
+    private func observeSignificantTimeChange() {
+        significantTimeObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.significantTimeChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.handleMidnightRollover()
+            }
+        }
+    }
+
+    /// Fires every time the app returns to the foreground.
+    /// Re-validates the in-memory cache so that a phone left open overnight
+    /// always shows fresh data when the user picks it up the next morning.
+    private func observeForeground() {
+        foregroundObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.currentDate = Date()
+                // Refresh when the cached date no longer matches today.
+                if let cached = SharedPrayerData.load(), !cached.isToday {
+                    self.loadSavedCity()
+                }
+            }
+        }
+    }
+
+    private func handleMidnightRollover() {
+        currentDate = Date()
+        loadSavedCity()
+        scheduleNextMidnightTimer()   // arm for the next midnight
+    }
+
     deinit {
         countdownTimer?.invalidate()
+        midnightTimer?.invalidate()
+        if let observer = significantTimeObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = foregroundObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 }

@@ -19,7 +19,7 @@
                BlueprintIdentifier = "0E21D9802F7343A000EA990C"
                BuildableName = "DeenAppWidgetExtension.appex"
                BlueprintName = "DeenAppWidgetExtension"
-               ReferencedContainer = "container:DailyDeen.xcodeproj">
+               ReferencedContainer = "container:Akh-ira.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,9 +31,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0EEA12112F510DB8006DB819"
-               BuildableName = "DailyDee.app"
-               BlueprintName = "DailyDee"
-               ReferencedContainer = "container:DailyDeen.xcodeproj">
+               BuildableName = "Akh-ira.app"
+               BlueprintName = "Akh-ira"
+               ReferencedContainer = "container:Akh-ira.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -65,16 +65,16 @@
             BlueprintIdentifier = "0E21D9802F7343A000EA990C"
             BuildableName = "DeenAppWidgetExtension.appex"
             BlueprintName = "DeenAppWidgetExtension"
-            ReferencedContainer = "container:DailyDeen.xcodeproj">
+            ReferencedContainer = "container:Akh-ira.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0EEA12112F510DB8006DB819"
-            BuildableName = "DailyDee.app"
-            BlueprintName = "DailyDee"
-            ReferencedContainer = "container:DailyDeen.xcodeproj">
+            BuildableName = "Akh-ira.app"
+            BlueprintName = "Akh-ira"
+            ReferencedContainer = "container:Akh-ira.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <EnvironmentVariables>
@@ -128,9 +128,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0EEA12112F510DB8006DB819"
-            BuildableName = "DailyDee.app"
-            BlueprintName = "DailyDee"
-            ReferencedContainer = "container:DailyDeen.xcodeproj">
+            BuildableName = "Akh-ira.app"
+            BlueprintName = "Akh-ira"
+            ReferencedContainer = "container:Akh-ira.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

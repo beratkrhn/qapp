@@ -45,7 +45,8 @@ struct DashboardView: View {
                 if !prayerTimeManager.prayerTimes.isEmpty {
                     PrayerTimesCardView(
                         prayers: prayerTimeManager.prayerTimes,
-                        nextPrayer: prayerTimeManager.nextPrayer
+                        nextPrayer: prayerTimeManager.nextPrayer,
+                        date: prayerTimeManager.currentDate
                     )
                 }
 
