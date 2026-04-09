@@ -567,6 +567,76 @@ private struct LargeWidgetView: View {
     }
 }
 
+// MARK: - Lock Screen Rectangular Widget View
+
+private struct LockScreenRectangularView: View {
+    let entry: DeenEntry
+
+    /// Previous and next prayer, excluding Sunrise, relative to `entry.date`.
+    private var segment: (prev: WidgetPrayer?, next: WidgetPrayer?) {
+        let prayers = entry.prayers.filter { $0.kindRaw != "Sunrise" }
+        guard let nextIdx = prayers.firstIndex(where: { $0.time > entry.date }) else {
+            // All prayers passed today — wrap: show last as prev, first as next
+            return (prayers.last, prayers.first)
+        }
+        return (nextIdx > 0 ? prayers[nextIdx - 1] : nil, prayers[nextIdx])
+    }
+
+    /// 0…1 fraction of elapsed time between previous and next prayer.
+    private var progress: Double {
+        guard let prev = segment.prev, let next = segment.next else { return 0 }
+        let total = next.time.timeIntervalSince(prev.time)
+        guard total > 0 else { return 0 }
+        return min(max(entry.date.timeIntervalSince(prev.time) / total, 0), 1)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+
+            // ── Top row: previous prayer ←————————————→ upcoming prayer ───────
+            HStack(alignment: .top) {
+                if let prev = segment.prev {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(prev.name)
+                            .font(.caption2.bold())
+                        Text(prev.timeString)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer()
+                if let next = segment.next {
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text(next.name)
+                            .font(.caption2.bold())
+                        Text(next.timeString)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+
+            // ── Bottom: progress gauge + live per-second countdown ────────────
+            if let next = segment.next {
+                // Ensure the range is always valid (upper bound must be in the future)
+                let endDate = next.time > Date() ? next.time : Date().addingTimeInterval(1)
+                Gauge(value: progress) {
+                    HStack(spacing: 2) {
+                        Text(next.name + " in")
+                        Text(timerInterval: Date()...endDate, countsDown: true)
+                    }
+                    .font(.caption2)
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
+                }
+                .gaugeStyle(.accessoryLinearCapacity)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .padding(.vertical, 2)
+    }
+}
+
 // MARK: - Entry View Router
 
 struct DeenWidgetEntryView: View {
@@ -577,6 +647,8 @@ struct DeenWidgetEntryView: View {
     var body: some View {
         Group {
             switch family {
+            case .accessoryRectangular:
+                LockScreenRectangularView(entry: entry)
             case .systemSmall:
                 SmallWidgetView(entry: entry)
             case .systemLarge, .systemExtraLarge:
@@ -588,7 +660,11 @@ struct DeenWidgetEntryView: View {
             }
         }
         .containerBackground(for: .widget) {
-            widgetBgColor
+            // Lock screen accessory widgets must not use custom background colours —
+            // the system applies its own vibrancy over the lock screen wallpaper.
+            if family != .accessoryRectangular {
+                widgetBgColor
+            }
         }
     }
 
@@ -609,7 +685,8 @@ struct DeenWidget: Widget {
         }
         .configurationDisplayName("Prayer Times")
         .description("Your daily prayer schedule at a glance.")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge,
+                            .accessoryRectangular])
     }
 }
 
@@ -628,6 +705,12 @@ struct DeenWidget: Widget {
 }
 
 #Preview("Large", as: .systemLarge) {
+    DeenWidget()
+} timeline: {
+    DeenEntry.makePlaceholder()
+}
+
+#Preview("Lock Screen", as: .accessoryRectangular) {
     DeenWidget()
 } timeline: {
     DeenEntry.makePlaceholder()
