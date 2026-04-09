@@ -8,12 +8,12 @@
 import Foundation
 
 // MARK: - Surenliste GET /v1/surah
-struct AlquranSurahListResponse: Decodable {
+struct AlquranSurahListResponse: Codable {
     let code: Int
     let data: [AlquranSurahListItem]
 }
 
-struct AlquranSurahListItem: Decodable, Identifiable {
+struct AlquranSurahListItem: Codable, Identifiable {
     let number: Int
     let name: String
     let englishName: String
@@ -25,12 +25,12 @@ struct AlquranSurahListItem: Decodable, Identifiable {
 }
 
 // MARK: - Sura-Detail GET /v1/surah/{number}
-struct AlquranSurahDetailResponse: Decodable {
+struct AlquranSurahDetailResponse: Codable {
     let code: Int
     let data: AlquranSurahDetail
 }
 
-struct AlquranSurahDetail: Decodable {
+struct AlquranSurahDetail: Codable, Sendable {
     let number: Int
     let name: String
     let englishName: String
@@ -38,7 +38,7 @@ struct AlquranSurahDetail: Decodable {
     let ayahs: [AlquranAyah]
 }
 
-struct AlquranAyah: Decodable {
+struct AlquranAyah: Codable, Sendable {
     let number: Int
     let text: String
     let numberInSurah: Int
@@ -46,17 +46,17 @@ struct AlquranAyah: Decodable {
 
 // MARK: - Mushaf Page GET /v1/page/{pageNumber}/quran-uthmani
 
-struct AlquranPageResponse: Decodable {
+struct AlquranPageResponse: Codable {
     let code: Int
     let data: AlquranPageData
 }
 
-struct AlquranPageData: Decodable {
+struct AlquranPageData: Codable, Sendable {
     let number: Int
     let ayahs: [AlquranPageAyah]
 }
 
-struct AlquranPageAyah: Decodable {
+struct AlquranPageAyah: Codable, Sendable {
     let number: Int
     let text: String
     let numberInSurah: Int
@@ -65,7 +65,7 @@ struct AlquranPageAyah: Decodable {
     let surah: AlquranPageSurah
 }
 
-struct AlquranPageSurah: Decodable {
+struct AlquranPageSurah: Codable, Sendable {
     let number: Int
     let name: String
     let englishName: String

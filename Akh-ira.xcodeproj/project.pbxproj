@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E1DFFD82F880BE100549A07 /* QuranOfflineCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFD72F880BE100549A07 /* QuranOfflineCache.swift */; };
+		0E1DFFDA2F88122100549A07 /* SurahRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFD92F88122100549A07 /* SurahRevealView.swift */; };
+		0E1DFFDC2F88188600549A07 /* JustifiedArabicText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFDB2F88188600549A07 /* JustifiedArabicText.swift */; };
 		0E21D9A42F73444D00EA990C /* SharedPrayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */; };
 		0E387EB92F7D2493005C7A70 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9832F7343A000EA990C /* WidgetKit.framework */; };
 		0E387EBA2F7D2493005C7A70 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9852F7343A000EA990C /* SwiftUI.framework */; };
@@ -67,15 +70,6 @@
 		DD000D2F510DEB006DB81901 /* PrayerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */; };
 		DD000F2F510DEB006DB81901 /* PrayerTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */; };
 		EE00012F510DEB006DB81901 /* LearnTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE00012F510DEB006DB81900 /* LearnTabView.swift */; };
-		FF0001012F510DEB006DB819 /* DailyActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0001002F510DEB006DB819 /* DailyActivity.swift */; };
-		FF0002012F510DEB006DB819 /* HifzModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0002002F510DEB006DB819 /* HifzModels.swift */; };
-		FF0003012F510DEB006DB819 /* HifzProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0003002F510DEB006DB819 /* HifzProgress.swift */; };
-		FF0004012F510DEB006DB819 /* SRSItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0004002F510DEB006DB819 /* SRSItem.swift */; };
-		FF0005012F510DEB006DB819 /* HifzAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0005002F510DEB006DB819 /* HifzAudioService.swift */; };
-		FF0006012F510DEB006DB819 /* HifzViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0006002F510DEB006DB819 /* HifzViewModel.swift */; };
-		FF0007012F510DEB006DB819 /* ContributionHeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0007002F510DEB006DB819 /* ContributionHeatmapView.swift */; };
-		FF0008012F510DEB006DB819 /* HifzCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0008002F510DEB006DB819 /* HifzCardView.swift */; };
-		FF0009012F510DEB006DB819 /* HifzMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0009002F510DEB006DB819 /* HifzMainView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +97,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0E1DFFD72F880BE100549A07 /* QuranOfflineCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranOfflineCache.swift; sourceTree = "<group>"; };
+		0E1DFFD92F88122100549A07 /* SurahRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurahRevealView.swift; sourceTree = "<group>"; };
+		0E1DFFDB2F88188600549A07 /* JustifiedArabicText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JustifiedArabicText.swift; sourceTree = "<group>"; };
 		0E21D9832F7343A000EA990C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0E21D9852F7343A000EA990C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPrayerData.swift; sourceTree = "<group>"; };
@@ -169,15 +166,6 @@
 		DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialView.swift; sourceTree = "<group>"; };
 		EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TajweedParser.swift; sourceTree = "<group>"; };
 		EE00012F510DEB006DB81900 /* LearnTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnTabView.swift; sourceTree = "<group>"; };
-		FF0001002F510DEB006DB819 /* DailyActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyActivity.swift; sourceTree = "<group>"; };
-		FF0002002F510DEB006DB819 /* HifzModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzModels.swift; sourceTree = "<group>"; };
-		FF0003002F510DEB006DB819 /* HifzProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzProgress.swift; sourceTree = "<group>"; };
-		FF0004002F510DEB006DB819 /* SRSItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSItem.swift; sourceTree = "<group>"; };
-		FF0005002F510DEB006DB819 /* HifzAudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzAudioService.swift; sourceTree = "<group>"; };
-		FF0006002F510DEB006DB819 /* HifzViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzViewModel.swift; sourceTree = "<group>"; };
-		FF0007002F510DEB006DB819 /* ContributionHeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributionHeatmapView.swift; sourceTree = "<group>"; };
-		FF0008002F510DEB006DB819 /* HifzCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzCardView.swift; sourceTree = "<group>"; };
-		FF0009002F510DEB006DB819 /* HifzMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzMainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -340,7 +328,6 @@
 				0EEA12622F510DEB006DB819 /* QuranStore.swift */,
 				DD00032F510DEB006DB81900 /* SRSViewModel.swift */,
 				DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */,
-				FF0006002F510DEB006DB819 /* HifzViewModel.swift */,
 				0EF57E752F775D2500936A5F /* LocationSearchViewModel.swift */,
 			);
 			path = ViewModels;
@@ -353,7 +340,7 @@
 				0EEA122B2F510DEB006DB819 /* CardContainer.swift */,
 				0EEA122C2F510DEB006DB819 /* NextPrayerCard.swift */,
 				0EEA122D2F510DEB006DB819 /* PrayerTimesCardView.swift */,
-				FF0007002F510DEB006DB819 /* ContributionHeatmapView.swift */,
+				0E1DFFDB2F88188600549A07 /* JustifiedArabicText.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -384,6 +371,7 @@
 				0EF57E772F775E0E00936A5F /* StateSelectionView.swift */,
 				0EF57E792F775E2400936A5F /* CitySelectionView.swift */,
 				0EA1E1BC2F8046C8004C025F /* TenDayForecastView.swift */,
+				0E1DFFD92F88122100549A07 /* SurahRevealView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -417,7 +405,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEA12912F510DEB006DB819 /* DitibAPIService.swift */,
-				FF0005002F510DEB006DB819 /* HifzAudioService.swift */,
+				0E1DFFD72F880BE100549A07 /* QuranOfflineCache.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -425,10 +413,6 @@
 		FF00A0002F510DEB006DB819 /* Hifz */ = {
 			isa = PBXGroup;
 			children = (
-				FF0001002F510DEB006DB819 /* DailyActivity.swift */,
-				FF0002002F510DEB006DB819 /* HifzModels.swift */,
-				FF0003002F510DEB006DB819 /* HifzProgress.swift */,
-				FF0004002F510DEB006DB819 /* SRSItem.swift */,
 			);
 			path = Hifz;
 			sourceTree = "<group>";
@@ -436,8 +420,6 @@
 		FF00B0002F510DEB006DB819 /* Hifz */ = {
 			isa = PBXGroup;
 			children = (
-				FF0008002F510DEB006DB819 /* HifzCardView.swift */,
-				FF0009002F510DEB006DB819 /* HifzMainView.swift */,
 			);
 			path = Hifz;
 			sourceTree = "<group>";
@@ -590,7 +572,9 @@
 				0EEA12432F510DEB006DB819 /* TabBarView.swift in Sources */,
 				0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */,
 				0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */,
+				0E1DFFDC2F88188600549A07 /* JustifiedArabicText.swift in Sources */,
 				0EEA12452F510DEB006DB819 /* MainTabView.swift in Sources */,
+				0E1DFFD82F880BE100549A07 /* QuranOfflineCache.swift in Sources */,
 				0EEA125B2F510DEB006DB819 /* AppLanguage.swift in Sources */,
 				0EEA125D2F510DEB006DB819 /* L10n.swift in Sources */,
 				0EEA125F2F510DEB006DB819 /* OnboardingView.swift in Sources */,
@@ -616,6 +600,7 @@
 				0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */,
 				0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */,
 				0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */,
+				0E1DFFDA2F88122100549A07 /* SurahRevealView.swift in Sources */,
 				0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */,
 				DD00092F510DEB006DB81901 /* PrayerTutorialModels.swift in Sources */,
 				0EF57E7A2F775E2400936A5F /* CitySelectionView.swift in Sources */,
@@ -625,15 +610,6 @@
 				A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */,
 				A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */,
 				A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */,
-				FF0001012F510DEB006DB819 /* DailyActivity.swift in Sources */,
-				FF0002012F510DEB006DB819 /* HifzModels.swift in Sources */,
-				FF0003012F510DEB006DB819 /* HifzProgress.swift in Sources */,
-				FF0004012F510DEB006DB819 /* SRSItem.swift in Sources */,
-				FF0005012F510DEB006DB819 /* HifzAudioService.swift in Sources */,
-				FF0006012F510DEB006DB819 /* HifzViewModel.swift in Sources */,
-				FF0007012F510DEB006DB819 /* ContributionHeatmapView.swift in Sources */,
-				FF0008012F510DEB006DB819 /* HifzCardView.swift in Sources */,
-				FF0009012F510DEB006DB819 /* HifzMainView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

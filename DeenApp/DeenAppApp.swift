@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct DeenAppApp: App {
@@ -26,10 +25,5 @@ struct DeenAppApp: App {
             .environmentObject(appState)
             .preferredColorScheme(appState.preferredSwiftUIColorScheme)
         }
-        .modelContainer(for: [
-            SRSItem.self,
-            DailyActivity.self,
-            HifzProgress.self
-        ])
     }
 }

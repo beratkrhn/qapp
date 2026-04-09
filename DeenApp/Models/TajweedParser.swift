@@ -46,44 +46,47 @@ struct TajweedParser {
     // MARK: - Strict Unicode Whitelist
 
     /// Whitelist of every scalar that is safe to display with the KFGQPC Hafs COLR font.
-    /// Anything outside this set is silently dropped — this is intentionally aggressive.
+    /// Anything outside this set is silently dropped.
     ///
     /// Permitted scalars:
     ///   U+0020          Space
     ///   U+0621–U+063A   Core Arabic letters  (ء … غ)
     ///   U+0640          Arabic tatweel  (ـ)
     ///   U+0641–U+064A   More Arabic letters  (ف … ي)
-    ///   U+064B–U+0652   Standard tashkeel / harakat  (tanwin, fatha, damma, kasra, shadda, sukun)
-    ///   U+0653          Maddah above  (ٓ)
-    ///   U+0654          Hamza above  (ٔ)
-    ///   U+0655          Hamza below  (ٕ)
-    ///   U+0656          Subscript alef  (ٖ)
+    ///   U+064B–U+0656   Standard tashkeel / harakat  (tanwin, fatha, damma, kasra, shadda, sukun,
+    ///                   maddah, hamza above/below, subscript alef)
     ///   U+0670          Dagger alif / superscript alef  (ٰ) — critical for Quran
     ///   U+0671          Alef wasla  (ٱ) — critical for Uthmanic Hafs
+    ///   U+06E1–U+06E8   Uthmanic rendering marks (small high dotless, meem, seen, madda, waw,
+    ///                   yeh, high yeh, high noon) — required by KFGQPC font for correct shaping
+    ///   U+06EA–U+06ED   Uthmanic stop marks (empty centre stops, rounded stop, small low meem)
+    ///                   — also required by KFGQPC font
     ///
-    /// Everything else — annotation signs (U+06D6–U+06ED), Arabic Extended-A (U+08D3–U+08FF),
-    /// zero-width joiners, BOM, format controls, etc. — is excluded and will not render.
+    /// Explicitly excluded: waqf/pause marks (U+06D6–U+06E0), sajda circle (U+06E9),
+    /// Arabic Extended-A (U+08D3–U+08FF), zero-width joiners, BOM, format controls, etc.
     private static let allowedScalarSet: CharacterSet = {
         var cs = CharacterSet()
         cs.insert(Unicode.Scalar(0x0020)!)                                            // space
         cs.insert(charactersIn: Unicode.Scalar(0x0621)!...Unicode.Scalar(0x063A)!)   // ء–غ
         cs.insert(Unicode.Scalar(0x0640)!)                                            // tatweel ـ
         cs.insert(charactersIn: Unicode.Scalar(0x0641)!...Unicode.Scalar(0x064A)!)   // ف–ي
-        cs.insert(charactersIn: Unicode.Scalar(0x064B)!...Unicode.Scalar(0x0652)!)   // harakat
-        cs.insert(Unicode.Scalar(0x0653)!)                                            // maddah ٓ
-        cs.insert(Unicode.Scalar(0x0654)!)                                            // hamza above ٔ
-        cs.insert(Unicode.Scalar(0x0655)!)                                            // hamza below ٕ
-        cs.insert(Unicode.Scalar(0x0656)!)                                            // subscript alef ٖ
+        cs.insert(charactersIn: Unicode.Scalar(0x064B)!...Unicode.Scalar(0x0656)!)   // harakat + maddah/hamza/subscript
         cs.insert(Unicode.Scalar(0x0670)!)                                            // dagger alif ٰ
         cs.insert(Unicode.Scalar(0x0671)!)                                            // alef wasla ٱ
+        // Uthmanic rendering marks — needed by KFGQPC Hafs font for correct glyph shaping
+        cs.insert(charactersIn: Unicode.Scalar(0x06E1)!...Unicode.Scalar(0x06E8)!)   // ۡ–ۨ
+        cs.insert(charactersIn: Unicode.Scalar(0x06EA)!...Unicode.Scalar(0x06ED)!)   // ۪–ۭ
         return cs
     }()
 
     /// Strict whitelist filter: retains only scalars in `allowedScalarSet`.
-    /// Replaces the old blacklist approach — any scalar not explicitly permitted is dropped.
-    private static func sanitize(_ text: String) -> String {
+    /// Drops waqf/decoration marks (U+06D6–U+06E0, U+06E9) while preserving
+    /// standard harakat and the Uthmanic marks that KFGQPC Hafs requires.
+    static func sanitizePlain(_ text: String) -> String {
         String(text.unicodeScalars.filter { allowedScalarSet.contains($0) })
     }
+
+    private static func sanitize(_ text: String) -> String { sanitizePlain(text) }
 
     // MARK: - Debug Scalar Logger
 

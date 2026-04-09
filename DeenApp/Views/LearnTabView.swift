@@ -7,17 +7,15 @@
 //
 
 import SwiftUI
-import SwiftData
 
 enum LearnMode: String, Identifiable, CaseIterable {
-    case hifz
+    case surahReveal
     case quranWords
 
     var id: String { rawValue }
 }
 
 struct LearnTabView: View {
-    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var appState: AppState
 
     @State private var selectedMode: LearnMode?
@@ -26,8 +24,8 @@ struct LearnTabView: View {
         Group {
             if let mode = selectedMode {
                 switch mode {
-                case .hifz:
-                    HifzMainView(modelContext: modelContext) {
+                case .surahReveal:
+                    SurahRevealView {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             selectedMode = nil
                         }
@@ -64,13 +62,13 @@ struct LearnTabView: View {
 
                 VStack(spacing: 16) {
                     LearnModeCard(
-                        title: "Hifz Mode",
-                        subtitle: "Memorise Ayat with the 3×3 method",
-                        icon: "brain.head.profile",
+                        title: "Surah Reveal",
+                        subtitle: "Reveal Ayat one by one to memorise",
+                        icon: "eye.slash.fill",
                         accentColor: Theme.accent
                     ) {
                         withAnimation(.easeInOut(duration: 0.25)) {
-                            selectedMode = .hifz
+                            selectedMode = .surahReveal
                         }
                     }
 

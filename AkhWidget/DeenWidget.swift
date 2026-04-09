@@ -601,11 +601,25 @@ private struct LockScreenRectangularView: View {
     }
 
     /// 0…1 fraction of elapsed time between previous and next prayer.
+    /// • Before first prayer → measures from midnight to first prayer.
+    /// • After last prayer   → measures from last prayer to tomorrow's first prayer
+    ///                         (stored in entry.nextPrayerDate by makeEntry).
     private var progress: Double {
-        guard let prev = segment.prev, let next = segment.next else { return 0 }
-        let total = next.time.timeIntervalSince(prev.time)
+        let prayers = entry.prayers.filter { $0.kindRaw != "Sunrise" }
+        guard let nextIdx = prayers.firstIndex(where: { $0.time > entry.date }) else {
+            // All of today's prayers have passed — measure from last prayer to tomorrow's Fajr.
+            guard let lastPrayer = prayers.last else { return 0 }
+            let total = entry.nextPrayerDate.timeIntervalSince(lastPrayer.time)
+            guard total > 0 else { return 1.0 }
+            return min(max(entry.date.timeIntervalSince(lastPrayer.time) / total, 0), 1)
+        }
+        let nextTime = prayers[nextIdx].time
+        let prevTime: Date = nextIdx > 0
+            ? prayers[nextIdx - 1].time
+            : Calendar.current.startOfDay(for: entry.date)
+        let total = nextTime.timeIntervalSince(prevTime)
         guard total > 0 else { return 0 }
-        return min(max(entry.date.timeIntervalSince(prev.time) / total, 0), 1)
+        return min(max(entry.date.timeIntervalSince(prevTime) / total, 0), 1)
     }
 
     var body: some View {
@@ -614,6 +628,8 @@ private struct LockScreenRectangularView: View {
         let endDate = (next?.time.timeIntervalSinceNow ?? 0) > 0
             ? next!.time
             : Date().addingTimeInterval(1)
+        // Avoid degenerate gradient (all stops at location 0) when progress is 0
+        let p = max(progress, 0.001)
 
         VStack(alignment: .leading, spacing: 3) {
 
@@ -639,12 +655,16 @@ private struct LockScreenRectangularView: View {
                     // Track — uses .primary so lock-screen vibrancy renders it visible
                     Capsule()
                         .fill(.primary.opacity(0.12))
-                    // Progress fill: opaque up to `progress`, transparent after
+                    // Progress fill: solid from 0 to p, transparent after.
+                    // Three stops (0, p, p) instead of two at the same location — when
+                    // both stops share a location SwiftUI extends the last stop's color
+                    // (opacity 0) across the entire bar, making it invisible.
                     Capsule()
                         .fill(LinearGradient(
                             stops: [
-                                .init(color: .primary.opacity(0.5), location: progress),
-                                .init(color: .primary.opacity(0),   location: progress)
+                                .init(color: .primary.opacity(0.5), location: 0),
+                                .init(color: .primary.opacity(0.5), location: p),
+                                .init(color: .primary.opacity(0),   location: p)
                             ],
                             startPoint: .leading,
                             endPoint: .trailing

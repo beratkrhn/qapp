@@ -80,6 +80,8 @@ struct QuranIndexView: View {
     let language: AppLanguage
     let onNavigate: (QuranNavigationTarget) -> Void
 
+    @State private var searchQuery = ""
+
     var body: some View {
         ZStack {
             Theme.background.ignoresSafeArea()
@@ -121,11 +123,42 @@ struct QuranIndexView: View {
 
     private var suraList: some View {
         List {
-            weiterlesenSection
-            ForEach(mergedNavigationItems) { item in
-                switch item {
-                case .surah(let sura): surahRow(sura)
-                case .juz(let num, let page): juzRow(number: num, page: page)
+            if searchQuery.isEmpty {
+                weiterlesenSection
+                ForEach(mergedNavigationItems) { item in
+                    switch item {
+                    case .surah(let sura): surahRow(sura)
+                    case .juz(let num, let page): juzRow(number: num, page: page)
+                    }
+                }
+            } else {
+                // Direct page-jump shortcut when query is a valid page number
+                if let page = pageSearchTarget {
+                    pageJumpRow(page: page)
+                }
+                let results = filteredNavigationItems
+                if results.isEmpty && pageSearchTarget == nil {
+                    // Empty state
+                    VStack(spacing: 10) {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 28))
+                            .foregroundColor(Theme.textSecondary.opacity(0.4))
+                        Text("Keine Ergebnisse f\u{FC}r \"\(searchQuery)\"")
+                            .font(.subheadline)
+                            .foregroundColor(Theme.textSecondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 40)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(results) { item in
+                        switch item {
+                        case .surah(let sura): surahRow(sura)
+                        case .juz(let num, let page): juzRow(number: num, page: page)
+                        }
+                    }
                 }
             }
         }
@@ -133,6 +166,46 @@ struct QuranIndexView: View {
         .scrollContentBackground(.hidden)
         .background(Theme.background)
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
+        .searchable(text: $searchQuery,
+                    placement: .navigationBarDrawer(displayMode: .always),
+                    prompt: searchPrompt)
+    }
+
+    private var searchPrompt: String {
+        switch language {
+        case .english: return "Surah, Juz or page"
+        case .turkish: return "Sure, Cüz veya sayfa"
+        default:       return "Sure, Juz oder Seite"
+        }
+    }
+
+    /// Non-nil when query is a valid Mushaf page number (1–604).
+    private var pageSearchTarget: Int? {
+        let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let page = Int(trimmed), page >= 1, page <= QuranStore.totalPages else { return nil }
+        return page
+    }
+
+    /// Merged navigation items filtered by the current search query.
+    /// - Surah: matches by number, transliteration, translation, or Arabic name.
+    /// - Juz:   matches by number only.
+    private var filteredNavigationItems: [QuranNavigationItem] {
+        let query = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return mergedNavigationItems }
+        let lower    = query.lowercased()
+        let queryNum = Int(query)
+        return mergedNavigationItems.filter { item in
+            switch item {
+            case .surah(let sura):
+                if let n = queryNum, sura.number == n { return true }
+                return sura.nameTransliteration.lowercased().contains(lower)
+                    || sura.nameTranslation.lowercased().contains(lower)
+                    || sura.nameArabic.contains(query)   // Arabic: original casing
+            case .juz(let num, _):
+                guard let n = queryNum else { return false }
+                return num == n
+            }
+        }
     }
 
     /// Surahs and Juz entries merged and sorted by page number.
@@ -148,6 +221,43 @@ struct QuranIndexView: View {
             if case .juz = a, case .surah = b { return true }
             return false
         }
+    }
+
+    // MARK: - Page Jump Row (shown when query is a valid page number)
+
+    private func pageJumpRow(page: Int) -> some View {
+        Button(action: { onNavigate(.mushafPage(page)) }) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(Theme.accent.opacity(0.15))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                .strokeBorder(Theme.accent.opacity(0.45), lineWidth: 0.75)
+                        )
+                        .frame(width: 36, height: 36)
+                    Image(systemName: "book.pages.fill")
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(Theme.accent)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(L10n.quranPage(language)) \(page)")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(Theme.textPrimary)
+                    Text("Direkt öffnen · Mushaf")
+                        .font(.caption)
+                        .foregroundColor(Theme.textSecondary)
+                }
+                Spacer()
+                Image(systemName: "arrow.right.circle.fill")
+                    .font(.body)
+                    .foregroundColor(Theme.accent)
+            }
+            .padding(.vertical, 4)
+        }
+        .buttonStyle(.plain)
+        .listRowBackground(Theme.accent.opacity(0.08))
+        .listRowSeparatorTint(Theme.accent.opacity(0.3))
     }
 
     // MARK: - Weiterlesen Card
@@ -928,7 +1038,9 @@ struct QuranListView: View {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .environment(\.layoutDirection, .rightToLeft)
                             } else {
-                                let words = verse.arabic
+                                // Sanitize through the same whitelist as the Tajweed path so
+                                // characters the KFGQPC font can't render don't appear as circles.
+                                let words = TajweedParser.stripAllTags(verse.arabic)
                                     .split(separator: " ")
                                     .map(String.init)
                                     .filter { !$0.isEmpty }
@@ -1130,70 +1242,7 @@ struct QuranSettingsSheet: View {
     }
 }
 
-// MARK: - Justified Arabic Text (UIKit)
-
-private struct JustifiedArabicText: UIViewRepresentable {
-    let segments: [(text: String, isMarker: Bool, ayahID: Int)]
-    let bodyFont: UIFont
-    let markerFont: UIFont
-    let tajweedEnabled: Bool
-    let tajweedCache: [Int: String]
-    let readingMode: Bool
-
-    private var markerColor: UIColor { UIColor(ThemeColor.current.color) }
-    private var defaultTextColor: UIColor { readingMode ? .black : .white }
-
-    func makeUIView(context: Context) -> UITextView {
-        let tv = UITextView()
-        tv.isEditable = false
-        tv.isScrollEnabled = false
-        tv.backgroundColor = .clear
-        tv.textContainerInset = .zero
-        tv.textContainer.lineFragmentPadding = 0
-        tv.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        return tv
-    }
-
-    func updateUIView(_ tv: UITextView, context: Context) {
-        tv.attributedText = attributedString
-    }
-
-    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
-        let width = proposal.width ?? UIScreen.main.bounds.width
-        let fitted = uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude))
-        return CGSize(width: width, height: fitted.height)
-    }
-
-    private var attributedString: NSAttributedString {
-        let para = NSMutableParagraphStyle()
-        para.alignment = .justified
-        para.baseWritingDirection = .rightToLeft
-        para.lineSpacing = 12
-
-        let result = NSMutableAttributedString()
-        for seg in segments {
-            if seg.isMarker {
-                result.append(NSAttributedString(string: seg.text, attributes: [
-                    .font:            markerFont,
-                    .foregroundColor: markerColor,
-                    .paragraphStyle:  para,
-                ]))
-            } else if tajweedEnabled, let html = tajweedCache[seg.ayahID] {
-                result.append(TajweedParser.nsAttributedString(
-                    from: html, bodyFont: bodyFont, paragraphStyle: para,
-                    defaultTextColor: defaultTextColor
-                ))
-            } else {
-                result.append(NSAttributedString(string: seg.text, attributes: [
-                    .font:            bodyFont,
-                    .foregroundColor: defaultTextColor,
-                    .paragraphStyle:  para,
-                ]))
-            }
-        }
-        return result
-    }
-}
+// JustifiedArabicText moved to DeenApp/Views/Components/JustifiedArabicText.swift
 
 // MARK: - Preview
 

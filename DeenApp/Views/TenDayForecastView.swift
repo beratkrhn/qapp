@@ -111,8 +111,18 @@ private struct ForecastDayCard: View {
 
     private var dateLabel: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: appLanguage == .german ? "de_DE" : "ar_SA")
-        formatter.dateFormat = "EEEE, d. MMMM"
+        formatter.calendar = Calendar(identifier: .gregorian)
+        switch appLanguage {
+        case .german, .germanArabic, .germanTurkish:
+            formatter.locale = Locale(identifier: "de_DE")
+        case .english:
+            formatter.locale = Locale(identifier: "en_US")
+        case .turkish:
+            formatter.locale = Locale(identifier: "tr_TR")
+        }
+        // Let the formatter choose the best pattern for the locale
+        // (e.g. "Montag, 14. April" / "Monday, April 14" / "14 Nisan Pazartesi")
+        formatter.setLocalizedDateFormatFromTemplate("EEEEdMMMM")
         return formatter.string(from: day.date)
     }
 

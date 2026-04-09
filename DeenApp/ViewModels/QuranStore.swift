@@ -98,6 +98,10 @@ final class QuranStore: ObservableObject {
         Task { await loadSuraList() }
     }
 
+    // MARK: - Offline cache reference
+
+    private let cache = QuranOfflineCache.shared
+
     // MARK: - Arabischer Text: Sanitisierung
 
     /// Entfernt Rendering-Artefakte aus dem Uthmani-Text (Kreise, Waqf-Zeichen, BOM, etc.)
@@ -105,8 +109,10 @@ final class QuranStore: ObservableObject {
         // Stripped Unicode ranges:
         // U+0600–U+0605   Arabic number signs / special prefixes
         // U+0610–U+061A   Arabic extended signs (small high marks, etc.)
-        // U+06D6–U+06ED   Full Quranic annotation block (Waqf/pause markers, end-of-ayah circles, etc.)
-        //                 Includes U+06DD (Arabic End of Ayah circle) explicitly
+        // U+06D6–U+06E0   Waqf/pause marks + end-of-ayah circle (U+06DD) only.
+        //                 U+06E1–U+06E8 and U+06EA–U+06ED are Uthmanic rendering marks
+        //                 required by the KFGQPC Hafs font for correct shaping — kept.
+        // U+06E9           Arabic Place of Sajdah (decorative sajda circle) — stripped.
         // U+FD3E–U+FD3F   Ornate Arabic parentheses
         // U+200B–U+200F   Zero-width / directional control chars
         // U+2028–U+2029   Line/paragraph separators
@@ -114,12 +120,12 @@ final class QuranStore: ObservableObject {
         let rangesToStrip: [ClosedRange<Unicode.Scalar>] = [
             "\u{0600}"..."\u{0605}",
             "\u{0610}"..."\u{061A}",
-            "\u{06D6}"..."\u{06ED}",  // covers 06DD (end-of-ayah) and all Waqf marks
+            "\u{06D6}"..."\u{06E0}",  // Waqf marks + end-of-ayah circle only
             "\u{FD3E}"..."\u{FD3F}",
             "\u{200B}"..."\u{200F}",
             "\u{2028}"..."\u{2029}"
         ]
-        let singleChars: [Unicode.Scalar] = ["\u{FEFF}"]
+        let singleChars: [Unicode.Scalar] = ["\u{FEFF}", "\u{06E9}"]  // BOM + sajda circle
 
         var unwanted = CharacterSet()
         for range in rangesToStrip { unwanted.insert(charactersIn: range) }
@@ -154,9 +160,49 @@ final class QuranStore: ObservableObject {
         return text
     }
 
+    // MARK: - Processing helpers (shared by cache and API paths)
+
+    /// Converts an `AlquranSurahDetail` into the view-ready `[QuranVerse]` array.
+    private func parseVerses(from detail: AlquranSurahDetail) -> [QuranVerse] {
+        let suraNumber = detail.number
+        return detail.ayahs.map { ayah in
+            let raw   = sanitizeArabicText(ayah.text.trimmingCharacters(in: .whitespacesAndNewlines))
+            let clean = stripBismillahIfNeeded(from: raw, suraNumber: suraNumber)
+            return QuranVerse(id: ayah.number, suraNumber: suraNumber,
+                              verseNumber: ayah.numberInSurah, arabic: clean,
+                              translationEN: nil, translationDE: nil)
+        }
+    }
+
+    /// Converts an `AlquranPageData` into a `MushafPage`, populating `mushafTajweedCache` as a side-effect.
+    private func buildMushafPage(pageNumber: Int, from data: AlquranPageData) -> MushafPage {
+        let ayahs = data.ayahs.map { a -> MushafAyah in
+            mushafTajweedCache[a.number] = a.text
+            let stripped  = TajweedParser.stripAllTags(a.text)
+            let rawText   = sanitizeArabicText(stripped.trimmingCharacters(in: .whitespacesAndNewlines))
+            let cleanText = stripBismillahIfNeeded(from: rawText, suraNumber: a.surah.number)
+            return MushafAyah(id: a.number, text: cleanText,
+                              numberInSurah: a.numberInSurah,
+                              suraNumber: a.surah.number,
+                              suraName: a.surah.name,
+                              suraEnglishName: a.surah.englishName,
+                              juz: a.juz)
+        }
+        return MushafPage(id: pageNumber, ayahs: ayahs)
+    }
+
     // MARK: - Surenliste
 
     func loadSuraList() async {
+        // Fast path: disk cache
+        let key = QuranOfflineCache.keyForSurahList()
+        if let cachedData = await cache.data(forKey: key),
+           let res = try? JSONDecoder().decode(AlquranSurahListResponse.self, from: cachedData),
+           res.code == 200, !res.data.isEmpty {
+            suraList = res.data.map { makeSuraInfo($0) }
+            return
+        }
+        // Slow path: network
         isLoading = true
         error = nil
         defer { isLoading = false }
@@ -165,19 +211,20 @@ final class QuranStore: ObservableObject {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranSurahListResponse.self, from: data)
             guard res.code == 200 else { error = "API Fehler"; return }
-            suraList = res.data.map { item in
-                QuranSuraInfo(
-                    number: item.number,
-                    nameArabic: item.name,
-                    nameTransliteration: item.englishName,
-                    nameTranslation: item.englishNameTranslation,
-                    numberOfAyahs: item.numberOfAyahs,
-                    pageNumber: Self.surahFirstPage[item.number] ?? 1
-                )
-            }
+            await cache.store(data, forKey: key)
+            suraList = res.data.map { makeSuraInfo($0) }
         } catch {
             self.error = error.localizedDescription
         }
+    }
+
+    private func makeSuraInfo(_ item: AlquranSurahListItem) -> QuranSuraInfo {
+        QuranSuraInfo(number: item.number,
+                      nameArabic: item.name,
+                      nameTransliteration: item.englishName,
+                      nameTranslation: item.englishNameTranslation,
+                      numberOfAyahs: item.numberOfAyahs,
+                      pageNumber: Self.surahFirstPage[item.number] ?? 1)
     }
 
     func selectSura(_ number: Int) {
@@ -197,6 +244,13 @@ final class QuranStore: ObservableObject {
     }
 
     func loadSura(_ number: Int) async {
+        let key = QuranOfflineCache.keyForSurah(number)
+        if let cachedData = await cache.data(forKey: key),
+           let res = try? JSONDecoder().decode(AlquranSurahDetailResponse.self, from: cachedData),
+           res.code == 200 {
+            currentSuraVerses = parseVerses(from: res.data)
+            return
+        }
         isLoading = true
         error = nil
         defer { isLoading = false }
@@ -205,19 +259,8 @@ final class QuranStore: ObservableObject {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranSurahDetailResponse.self, from: data)
             guard res.code == 200 else { error = "API Fehler"; return }
-            let suraNumber = res.data.number
-            currentSuraVerses = res.data.ayahs.map { ayah in
-                let rawArabic = sanitizeArabicText(ayah.text.trimmingCharacters(in: .whitespacesAndNewlines))
-                let cleanArabic = stripBismillahIfNeeded(from: rawArabic, suraNumber: suraNumber)
-                return QuranVerse(
-                    id: ayah.number,
-                    suraNumber: suraNumber,
-                    verseNumber: ayah.numberInSurah,
-                    arabic: cleanArabic,
-                    translationEN: nil,
-                    translationDE: nil
-                )
-            }
+            await cache.store(data, forKey: key)
+            currentSuraVerses = parseVerses(from: res.data)
         } catch {
             self.error = error.localizedDescription
         }
@@ -226,6 +269,13 @@ final class QuranStore: ObservableObject {
     // MARK: - Sura-Übersetzung für Listenansicht
 
     func loadSuraTranslation(_ number: Int, edition: String) async {
+        let key = QuranOfflineCache.keyForSurah(number, edition)
+        if let cachedData = await cache.data(forKey: key),
+           let res = try? JSONDecoder().decode(AlquranSurahDetailResponse.self, from: cachedData),
+           res.code == 200 {
+            suraTranslationTexts = textDict(from: res.data)
+            return
+        }
         isLoadingTranslationTexts = true
         defer { isLoadingTranslationTexts = false }
         guard let url = URL(string: "\(baseURL)/surah/\(number)/\(edition)") else { return }
@@ -233,10 +283,9 @@ final class QuranStore: ObservableObject {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranSurahDetailResponse.self, from: data)
             guard res.code == 200 else { return }
-            suraTranslationTexts = res.data.ayahs.reduce(into: [:]) { dict, ayah in
-                dict[ayah.numberInSurah] = ayah.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-        } catch { /* Fehler still behandelt */ }
+            await cache.store(data, forKey: key)
+            suraTranslationTexts = textDict(from: res.data)
+        } catch { }
     }
 
     // MARK: - Mushaf Pages
@@ -245,34 +294,27 @@ final class QuranStore: ObservableObject {
         guard pageNumber >= 1, pageNumber <= QuranStore.totalPages else { return }
         if mushafPageCache[pageNumber] != nil { return }
 
-        isMushafLoading = true
-        defer { isMushafLoading = false }
+        // Fast path: disk cache
+        let key = QuranOfflineCache.keyForPage(pageNumber)
+        if let cachedData = await cache.data(forKey: key),
+           let res = try? JSONDecoder().decode(AlquranPageResponse.self, from: cachedData),
+           res.code == 200 {
+            mushafPageCache[pageNumber] = buildMushafPage(pageNumber: pageNumber, from: res.data)
+            return
+        }
 
+        // Slow path: network
         // Use the tajweed edition as the single source of truth.
         // The raw HTML is cached for coloured rendering; tags are stripped for plain display.
+        isMushafLoading = true
+        defer { isMushafLoading = false }
         guard let url = URL(string: "\(baseURL)/page/\(pageNumber)/\(Self.tajweedEdition)") else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranPageResponse.self, from: data)
             guard res.code == 200 else { return }
-            let ayahs = res.data.ayahs.map { a -> MushafAyah in
-                // Store raw tajweed HTML for JustifiedArabicText coloured rendering
-                mushafTajweedCache[a.number] = a.text
-                // Strip tags → sanitize → remove Bismillah prefix for plain-text display
-                let stripped = TajweedParser.stripAllTags(a.text)
-                let rawText  = sanitizeArabicText(stripped.trimmingCharacters(in: .whitespacesAndNewlines))
-                let cleanText = stripBismillahIfNeeded(from: rawText, suraNumber: a.surah.number)
-                return MushafAyah(
-                    id: a.number,
-                    text: cleanText,
-                    numberInSurah: a.numberInSurah,
-                    suraNumber: a.surah.number,
-                    suraName: a.surah.name,
-                    suraEnglishName: a.surah.englishName,
-                    juz: a.juz
-                )
-            }
-            mushafPageCache[pageNumber] = MushafPage(id: pageNumber, ayahs: ayahs)
+            await cache.store(data, forKey: key)
+            mushafPageCache[pageNumber] = buildMushafPage(pageNumber: pageNumber, from: res.data)
         } catch { }
     }
 
@@ -306,24 +348,36 @@ final class QuranStore: ObservableObject {
 
     func loadPageTranslation(_ pageNumber: Int, edition: String) async {
         guard pageTranslationCache[pageNumber] == nil else { return }
+
+        // Fast path: disk cache
+        let safeEdition = edition.replacingOccurrences(of: ".", with: "_")
+        let key = "page_\(pageNumber)_\(safeEdition)"
+        if let cachedData = await cache.data(forKey: key),
+           let res = try? JSONDecoder().decode(AlquranPageResponse.self, from: cachedData),
+           res.code == 200 {
+            pageTranslationCache[pageNumber] = res.data.ayahs.map { a in
+                TranslationAyah(id: a.number, numberInSurah: a.numberInSurah,
+                                suraNumber: a.surah.number, suraName: a.surah.englishName,
+                                text: a.text.trimmingCharacters(in: .whitespacesAndNewlines))
+            }
+            return
+        }
+
+        // Slow path: network
         isLoadingTranslations = true
         defer { isLoadingTranslations = false }
-
         guard let url = URL(string: "\(baseURL)/page/\(pageNumber)/\(edition)") else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranPageResponse.self, from: data)
             guard res.code == 200 else { return }
+            await cache.store(data, forKey: key)
             pageTranslationCache[pageNumber] = res.data.ayahs.map { a in
-                TranslationAyah(
-                    id: a.number,
-                    numberInSurah: a.numberInSurah,
-                    suraNumber: a.surah.number,
-                    suraName: a.surah.englishName,
-                    text: a.text.trimmingCharacters(in: .whitespacesAndNewlines)
-                )
+                TranslationAyah(id: a.number, numberInSurah: a.numberInSurah,
+                                suraNumber: a.surah.number, suraName: a.surah.englishName,
+                                text: a.text.trimmingCharacters(in: .whitespacesAndNewlines))
             }
-        } catch { /* Fehler still behandelt */ }
+        } catch { }
     }
 
     static func translationEdition(for option: QuranTranslationOption) -> String? {
@@ -339,6 +393,13 @@ final class QuranStore: ObservableObject {
     static let transliterationEdition = "en.transliteration"
 
     func loadSuraTransliteration(_ number: Int) async {
+        let key = QuranOfflineCache.keyForSurah(number, Self.transliterationEdition)
+        if let cachedData = await cache.data(forKey: key),
+           let res = try? JSONDecoder().decode(AlquranSurahDetailResponse.self, from: cachedData),
+           res.code == 200 {
+            suraTransliterationTexts = textDict(from: res.data)
+            return
+        }
         isLoadingTransliteration = true
         defer { isLoadingTransliteration = false }
         guard let url = URL(string: "\(baseURL)/surah/\(number)/\(Self.transliterationEdition)") else { return }
@@ -346,10 +407,9 @@ final class QuranStore: ObservableObject {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranSurahDetailResponse.self, from: data)
             guard res.code == 200 else { return }
-            suraTransliterationTexts = res.data.ayahs.reduce(into: [:]) { dict, ayah in
-                dict[ayah.numberInSurah] = ayah.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-        } catch { /* silently handled */ }
+            await cache.store(data, forKey: key)
+            suraTransliterationTexts = textDict(from: res.data)
+        } catch { }
     }
 
     // MARK: - Tajweed (ar.tajweed edition returns HTML-tagged Arabic)
@@ -357,6 +417,13 @@ final class QuranStore: ObservableObject {
     static let tajweedEdition = "quran-tajweed"
 
     func loadSuraTajweed(_ number: Int) async {
+        let key = QuranOfflineCache.keyForSurah(number, Self.tajweedEdition)
+        if let cachedData = await cache.data(forKey: key),
+           let res = try? JSONDecoder().decode(AlquranSurahDetailResponse.self, from: cachedData),
+           res.code == 200 {
+            suraTajweedTexts = res.data.ayahs.reduce(into: [:]) { $0[$1.numberInSurah] = $1.text }
+            return
+        }
         isLoadingTajweed = true
         defer { isLoadingTajweed = false }
         guard let url = URL(string: "\(baseURL)/surah/\(number)/\(Self.tajweedEdition)") else { return }
@@ -364,10 +431,16 @@ final class QuranStore: ObservableObject {
             let (data, _) = try await URLSession.shared.data(from: url)
             let res = try JSONDecoder().decode(AlquranSurahDetailResponse.self, from: data)
             guard res.code == 200 else { return }
-            suraTajweedTexts = res.data.ayahs.reduce(into: [:]) { dict, ayah in
-                dict[ayah.numberInSurah] = ayah.text
-            }
-        } catch { /* silently handled */ }
+            await cache.store(data, forKey: key)
+            suraTajweedTexts = res.data.ayahs.reduce(into: [:]) { $0[$1.numberInSurah] = $1.text }
+        } catch { }
+    }
+
+    /// Converts an `AlquranSurahDetail` ayah array into a `[verseNumber: text]` dict.
+    private func textDict(from detail: AlquranSurahDetail) -> [Int: String] {
+        detail.ayahs.reduce(into: [:]) { dict, ayah in
+            dict[ayah.numberInSurah] = ayah.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
     }
 
     // MARK: - Tajweed → AttributedString Parser
