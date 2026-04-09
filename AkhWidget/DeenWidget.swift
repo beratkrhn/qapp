@@ -591,49 +591,65 @@ private struct LockScreenRectangularView: View {
     }
 
     var body: some View {
+        let prev = segment.prev
+        let next = segment.next
+        let endDate = (next?.time.timeIntervalSinceNow ?? 0) > 0
+            ? next!.time
+            : Date().addingTimeInterval(1)
+
         VStack(alignment: .leading, spacing: 3) {
 
-            // ── Top row: previous prayer ←————————————→ upcoming prayer ───────
-            HStack(alignment: .top) {
-                if let prev = segment.prev {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(prev.name)
-                            .font(.caption2.bold())
-                        Text(prev.timeString)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+            // ── Top: previous name ←————————————→ upcoming name ──────────────
+            HStack {
+                Text(prev?.name ?? "—")
+                    .font(.subheadline.bold())
                 Spacer()
-                if let next = segment.next {
-                    VStack(alignment: .trailing, spacing: 1) {
-                        Text(next.name)
-                            .font(.caption2.bold())
-                        Text(next.timeString)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                Text(next?.name ?? "—")
+                    .font(.subheadline.bold())
             }
 
-            // ── Bottom: progress gauge + live per-second countdown ────────────
-            if let next = segment.next {
-                // Ensure the range is always valid (upper bound must be in the future)
-                let endDate = next.time > Date() ? next.time : Date().addingTimeInterval(1)
-                Gauge(value: progress) {
-                    HStack(spacing: 2) {
-                        Text(next.name + " in")
-                        Text(timerInterval: Date()...endDate, countsDown: true)
-                    }
-                    .font(.caption2)
-                    .minimumScaleFactor(0.7)
-                    .lineLimit(1)
+            // ── Thick capsule bar with outline, inset gap, and timer inside ────
+            ZStack {
+                // Outer border
+                Capsule()
+                    .strokeBorder(.primary.opacity(0.35), lineWidth: 1.5)
+
+                // Inner fill area — padded to create a small gap from the border.
+                // Uses a gradient hard-stop instead of GeometryReader, which can
+                // return zero size in the live lock screen rendering environment.
+                ZStack {
+                    // Track
+                    Capsule()
+                        .fill(.secondary.opacity(0.15))
+                    // Progress fill: solid up to `progress`, then clear
+                    Capsule()
+                        .fill(LinearGradient(
+                            stops: [
+                                .init(color: .secondary.opacity(0.55), location: progress),
+                                .init(color: .clear,                   location: progress)
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ))
                 }
-                .gaugeStyle(.accessoryLinearCapacity)
+                .padding(3) // gap between border and fill
+
+                // Timer text — centered over the full bar
+                Text(timerInterval: Date()...endDate, countsDown: true)
+                    .font(.caption.bold().monospacedDigit())
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .multilineTextAlignment(.center)
             }
+            .frame(height: 22)
+
+            // ── Bottom: "Ends at HH:mm" ───────────────────────────────────────
+            Text("Ends at \(next?.timeString ?? "—")")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(.vertical, 2)
+        .padding(.vertical, 1)
     }
 }
 
