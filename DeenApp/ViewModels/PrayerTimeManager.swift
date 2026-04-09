@@ -24,31 +24,45 @@ final class PrayerTimeManager: ObservableObject {
     @Published private(set) var errorMessage: String?
     /// Always reflects the current calendar day; updates automatically at midnight.
     @Published private(set) var currentDate: Date = Date()
+    /// 10-day prayer time forecast, loaded on demand.
+    @Published private(set) var tenDayForecast: [ForecastDay] = []
+    @Published private(set) var isForecastLoading = false
 
     // MARK: - Private
 
     private var lastLoadedCityName = ""
+    /// The last city used to successfully fetch prayer times — used by the forecast loader.
+    private(set) var currentDitibCity: DitibCity?
     private var midnightTimer: Timer?
+    /// Set to true when all today's prayers have passed, preventing repeated
+    /// tomorrow-preload requests from the per-second countdown timer.
+    private var nextDayFetchTriggered = false
     private var significantTimeObserver: (any NSObjectProtocol)?
     private var foregroundObserver: (any NSObjectProtocol)?
+    private var languageObserver: (any NSObjectProtocol)?
 
     // MARK: - Init
 
     init() {
-        if let cached = SharedPrayerData.load(), cached.isToday {
-            // Today's data already lives in the shared App Group cache.
-            // Restore it directly — no API call, no risk of overwriting
-            // correct DITIB data. Widget and app stay perfectly in sync.
+        // Always restore the DITIB city from UserDefaults first, so
+        // loadTenDayForecast() works even when prayer times come from cache.
+        if let data = UserDefaults.standard.data(forKey: "dailydee.selectedDitibCity"),
+           let city = try? JSONDecoder().decode(DitibCity.self, from: data) {
+            currentDitibCity = city
+        }
+
+        if let cached = SharedPrayerData.load(), isCacheCurrentlyValid(cached) {
+            // Cache holds data for today OR for tomorrow (pre-loaded after Isha).
+            // Restore directly — no API call needed.
             applySharedCache(cached)
         } else {
-            // Cache is stale (new day) or empty (first launch).
-            // Load using the persisted DITIB city — never fall back to a
-            // hard-coded city string that could silently target the wrong city.
+            // Cache is stale (past day) or empty (first launch).
             loadSavedCity()
         }
         scheduleNextMidnightTimer()
         observeSignificantTimeChange()
         observeForeground()
+        observeLanguageChange()
     }
 
     // MARK: - Stale-cache / first-launch reload
@@ -61,6 +75,19 @@ final class PrayerTimeManager: ObservableObject {
             return
         }
         loadPrayerTimes(ditibCity: city)
+    }
+
+    /// A cache entry is valid if its dateString represents today OR a future date.
+    /// This allows post-Isha next-day data (stored with tomorrow's date) to survive
+    /// foreground re-enters and app restarts without being thrown away.
+    private func isCacheCurrentlyValid(_ cached: SharedPrayerData) -> Bool {
+        let fmt = DateFormatter()
+        fmt.locale     = Locale(identifier: "en_US_POSIX")
+        fmt.dateFormat = "yyyy-MM-dd"
+        guard let cacheDate = fmt.date(from: cached.dateString) else { return false }
+        let todayStart = Calendar.current.startOfDay(for: Date())
+        let cacheStart = Calendar.current.startOfDay(for: cacheDate)
+        return cacheStart >= todayStart
     }
 
     // MARK: - Kerahat (Makruh) start times per prayer kind
@@ -90,9 +117,12 @@ final class PrayerTimeManager: ObservableObject {
         isLoading = true
         errorMessage = nil
         lastLoadedCityName = ditibCity.name
-        // Write city name to the shared store immediately so the widget
-        // already knows the new name before the API response arrives.
+        currentDitibCity = ditibCity
+        // Write city name and district ID to the shared App Group so the
+        // widget knows the new city before the API response arrives, and
+        // can self-fetch prayer times when its cached data becomes stale.
         SharedPrayerData.saveCity(ditibCity.name)
+        UserDefaults(suiteName: "group.d.DailyDee")?.set(ditibCity.id, forKey: "widgetDistrictId")
         Task {
             do {
                 let daily = try await DitibAPIService.shared.fetchDailyPrayerTimes(districtId: ditibCity.id)
@@ -106,8 +136,40 @@ final class PrayerTimeManager: ObservableObject {
 
     // MARK: - Apply DITIB response
 
-    private func applyDitibTimes(_ daily: DitibDailyData) {
-        let t   = daily.times
+    private func applyDitibTimes(_ daily: DitibDailyData, skipStaleCheck: Bool = false) {
+        let t = daily.times
+
+        // MARK: Stale Data Detection
+        if !skipStaleCheck {
+            let localISO = DateFormatter()
+            localISO.locale     = Locale(identifier: "en_US_POSIX")
+            localISO.dateFormat = "yyyy-MM-dd"
+            let todayLocal = localISO.string(from: Date())
+            let apiPrefix  = String(daily.date.prefix(10))
+
+            // Primary signal: the API's own date field doesn't match today in the
+            // local (Berlin) timezone. This is the definitive stale-data indicator —
+            // localTodayEntry() fell back to .first and returned yesterday's entry.
+            let apiDateMismatch = localISO.date(from: apiPrefix) != nil && apiPrefix != todayLocal
+
+            // Secondary signal: all six time strings are identical to a cache entry
+            // that is NOT from today. Catches the edge-case where the server stamps
+            // the correct date but ships yesterday's time values.
+            var timesMirrorCache = false
+            if let cached = SharedPrayerData.load(), !cached.isToday {
+                let cachedTimes = [cached.fajr, cached.sunrise, cached.dhuhr,
+                                   cached.asr,  cached.maghrib, cached.isha]
+                let newTimes    = [t.imsak, t.gunes, t.ogle, t.ikindi, t.aksam, t.yatsi]
+                timesMirrorCache = cachedTimes == newTimes
+            }
+
+            if apiDateMismatch || timesMirrorCache {
+                isLoading = false
+                fetchNextDayAsFallback()
+                return
+            }
+        }
+
         let ref = Date()
         timezoneIdentifier = "Europe/Berlin"
         prayerTimes = [
@@ -150,12 +212,42 @@ final class PrayerTimeManager: ObservableObject {
         startCountdownTimer()
     }
 
+    // MARK: - Stale-Data Fallback
+
+    /// Triggered when applyDitibTimes detects that the API returned time strings
+    /// identical to yesterday's cache (UTC-lag / stale CDN response).
+    /// Re-fetches the multi-day list and applies the entry that correctly represents
+    /// today in the local (Berlin) timezone. `skipStaleCheck: true` prevents loops.
+    private func fetchNextDayAsFallback() {
+        guard let city = currentDitibCity else { return }
+        Task {
+            do {
+                let days = try await DitibAPIService.shared.fetchNextTenDays(districtId: city.id)
+                guard !days.isEmpty else {
+                    errorMessage = "Keine Gebetszeiten für heute verfügbar"
+                    return
+                }
+                // fetchNextTenDays starts its slice from today's local date (index 0),
+                // so days[0] is the correct current-local-day entry.
+                applyDitibTimes(days[0], skipStaleCheck: true)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
     // MARK: - Restore from App Group cache (no API call)
 
     private func applySharedCache(_ cached: SharedPrayerData) {
         lastLoadedCityName = cached.cityName
         timezoneIdentifier = cached.timezone
-        let ref = Date()
+        // Use the cache's own date as referenceDate so that a next-day entry
+        // (stored with tomorrow's date after Isha) produces PrayerTime.time values
+        // that are correctly anchored to tomorrow, not to today.
+        let fmt = DateFormatter()
+        fmt.locale     = Locale(identifier: "en_US_POSIX")
+        fmt.dateFormat = "yyyy-MM-dd"
+        let ref = fmt.date(from: cached.dateString) ?? Date()
         prayerTimes = [
             PrayerTime(kind: .imsak,   timeString: cached.fajr,    referenceDate: ref),
             PrayerTime(kind: .shuruuq, timeString: cached.sunrise, referenceDate: ref),
@@ -171,22 +263,38 @@ final class PrayerTimeManager: ObservableObject {
 
     // MARK: - Widget Sync
 
-    /// Encodes the 5 display prayers (Sunrise excluded) into the shared App Group
-    /// so the widget extension can build its timeline without reimplementing prayer logic.
+    /// Encodes all 6 display prayers (including Shuruuq) into the shared App Group
+    /// so the widget extension can build its timeline. Names are localised to the
+    /// currently selected app language so all widget sizes show the correct names.
     private func syncWidgetPrayers() {
-        let displayKinds: Set<PrayerKind> = [.imsak, .dhuhr, .asr, .maghrib, .isha]
-        let entries: [WidgetPrayerEntry] = prayerTimes
-            .filter { displayKinds.contains($0.kind) }
-            .map { pt in
-                WidgetPrayerEntry(
-                    kindRaw: pt.kind.rawValue,
-                    name: pt.kind.displayName,
-                    iconName: pt.kind.iconName,
-                    timeString: pt.timeString,
-                    time: pt.time
-                )
-            }
+        let rawLang = UserDefaults.standard.string(forKey: "dailydee.appLanguage")
+        let language = rawLang.flatMap(AppLanguage.init(rawValue:)) ?? .german
+
+        let entries: [WidgetPrayerEntry] = prayerTimes.map { pt in
+            WidgetPrayerEntry(
+                kindRaw: pt.kind.rawValue,
+                name: pt.kind.localizedName(for: language),
+                iconName: pt.kind.iconName,
+                timeString: pt.timeString,
+                time: pt.time
+            )
+        }
         SharedPrayerData.saveTodayPrayers(entries)
+    }
+
+    /// Re-syncs widget data when the user changes the app language so the widget
+    /// immediately reflects the new prayer name style without an API refetch.
+    private func observeLanguageChange() {
+        languageObserver = NotificationCenter.default.addObserver(
+            forName: .appLanguageDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.syncWidgetPrayers()
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+        }
     }
 
     // MARK: - Countdown
@@ -207,14 +315,26 @@ final class PrayerTimeManager: ObservableObject {
     private func updateNextPrayerAndCountdown() {
         let now = Date()
         nextPrayer = prayerTimes.first { $0.time > now }
+
         if let next = nextPrayer {
+            // Prayers remain today — reset trigger so it can re-arm tomorrow.
+            nextDayFetchTriggered = false
             let interval = next.time.timeIntervalSince(now)
             let h = Int(interval) / 3600
             let m = (Int(interval) % 3600) / 60
             let s = Int(interval) % 60
             countdownString = String(format: "%02d:%02d:%02d", h, m, s)
         } else {
-            // All prayers have passed — show countdown to tomorrow's Fajr.
+            // All of today's prayers have passed.
+            // Fire the tomorrow-preload exactly once so we can show an exact Fajr countdown
+            // rather than an approximated time-shift. The flag prevents repeat Task launches.
+            if !nextDayFetchTriggered {
+                nextDayFetchTriggered = true
+                loadTomorrowFully()
+            }
+
+            // Placeholder countdown (today's Fajr time-components pushed to tomorrow).
+            // Replaced with exact values once loadTomorrowFully() completes.
             nextPrayer = prayerTimes.first
             let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now) ?? now
             let nextFajr = prayerTimes.first.flatMap { pt in
@@ -283,9 +403,13 @@ final class PrayerTimeManager: ObservableObject {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.currentDate = Date()
-                // Refresh when the cached date no longer matches today.
-                if let cached = SharedPrayerData.load(), !cached.isToday {
+                // Only re-fetch when the cache is genuinely stale (past day).
+                // A cache with tomorrow's date (post-Isha next-day load) is still valid.
+                if let cached = SharedPrayerData.load(), !self.isCacheCurrentlyValid(cached) {
                     self.loadSavedCity()
+                } else if let cached = SharedPrayerData.load(), self.isCacheCurrentlyValid(cached) {
+                    // Re-apply so PrayerTime.time values are re-anchored to the correct date.
+                    self.applySharedCache(cached)
                 }
             }
         }
@@ -293,8 +417,128 @@ final class PrayerTimeManager: ObservableObject {
 
     private func handleMidnightRollover() {
         currentDate = Date()
-        loadSavedCity()
-        scheduleNextMidnightTimer()   // arm for the next midnight
+        nextDayFetchTriggered = false
+        // If tomorrow's prayer times were pre-loaded after Isha, they are now
+        // today's times. Apply from cache — no API call needed.
+        // Otherwise fetch fresh data for the new day.
+        if let cached = SharedPrayerData.load(), isCacheCurrentlyValid(cached) {
+            applySharedCache(cached)
+        } else {
+            loadSavedCity()
+        }
+        scheduleNextMidnightTimer()
+    }
+
+    // MARK: - Next-Day Full Commit (post-Isha)
+
+    /// Called once after Isha passes. Fetches tomorrow's prayer times and fully
+    /// commits them to the app, cache, and widget — so both the app and the widget
+    /// immediately display Saturday's schedule after Friday's Isha.
+    private func loadTomorrowFully() {
+        guard let city = currentDitibCity else { return }
+        Task {
+            do {
+                let days = try await DitibAPIService.shared.fetchNextTenDays(districtId: city.id)
+                // days[0] = today, days[1] = tomorrow
+                guard days.count > 1 else { return }
+                applyNextDayData(days[1])
+            } catch {
+                // Non-critical: the approximate placeholder countdown stays visible.
+            }
+        }
+    }
+
+    /// Applies tomorrow's prayer times as the active schedule.
+    /// Uses tomorrow as referenceDate so every PrayerTime.time is a real future Date.
+    /// Writes to the shared cache (with tomorrow's dateString) and reloads the widget
+    /// so the widget also immediately shows the next day's times.
+    private func applyNextDayData(_ daily: DitibDailyData) {
+        let t        = daily.times
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+
+        prayerTimes = [
+            PrayerTime(kind: .imsak,   timeString: t.imsak,  referenceDate: tomorrow),
+            PrayerTime(kind: .shuruuq, timeString: t.gunes,  referenceDate: tomorrow),
+            PrayerTime(kind: .dhuhr,   timeString: t.ogle,   referenceDate: tomorrow),
+            PrayerTime(kind: .asr,     timeString: t.ikindi, referenceDate: tomorrow),
+            PrayerTime(kind: .maghrib, timeString: t.aksam,  referenceDate: tomorrow),
+            PrayerTime(kind: .isha,    timeString: t.yatsi,  referenceDate: tomorrow)
+        ]
+
+        // Determine the ISO date string for the cache entry.
+        // Prefer the API's own date field; fall back to our computed tomorrow.
+        let iso = DateFormatter()
+        iso.locale     = Locale(identifier: "en_US_POSIX")
+        iso.dateFormat = "yyyy-MM-dd"
+        let apiPrefix    = String(daily.date.prefix(10))
+        let tomorrowISO  = iso.string(from: tomorrow)
+        let cacheDateStr = (iso.date(from: apiPrefix) != nil) ? apiPrefix : tomorrowISO
+
+        // Full commit: write cache with tomorrow's date so isCacheCurrentlyValid
+        // keeps it alive, and reload the widget so it also shows tomorrow's times.
+        SharedPrayerData.save(SharedPrayerData(
+            fajr: t.imsak, sunrise: t.gunes,
+            dhuhr: t.ogle, asr: t.ikindi,
+            maghrib: t.aksam, isha: t.yatsi,
+            dateString: cacheDateStr,
+            timezone: timezoneIdentifier,
+            cityName: lastLoadedCityName
+        ))
+        syncWidgetPrayers()
+        WidgetCenter.shared.reloadAllTimelines()
+
+        // Re-evaluate: countdown timer will now find tomorrow's Fajr as nextPrayer.
+        updateNextPrayerAndCountdown()
+    }
+
+    // MARK: - 10-Day Forecast
+
+    /// Loads the 10-day prayer time forecast using the internally stored city.
+    /// No parameter needed — uses the city that produced today's prayer times.
+    func loadTenDayForecast() {
+        guard let city = currentDitibCity else { return }
+        guard !isForecastLoading else { return }
+        isForecastLoading = true
+        Task {
+            do {
+                let days = try await DitibAPIService.shared.fetchNextTenDays(districtId: city.id)
+                let forecast: [ForecastDay] = days.compactMap { daily in
+                    let date = Self.parseAPIDate(daily.date) ?? Date()
+                    let t = daily.times
+                    let prayers: [PrayerTime] = [
+                        PrayerTime(kind: .imsak,   timeString: t.imsak,  referenceDate: date),
+                        PrayerTime(kind: .shuruuq, timeString: t.gunes,  referenceDate: date),
+                        PrayerTime(kind: .dhuhr,   timeString: t.ogle,   referenceDate: date),
+                        PrayerTime(kind: .asr,     timeString: t.ikindi, referenceDate: date),
+                        PrayerTime(kind: .maghrib, timeString: t.aksam,  referenceDate: date),
+                        PrayerTime(kind: .isha,    timeString: t.yatsi,  referenceDate: date)
+                    ]
+                    return ForecastDay(date: date, dateString: daily.date, prayers: prayers)
+                }
+                tenDayForecast = forecast
+                isForecastLoading = false
+            } catch {
+                isForecastLoading = false
+            }
+        }
+    }
+
+    /// Parses API date strings in multiple formats (ISO, German, etc.).
+    private static func parseAPIDate(_ raw: String) -> Date? {
+        let candidates = [
+            String(raw.prefix(10)),  // truncate to date portion only
+            raw
+        ]
+        let formats = ["yyyy-MM-dd", "dd.MM.yyyy", "MM/dd/yyyy", "yyyy/MM/dd"]
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
+        for candidate in candidates {
+            for fmt in formats {
+                df.dateFormat = fmt
+                if let date = df.date(from: candidate) { return date }
+            }
+        }
+        return nil
     }
 
     deinit {
@@ -304,6 +548,9 @@ final class PrayerTimeManager: ObservableObject {
             NotificationCenter.default.removeObserver(observer)
         }
         if let observer = foregroundObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = languageObserver {
             NotificationCenter.default.removeObserver(observer)
         }
     }

@@ -316,7 +316,7 @@ struct SettingsView: View {
                                         .environmentObject(prayerTimeManager)
                                 } label: {
                                     HStack {
-                                        Text("Eigene Winkel & Minuten-Offsets")
+                                        Text("Selber rechnen")
                                             .font(.body)
                                             .foregroundColor(Theme.textPrimary)
                                         Spacer()

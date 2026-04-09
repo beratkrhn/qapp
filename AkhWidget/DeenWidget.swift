@@ -19,7 +19,18 @@ private enum DeenWidgetConst {
     static let todayPrayersKey = "widgetTodayPrayers"
     static let cityKey         = "widgetCityName"
     static let accentThemeKey  = "dailydee.accentTheme"
+    static let districtIdKey   = "widgetDistrictId"
+    static let ditibBase       = "https://ezanvakti.imsakiyem.com/api"
 }
+
+// MARK: - Lightweight DITIB models (widget-local, no dependency on main target)
+
+private struct WDitibTimes: Decodable {
+    let imsak: String; let gunes: String; let ogle: String
+    let ikindi: String; let aksam: String; let yatsi: String
+}
+private struct WDitibDay: Decodable { let date: String; let times: WDitibTimes }
+private struct WDitibResponse: Decodable { let data: [WDitibDay] }
 
 // MARK: - Color helpers
 
@@ -27,10 +38,13 @@ private enum DeenWidgetConst {
 private let themeHexMap: [String: String] = [
     "sea_blue":      "1E88E5",
     "dark_purple":   "7B2FBE",
-    "soft_gray":     "9E9E9E",
+    "soft_gray":     "E53935",  // legacy → mapped to Red
+    "red":           "E53935",
     "beige":         "D4A574",
     "emerald_green": "36D080",
     "warm_gold":     "FFC107",
+    "white":         "F5F5F5",
+    "dark_gray":     "424242",
 ]
 
 private func accentColorForRaw(_ raw: String) -> Color {
@@ -104,11 +118,12 @@ extension DeenEntry {
             cal.date(bySettingHour: h, minute: m, second: 0, of: now) ?? now
         }
         let prayers: [WidgetPrayer] = [
-            WidgetPrayer(kindRaw: "Imsak",   name: "İmsak",  iconName: "moon.haze.fill",  timeString: "05:22", time: d(5,  22)),
-            WidgetPrayer(kindRaw: "Dhuhr",   name: "Öğle",   iconName: "sun.max.fill",    timeString: "13:08", time: d(13,  8)),
-            WidgetPrayer(kindRaw: "Asr",     name: "İkindi", iconName: "cloud.sun.fill",  timeString: "16:45", time: d(16, 45)),
-            WidgetPrayer(kindRaw: "Maghrib", name: "Akşam",  iconName: "sunset.fill",     timeString: "19:48", time: d(19, 48)),
-            WidgetPrayer(kindRaw: "Isha",    name: "Yatsı",  iconName: "moon.fill",       timeString: "21:18", time: d(21, 18)),
+            WidgetPrayer(kindRaw: "Imsak",   name: "Fajr",    iconName: "moon.haze.fill",  timeString: "05:22", time: d(5,  22)),
+            WidgetPrayer(kindRaw: "Sunrise", name: "Shuruuq", iconName: "sunrise.fill",    timeString: "06:54", time: d(6,  54)),
+            WidgetPrayer(kindRaw: "Dhuhr",   name: "Dhuhr",   iconName: "sun.max.fill",    timeString: "13:08", time: d(13,  8)),
+            WidgetPrayer(kindRaw: "Asr",     name: "Asr",     iconName: "cloud.sun.fill",  timeString: "16:45", time: d(16, 45)),
+            WidgetPrayer(kindRaw: "Maghrib", name: "Maghrib", iconName: "sunset.fill",     timeString: "19:48", time: d(19, 48)),
+            WidgetPrayer(kindRaw: "Isha",    name: "Ishaa",   iconName: "moon.fill",       timeString: "21:18", time: d(21, 18)),
         ]
         let next = prayers.first { $0.time > now } ?? prayers[3]
         return DeenEntry(
@@ -132,39 +147,49 @@ struct DeenProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<DeenEntry>) -> Void) {
-        guard let prayers = loadPrayers(), let city = loadCity() else {
-            // No shared data yet — retry in an hour
-            let timeline = Timeline(entries: [DeenEntry.makePlaceholder()],
-                                    policy: .after(Date().addingTimeInterval(3600)))
-            completion(timeline)
+        let now = Date()
+        let city = loadCity() ?? "—"
+
+        // If cached prayers exist AND are from today → use them directly.
+        if let prayers = loadPrayers(), !arePrayersStale(prayers) {
+            completion(buildTimeline(prayers: prayers, city: city, from: now))
             return
         }
 
-        let now = Date()
-        var entries: [DeenEntry] = []
+        // Cached data is stale (previous day) or missing.
+        // The widget fetches fresh prayer times directly from the DITIB API so
+        // it never shows the wrong day, even when the main app hasn't run yet.
+        if let districtId = loadDistrictId() {
+            fetchFreshTimeline(districtId: districtId, city: city, now: now, completion: completion)
+        } else {
+            // No district ID yet — retry in 15 minutes.
+            completion(Timeline(entries: [DeenEntry.makePlaceholder()],
+                                policy: .after(now.addingTimeInterval(900))))
+        }
+    }
 
-        // Entry for the current moment
-        entries.append(makeEntry(at: now, prayers: prayers, city: city))
+    // MARK: - Stale detection
 
-        // One transition entry per future prayer:
-        // at prayer.time the "next prayer" advances to the following one.
+    /// Returns true when every stored prayer's Date is before the start of today.
+    private func arePrayersStale(_ prayers: [WidgetPrayer]) -> Bool {
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        return prayers.allSatisfy { $0.time < startOfToday }
+    }
+
+    // MARK: - Timeline construction
+
+    private func buildTimeline(prayers: [WidgetPrayer], city: String, from now: Date) -> Timeline<DeenEntry> {
+        var entries: [DeenEntry] = [makeEntry(at: now, prayers: prayers, city: city)]
         for prayer in prayers where prayer.time > now {
             entries.append(makeEntry(at: prayer.time, prayers: prayers, city: city))
         }
-
-        // Reload 1 second after midnight so the widget picks up the new day's
-        // data as soon as the main app has written the fresh cache.
-        let tomorrowRefresh = Calendar.current.nextDate(
+        let midnight = Calendar.current.nextDate(
             after: now,
             matching: DateComponents(hour: 0, minute: 0, second: 1),
             matchingPolicy: .nextTime
         ) ?? now.addingTimeInterval(86_400)
-
-        let timeline = Timeline(entries: entries, policy: .after(tomorrowRefresh))
-        completion(timeline)
+        return Timeline(entries: entries, policy: .after(midnight))
     }
-
-    // MARK: Private helpers
 
     private func makeEntry(at date: Date, prayers: [WidgetPrayer], city: String) -> DeenEntry {
         let accentRaw = loadAccentThemeRaw()
@@ -173,7 +198,7 @@ struct DeenProvider: TimelineProvider {
                              nextPrayerName: next.name, nextPrayerDate: next.time,
                              prayers: prayers, accentThemeRaw: accentRaw)
         }
-        // All prayers have passed — point to tomorrow's first (İmsak)
+        // All prayers passed — countdown to tomorrow's Imsak
         let first = prayers[0]
         let tomorrowFirst = Calendar.current.date(byAdding: .day, value: 1, to: first.time)
             ?? date.addingTimeInterval(3_600)
@@ -181,6 +206,65 @@ struct DeenProvider: TimelineProvider {
                          nextPrayerName: first.name, nextPrayerDate: tomorrowFirst,
                          prayers: prayers, accentThemeRaw: accentRaw)
     }
+
+    // MARK: - DITIB self-fetch
+
+    /// Fetches today's prayer times directly from the DITIB API when the
+    /// App Group cache is stale.  Runs on a background URLSession thread and
+    /// calls `completion` once — either with fresh data or a 15-min retry.
+    private func fetchFreshTimeline(districtId: String, city: String, now: Date,
+                                    completion: @escaping (Timeline<DeenEntry>) -> Void) {
+        let urlString = "\(DeenWidgetConst.ditibBase)/prayer-times/\(districtId)/daily"
+        guard let url = URL(string: urlString) else {
+            completion(retryTimeline(after: 900))
+            return
+        }
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            guard
+                let data,
+                let response = try? JSONDecoder().decode(WDitibResponse.self, from: data),
+                !response.data.isEmpty
+            else {
+                completion(self.retryTimeline(after: 900))
+                return
+            }
+            // Pick today's entry
+            let iso = DateFormatter()
+            iso.locale = Locale(identifier: "en_US_POSIX")
+            iso.dateFormat = "yyyy-MM-dd"
+            let todayISO = iso.string(from: now)
+            let todayData = response.data.first(where: { $0.date.hasPrefix(todayISO) })
+                         ?? response.data.first!
+
+            let prayers = Self.buildPrayers(from: todayData.times, referenceDate: now)
+            completion(self.buildTimeline(prayers: prayers, city: city, from: now))
+        }.resume()
+    }
+
+    private func retryTimeline(after seconds: TimeInterval) -> Timeline<DeenEntry> {
+        Timeline(entries: [DeenEntry.makePlaceholder()],
+                 policy: .after(Date().addingTimeInterval(seconds)))
+    }
+
+    /// Maps raw DITIB time strings to `WidgetPrayer` with today's `Date` values.
+    private static func buildPrayers(from t: WDitibTimes, referenceDate: Date) -> [WidgetPrayer] {
+        func d(_ hhmm: String) -> Date {
+            let p = hhmm.split(separator: ":").compactMap { Int($0) }
+            guard p.count >= 2 else { return referenceDate }
+            return Calendar.current.date(bySettingHour: p[0], minute: p[1],
+                                         second: 0, of: referenceDate) ?? referenceDate
+        }
+        return [
+            WidgetPrayer(kindRaw: "Imsak",   name: "Fajr",    iconName: "moon.haze.fill",  timeString: t.imsak,  time: d(t.imsak)),
+            WidgetPrayer(kindRaw: "Sunrise",  name: "Shuruuq", iconName: "sunrise.fill",    timeString: t.gunes,  time: d(t.gunes)),
+            WidgetPrayer(kindRaw: "Dhuhr",   name: "Dhuhr",   iconName: "sun.max.fill",    timeString: t.ogle,   time: d(t.ogle)),
+            WidgetPrayer(kindRaw: "Asr",     name: "Asr",     iconName: "cloud.sun.fill",  timeString: t.ikindi, time: d(t.ikindi)),
+            WidgetPrayer(kindRaw: "Maghrib", name: "Maghrib", iconName: "sunset.fill",     timeString: t.aksam,  time: d(t.aksam)),
+            WidgetPrayer(kindRaw: "Isha",    name: "Isha",    iconName: "moon.fill",       timeString: t.yatsi,  time: d(t.yatsi)),
+        ]
+    }
+
+    // MARK: - App Group readers
 
     private func buildCurrentEntry() -> DeenEntry? {
         guard let prayers = loadPrayers(), let city = loadCity() else { return nil }
@@ -194,10 +278,15 @@ struct DeenProvider: TimelineProvider {
     }
 
     private func loadCity() -> String? {
-        guard let city = UserDefaults(suiteName: DeenWidgetConst.suiteName)?
-                .string(forKey: DeenWidgetConst.cityKey),
-              !city.isEmpty else { return nil }
-        return city
+        UserDefaults(suiteName: DeenWidgetConst.suiteName)?
+            .string(forKey: DeenWidgetConst.cityKey)
+            .flatMap { $0.isEmpty ? nil : $0 }
+    }
+
+    private func loadDistrictId() -> String? {
+        UserDefaults(suiteName: DeenWidgetConst.suiteName)?
+            .string(forKey: DeenWidgetConst.districtIdKey)
+            .flatMap { $0.isEmpty ? nil : $0 }
     }
 
     private func loadAccentThemeRaw() -> String {
@@ -299,6 +388,12 @@ private struct PrayerPill: View {
 private struct MediumWidgetView: View {
     let entry: DeenEntry
 
+    // Shuruuq (Sunrise) is excluded from the medium widget pills — six pills
+    // don't fit the medium canvas without becoming unreadably small.
+    private var mediumPrayers: [WidgetPrayer] {
+        entry.prayers.filter { $0.kindRaw != "Sunrise" }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
 
@@ -315,13 +410,22 @@ private struct MediumWidgetView: View {
                     .lineLimit(1)
                     .layoutPriority(1)
 
-                Spacer(minLength: 8)
+                Spacer(minLength: 6)
 
-                // Timer — right side
-                Text(entry.nextPrayerDate, style: .timer)
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    .foregroundStyle(entry.accentColor)
-                    .widgetAccentable()
+                // "verbleibende Zeit bis [Gebet]:" inline left of timer
+                HStack(alignment: .center, spacing: 4) {
+                    Text("verbleibende Zeit bis \(entry.nextPrayerName):")
+                        .font(.system(size: 8, weight: .medium))
+                        .foregroundStyle(Color.primary.opacity(0.5))
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.75)
+                        .multilineTextAlignment(.trailing)
+                    Text(entry.nextPrayerDate, style: .timer)
+                        .font(.system(size: 17, weight: .bold, design: .monospaced))
+                        .foregroundStyle(entry.accentColor)
+                        .widgetAccentable()
+                        .layoutPriority(1)
+                }
             }
 
             // ── Divider ─────────────────────────────────────────────────────
@@ -330,15 +434,15 @@ private struct MediumWidgetView: View {
                 .frame(height: 0.5)
                 .padding(.vertical, 8)
 
-            // ── Prayer pills ─────────────────────────────────────────────────
+            // ── Prayer pills (5 prayers, Shuruuq excluded) ───────────────────
             HStack(spacing: 0) {
-                ForEach(entry.prayers) { prayer in
+                ForEach(mediumPrayers) { prayer in
                     PrayerPill(
                         prayer: prayer,
                         isNext: prayer.name == entry.nextPrayerName,
                         accentColor: entry.accentColor
                     )
-                    if prayer.id != entry.prayers.last?.id {
+                    if prayer.id != mediumPrayers.last?.id {
                         Spacer(minLength: 0)
                     }
                 }
@@ -418,17 +522,19 @@ private struct LargeWidgetView: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 8)
-                // Countdown to next prayer
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text(entry.nextPrayerName)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(entry.accentColor)
-                        .widgetAccentable()
+                // "verbleibende Zeit bis [Gebet]:" inline left of timer
+                HStack(alignment: .center, spacing: 5) {
+                    Text("verbleibende Zeit bis \(entry.nextPrayerName):")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(Color.primary.opacity(0.5))
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.75)
+                        .multilineTextAlignment(.trailing)
                     Text(entry.nextPrayerDate, style: .timer)
                         .font(.system(size: 15, weight: .bold, design: .monospaced))
                         .foregroundStyle(entry.accentColor)
                         .widgetAccentable()
-                        .multilineTextAlignment(.trailing)
+                        .layoutPriority(1)
                 }
             }
 
@@ -473,7 +579,9 @@ struct DeenWidgetEntryView: View {
             switch family {
             case .systemSmall:
                 SmallWidgetView(entry: entry)
-            case .systemLarge:
+            case .systemLarge, .systemExtraLarge:
+                // Both large sizes use the same full-list layout which naturally
+                // includes Shuruuq via ForEach(entry.prayers).
                 LargeWidgetView(entry: entry)
             default:
                 MediumWidgetView(entry: entry)
@@ -501,7 +609,7 @@ struct DeenWidget: Widget {
         }
         .configurationDisplayName("Prayer Times")
         .description("Your daily prayer schedule at a glance.")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
     }
 }
 

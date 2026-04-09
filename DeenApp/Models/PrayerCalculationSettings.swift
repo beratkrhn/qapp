@@ -11,10 +11,6 @@ import Foundation
 
 enum AladhanPresetCalculation: String, CaseIterable, Identifiable, Codable {
     case ditib = "ditib"
-    case mwl = "mwl"
-    case isna = "isna"
-    case egypt = "egypt"
-    case karachi = "karachi"
     case fazilet = "fazilet"
 
     var id: String { rawValue }
@@ -22,10 +18,6 @@ enum AladhanPresetCalculation: String, CaseIterable, Identifiable, Codable {
     var displayName: String {
         switch self {
         case .ditib:   return "DITIB (Diyanet)"
-        case .mwl:     return "Muslim World League"
-        case .isna:    return "ISNA"
-        case .egypt:   return "Ägyptische Behörde"
-        case .karachi: return "Karachi"
         case .fazilet: return "Fazilet (Winkel 18° / 17°)"
         }
     }
@@ -34,10 +26,6 @@ enum AladhanPresetCalculation: String, CaseIterable, Identifiable, Codable {
     var aladhanMethodId: Int {
         switch self {
         case .ditib:   return 13
-        case .mwl:     return 3
-        case .isna:    return 2
-        case .egypt:   return 5
-        case .karachi: return 1
         case .fazilet: return 99
         }
     }

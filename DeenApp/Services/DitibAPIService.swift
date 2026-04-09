@@ -131,6 +131,34 @@ actor DitibAPIService {
         return germanyMatches.first?.id ?? response.data.first?.id
     }
 
+    /// Fetches the next 10 days of prayer times for the given district ID.
+    /// Uses the same `/daily` endpoint which returns the rest of the current month.
+    /// Returns entries starting from today, capped at 10 days.
+    func fetchNextTenDays(districtId: String) async throws -> [DitibDailyData] {
+        guard let url = URL(string: "\(baseURL)/prayer-times/\(districtId)/daily") else {
+            throw DitibError.invalidURL
+        }
+
+        let (data, response) = try await session.data(from: url)
+
+        if let http = response as? HTTPURLResponse, http.statusCode != 200 {
+            throw DitibError.httpError(statusCode: http.statusCode)
+        }
+
+        let decoded = try JSONDecoder().decode(DitibAPIResponse<DitibDailyData>.self, from: data)
+
+        // Build today's ISO string in local timezone to find the starting index.
+        let iso = DateFormatter()
+        iso.locale = Locale(identifier: "en_US_POSIX")
+        iso.dateFormat = "yyyy-MM-dd"
+        let todayISO = iso.string(from: Date())
+
+        // Find the index of today and return up to 10 days from that point.
+        let startIndex = decoded.data.firstIndex(where: { $0.date.hasPrefix(todayISO) }) ?? 0
+        let slice = decoded.data.dropFirst(startIndex)
+        return Array(slice.prefix(10))
+    }
+
     /// Fetches today's prayer times for the given district ID.
     /// Returns the full `DitibDailyData` (including the API's own `date` string)
     /// so callers can detect UTC-lag cache poisoning.

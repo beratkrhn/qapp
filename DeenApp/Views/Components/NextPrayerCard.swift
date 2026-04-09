@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct NextPrayerCard: View {
+    @EnvironmentObject private var appState: AppState
+
     let prayer: PrayerTime
     let countdown: String
 
@@ -26,7 +28,7 @@ struct NextPrayerCard: View {
                             .foregroundColor(.gray)
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(prayer.kind.displayName)
+                            Text(prayer.kind.localizedName(for: appState.appLanguage))
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(Theme.textPrimary)
                             Text("\(prayer.timeString) Uhr")
@@ -61,4 +63,5 @@ struct NextPrayerCard: View {
     )
     .padding()
     .background(Theme.background)
+    .environmentObject(AppState())
 }

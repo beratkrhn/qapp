@@ -11,6 +11,7 @@
 		0E387EB92F7D2493005C7A70 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9832F7343A000EA990C /* WidgetKit.framework */; };
 		0E387EBA2F7D2493005C7A70 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9852F7343A000EA990C /* SwiftUI.framework */; };
 		0E387EC72F7D2493005C7A70 /* AkhWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0EA1E1BD2F8046C8004C025F /* TenDayForecastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA1E1BC2F8046C8004C025F /* TenDayForecastView.swift */; };
 		0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */; };
 		0EA3F23A2F5A701E003E0629 /* PrayerDisplaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */; };
 		0EA3F2432F5A701E003E0629 /* PrayerBasmalaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */; };
@@ -107,6 +108,7 @@
 		0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPrayerData.swift; sourceTree = "<group>"; };
 		0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkhWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E387ECC2F7D24C7005C7A70 /* AkhWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AkhWidgetExtension.entitlements; sourceTree = "<group>"; };
+		0EA1E1BC2F8046C8004C025F /* TenDayForecastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TenDayForecastView.swift; sourceTree = "<group>"; };
 		0EA3F2372F5A7010003E0629 /* PrayerTutorialData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialData.swift; sourceTree = "<group>"; };
 		0EA3F2392F5A701E003E0629 /* PrayerDisplaySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDisplaySettingsView.swift; sourceTree = "<group>"; };
 		0EA3F2422F5A701E003E0629 /* PrayerBasmalaPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerBasmalaPreview.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 				A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */,
 				0EF57E772F775E0E00936A5F /* StateSelectionView.swift */,
 				0EF57E792F775E2400936A5F /* CitySelectionView.swift */,
+				0EA1E1BC2F8046C8004C025F /* TenDayForecastView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -595,6 +598,7 @@
 				0EEA12632F510DEB006DB819 /* QuranStore.swift in Sources */,
 				0EEA12652F510DEB006DB819 /* GreetingFontCycle.swift in Sources */,
 				0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */,
+				0EA1E1BD2F8046C8004C025F /* TenDayForecastView.swift in Sources */,
 				0EEA12672F510DEB006DB819 /* QuranModels.swift in Sources */,
 				0EEA12692F510DEB006DB819 /* QuranArabicFont.swift in Sources */,
 				C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */,

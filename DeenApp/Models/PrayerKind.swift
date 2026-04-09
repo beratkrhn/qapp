@@ -43,11 +43,26 @@ enum PrayerKind: String, CaseIterable, Codable {
     var latinArabicName: String {
         switch self {
         case .imsak:   return "Fajr"
-        case .shuruuq: return "Schuruq"
+        case .shuruuq: return "Shuruuq"
         case .dhuhr:   return "Dhuhr"
         case .asr:     return "Asr"
         case .maghrib: return "Maghrib"
-        case .isha:    return "Ischa"
+        case .isha:    return "Ishaa"
+        }
+    }
+
+    /// Returns the prayer name localised for the given app language.
+    /// - German and Deutsch/Arabisch → Arabic transliterations (Fajr, Shuruuq …)
+    /// - Turkish and Deutsch/Türkisch → Turkish names (İmsak, Güneş …)
+    /// - English → English names (Fajr, Sunrise …)
+    func localizedName(for language: AppLanguage) -> String {
+        switch language {
+        case .german, .germanArabic:
+            return latinArabicName
+        case .turkish, .germanTurkish:
+            return turkishName
+        case .english:
+            return englishName
         }
     }
 

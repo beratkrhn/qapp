@@ -131,10 +131,12 @@ enum Theme {
 enum ThemeColor: String, CaseIterable, Identifiable {
     case seaBlue      = "sea_blue"
     case darkPurple   = "dark_purple"
-    case softGray     = "soft_gray"
+    case red          = "red"
     case beige        = "beige"
     case emeraldGreen = "emerald_green"
     case warmGold     = "warm_gold"
+    case white        = "white"
+    case darkGray     = "dark_gray"
 
     var id: String { rawValue }
 
@@ -142,10 +144,12 @@ enum ThemeColor: String, CaseIterable, Identifiable {
         switch self {
         case .seaBlue:      return "Sea Blue"
         case .darkPurple:   return "Dark Purple"
-        case .softGray:     return "Soft Gray"
+        case .red:          return "Red"
         case .beige:        return "Beige"
         case .emeraldGreen: return "Emerald Green"
         case .warmGold:     return "Warm Gold"
+        case .white:        return "White"
+        case .darkGray:     return "Dark Gray"
         }
     }
 
@@ -153,17 +157,20 @@ enum ThemeColor: String, CaseIterable, Identifiable {
         switch self {
         case .seaBlue:      return Color(hex: "1E88E5")
         case .darkPurple:   return Color(hex: "7B2FBE")
-        case .softGray:     return Color(hex: "9E9E9E")
+        case .red:          return Color(hex: "E53935")
         case .beige:        return Color(hex: "D4A574")
         case .emeraldGreen: return Color(hex: "36D080")
         case .warmGold:     return Color(hex: "FFC107")
+        case .white:        return Color(hex: "F5F5F5")
+        case .darkGray:     return Color(hex: "424242")
         }
     }
 
-    /// Persistierte Auswahl; entferntes `slate_blue` wird auf Smaragdgrün gemappt.
+    /// Persistierte Auswahl; `slate_blue` und `soft_gray` (legacy) werden gemappt.
     static var current: ThemeColor {
         let raw = UserDefaults.standard.string(forKey: "dailydee.accentTheme") ?? ""
         if raw == "slate_blue" { return .emeraldGreen }
+        if raw == "soft_gray"  { return .red }
         return ThemeColor(rawValue: raw) ?? .emeraldGreen
     }
 

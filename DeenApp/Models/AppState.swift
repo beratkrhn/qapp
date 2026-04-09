@@ -181,6 +181,8 @@ final class AppState: ObservableObject {
     func updateLanguage(_ language: AppLanguage) {
         appLanguage = language
         UserDefaults.standard.set(language.rawValue, forKey: UserDefaultsKeys.appLanguage)
+        // Notify PrayerTimeManager so it can re-sync widget prayer names.
+        NotificationCenter.default.post(name: .appLanguageDidChange, object: nil)
     }
 
     func updateCity(_ city: AppCity) {
@@ -224,11 +226,7 @@ final class AppState: ObservableObject {
         if let legacy = UserDefaults.standard.object(forKey: UserDefaultsKeys.calculationMethodLegacy) as? Int {
             let preset: AladhanPresetCalculation
             switch legacy {
-            case 13: preset = .ditib
-            case 3: preset = .mwl
-            case 2: preset = .isna
-            case 5: preset = .egypt
-            case 1: preset = .karachi
+            case 99: preset = .fazilet
             default: preset = .ditib
             }
             let migrated: PrayerCalculationSettings = .preset(preset)
@@ -271,6 +269,12 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
         case .dark: return .dark
         }
     }
+}
+
+// MARK: - Notification Names
+
+extension Notification.Name {
+    static let appLanguageDidChange = Notification.Name("dailydee.appLanguageDidChange")
 }
 
 enum MainTab: Int, CaseIterable {
