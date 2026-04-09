@@ -495,15 +495,31 @@ final class PrayerTimeManager: ObservableObject {
 
     /// Loads the 10-day prayer time forecast using the internally stored city.
     /// No parameter needed — uses the city that produced today's prayer times.
+    /// After Isha has passed today, the first card shown is tomorrow.
     func loadTenDayForecast() {
         guard let city = currentDitibCity else { return }
         guard !isForecastLoading else { return }
         isForecastLoading = true
         Task {
             do {
-                let days = try await DitibAPIService.shared.fetchNextTenDays(districtId: city.id)
-                let forecast: [ForecastDay] = days.compactMap { daily in
-                    let date = Self.parseAPIDate(daily.date) ?? Date()
+                var days = try await DitibAPIService.shared.fetchNextTenDays(districtId: city.id)
+
+                // Once Isha has passed, today is fully done — the user only cares
+                // about upcoming days, so drop today's entry from the list.
+                if let isha = prayerTimes.first(where: { $0.kind == .isha }),
+                   Date() >= isha.time {
+                    days = Array(days.dropFirst())
+                }
+
+                let isoFmt = DateFormatter()
+                isoFmt.locale     = Locale(identifier: "en_US_POSIX")
+                isoFmt.dateFormat = "yyyy-MM-dd"
+
+                let forecast: [ForecastDay] = Array(days.prefix(10)).compactMap { daily in
+                    // Use guard-let so that days with unparseable date strings are
+                    // excluded entirely, instead of silently defaulting to today
+                    // (which would make every card appear to show today's date).
+                    guard let date = Self.parseAPIDate(daily.date) else { return nil }
                     let t = daily.times
                     let prayers: [PrayerTime] = [
                         PrayerTime(kind: .imsak,   timeString: t.imsak,  referenceDate: date),
@@ -513,7 +529,11 @@ final class PrayerTimeManager: ObservableObject {
                         PrayerTime(kind: .maghrib, timeString: t.aksam,  referenceDate: date),
                         PrayerTime(kind: .isha,    timeString: t.yatsi,  referenceDate: date)
                     ]
-                    return ForecastDay(date: date, dateString: daily.date, prayers: prayers)
+                    // Normalise the dateString to "yyyy-MM-dd" so IDs are stable
+                    // and consistent regardless of what format the API returned.
+                    return ForecastDay(date: date,
+                                       dateString: isoFmt.string(from: date),
+                                       prayers: prayers)
                 }
                 tenDayForecast = forecast
                 isForecastLoading = false
@@ -523,19 +543,30 @@ final class PrayerTimeManager: ObservableObject {
         }
     }
 
-    /// Parses API date strings in multiple formats (ISO, German, etc.).
-    private static func parseAPIDate(_ raw: String) -> Date? {
-        let candidates = [
-            String(raw.prefix(10)),  // truncate to date portion only
-            raw
-        ]
-        let formats = ["yyyy-MM-dd", "dd.MM.yyyy", "MM/dd/yyyy", "yyyy/MM/dd"]
-        let df = DateFormatter()
-        df.locale = Locale(identifier: "en_US_POSIX")
+    /// Parses API date strings in multiple formats (ISO, German, Unix epoch, etc.).
+    /// Returns nil if the string cannot be interpreted — callers should exclude
+    /// nil results rather than falling back to today's date.
+    static func parseAPIDate(_ raw: String) -> Date? {
+        let prefix10 = String(raw.prefix(10))
+
+        // Unix epoch (all-digit string, 10 chars = seconds since 1970)
+        if prefix10.allSatisfy(\.isNumber), let ts = TimeInterval(prefix10) {
+            // Normalise to local-calendar midnight so referenceDate arithmetic works.
+            let tsDate = Date(timeIntervalSince1970: ts)
+            return Calendar.current.startOfDay(for: tsDate)
+        }
+
+        let candidates = [prefix10, raw]
+        let formats    = ["yyyy-MM-dd", "dd.MM.yyyy", "MM/dd/yyyy", "yyyy/MM/dd"]
+        let df         = DateFormatter()
+        df.locale      = Locale(identifier: "en_US_POSIX")
         for candidate in candidates {
             for fmt in formats {
                 df.dateFormat = fmt
-                if let date = df.date(from: candidate) { return date }
+                if let date = df.date(from: candidate) {
+                    // Normalise to local-calendar midnight for safe referenceDate use.
+                    return Calendar.current.startOfDay(for: date)
+                }
             }
         }
         return nil

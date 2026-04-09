@@ -152,7 +152,7 @@ struct DeenProvider: TimelineProvider {
 
         // If cached prayers exist AND are from today → use them directly.
         if let prayers = loadPrayers(), !arePrayersStale(prayers) {
-            completion(buildTimeline(prayers: prayers, city: city, from: now))
+            completion(buildTimeline(prayers: prayers, city: city, from: now, family: context.family))
             return
         }
 
@@ -160,7 +160,8 @@ struct DeenProvider: TimelineProvider {
         // The widget fetches fresh prayer times directly from the DITIB API so
         // it never shows the wrong day, even when the main app hasn't run yet.
         if let districtId = loadDistrictId() {
-            fetchFreshTimeline(districtId: districtId, city: city, now: now, completion: completion)
+            fetchFreshTimeline(districtId: districtId, city: city, now: now,
+                               family: context.family, completion: completion)
         } else {
             // No district ID yet — retry in 15 minutes.
             completion(Timeline(entries: [DeenEntry.makePlaceholder()],
@@ -178,16 +179,32 @@ struct DeenProvider: TimelineProvider {
 
     // MARK: - Timeline construction
 
-    private func buildTimeline(prayers: [WidgetPrayer], city: String, from now: Date) -> Timeline<DeenEntry> {
-        var entries: [DeenEntry] = [makeEntry(at: now, prayers: prayers, city: city)]
-        for prayer in prayers where prayer.time > now {
-            entries.append(makeEntry(at: prayer.time, prayers: prayers, city: city))
-        }
+    private func buildTimeline(prayers: [WidgetPrayer], city: String, from now: Date,
+                                family: WidgetFamily = .systemSmall) -> Timeline<DeenEntry> {
         let midnight = Calendar.current.nextDate(
             after: now,
             matching: DateComponents(hour: 0, minute: 0, second: 1),
             matchingPolicy: .nextTime
         ) ?? now.addingTimeInterval(86_400)
+
+        var entries: [DeenEntry] = [makeEntry(at: now, prayers: prayers, city: city)]
+        for prayer in prayers where prayer.time > now {
+            entries.append(makeEntry(at: prayer.time, prayers: prayers, city: city))
+        }
+
+        // For the lock screen bar the entry's `date` is the reference for `progress`.
+        // Without intermediate entries, progress stays at 0 from the moment a prayer
+        // begins until the next one — making the bar appear empty.
+        // Adding an entry every 30 min ensures the bar visually advances.
+        if family == .accessoryRectangular {
+            var t = now.addingTimeInterval(1_800)
+            while t < midnight {
+                entries.append(makeEntry(at: t, prayers: prayers, city: city))
+                t = t.addingTimeInterval(1_800)
+            }
+            entries.sort { $0.date < $1.date }
+        }
+
         return Timeline(entries: entries, policy: .after(midnight))
     }
 
@@ -213,6 +230,7 @@ struct DeenProvider: TimelineProvider {
     /// App Group cache is stale.  Runs on a background URLSession thread and
     /// calls `completion` once — either with fresh data or a 15-min retry.
     private func fetchFreshTimeline(districtId: String, city: String, now: Date,
+                                    family: WidgetFamily = .systemSmall,
                                     completion: @escaping (Timeline<DeenEntry>) -> Void) {
         let urlString = "\(DeenWidgetConst.ditibBase)/prayer-times/\(districtId)/daily"
         guard let url = URL(string: urlString) else {
@@ -237,7 +255,7 @@ struct DeenProvider: TimelineProvider {
                          ?? response.data.first!
 
             let prayers = Self.buildPrayers(from: todayData.times, referenceDate: now)
-            completion(self.buildTimeline(prayers: prayers, city: city, from: now))
+            completion(self.buildTimeline(prayers: prayers, city: city, from: now, family: family))
         }.resume()
     }
 
@@ -618,15 +636,15 @@ private struct LockScreenRectangularView: View {
                 // Uses a gradient hard-stop instead of GeometryReader, which can
                 // return zero size in the live lock screen rendering environment.
                 ZStack {
-                    // Track
+                    // Track — uses .primary so lock-screen vibrancy renders it visible
                     Capsule()
-                        .fill(.secondary.opacity(0.15))
-                    // Progress fill: solid up to `progress`, then clear
+                        .fill(.primary.opacity(0.12))
+                    // Progress fill: opaque up to `progress`, transparent after
                     Capsule()
                         .fill(LinearGradient(
                             stops: [
-                                .init(color: .secondary.opacity(0.55), location: progress),
-                                .init(color: .clear,                   location: progress)
+                                .init(color: .primary.opacity(0.5), location: progress),
+                                .init(color: .primary.opacity(0),   location: progress)
                             ],
                             startPoint: .leading,
                             endPoint: .trailing

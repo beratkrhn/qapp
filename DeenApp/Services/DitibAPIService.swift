@@ -132,31 +132,45 @@ actor DitibAPIService {
     }
 
     /// Fetches the next 10 days of prayer times for the given district ID.
-    /// Uses the same `/daily` endpoint which returns the rest of the current month.
+    /// Tries the `/monthly` endpoint first (returns the full calendar month).
+    /// Falls back to `/daily` for districts where `/monthly` is unavailable.
     /// Returns entries starting from today, capped at 10 days.
     func fetchNextTenDays(districtId: String) async throws -> [DitibDailyData] {
-        guard let url = URL(string: "\(baseURL)/prayer-times/\(districtId)/daily") else {
-            throw DitibError.invalidURL
+        let iso = DateFormatter()
+        iso.locale     = Locale(identifier: "en_US_POSIX")
+        iso.dateFormat = "yyyy-MM-dd"
+        let todayISO   = iso.string(from: Date())
+
+        // ── 1. Try /monthly (full calendar month — most reliable for multi-day) ──
+        if let monthly = try? await fetchRawDays(path: "monthly", districtId: districtId),
+           monthly.count > 1 {
+            let startIndex = monthly.firstIndex(where: { $0.date.hasPrefix(todayISO) }) ?? 0
+            return Array(monthly.dropFirst(startIndex).prefix(10))
         }
 
-        let (data, response) = try await session.data(from: url)
+        // ── 2. Try /weekly (some districts expose this instead) ─────────────────
+        if let weekly = try? await fetchRawDays(path: "weekly", districtId: districtId),
+           weekly.count > 1 {
+            let startIndex = weekly.firstIndex(where: { $0.date.hasPrefix(todayISO) }) ?? 0
+            return Array(weekly.dropFirst(startIndex).prefix(10))
+        }
 
+        // ── 3. Fall back to /daily (may return only today for some districts) ───
+        let daily = try await fetchRawDays(path: "daily", districtId: districtId)
+        let startIndex = daily.firstIndex(where: { $0.date.hasPrefix(todayISO) }) ?? 0
+        return Array(daily.dropFirst(startIndex).prefix(10))
+    }
+
+    /// Fetches raw DitibDailyData from `{baseURL}/prayer-times/{districtId}/{path}`.
+    private func fetchRawDays(path: String, districtId: String) async throws -> [DitibDailyData] {
+        guard let url = URL(string: "\(baseURL)/prayer-times/\(districtId)/\(path)") else {
+            throw DitibError.invalidURL
+        }
+        let (data, response) = try await session.data(from: url)
         if let http = response as? HTTPURLResponse, http.statusCode != 200 {
             throw DitibError.httpError(statusCode: http.statusCode)
         }
-
-        let decoded = try JSONDecoder().decode(DitibAPIResponse<DitibDailyData>.self, from: data)
-
-        // Build today's ISO string in local timezone to find the starting index.
-        let iso = DateFormatter()
-        iso.locale = Locale(identifier: "en_US_POSIX")
-        iso.dateFormat = "yyyy-MM-dd"
-        let todayISO = iso.string(from: Date())
-
-        // Find the index of today and return up to 10 days from that point.
-        let startIndex = decoded.data.firstIndex(where: { $0.date.hasPrefix(todayISO) }) ?? 0
-        let slice = decoded.data.dropFirst(startIndex)
-        return Array(slice.prefix(10))
+        return try JSONDecoder().decode(DitibAPIResponse<DitibDailyData>.self, from: data).data
     }
 
     /// Fetches today's prayer times for the given district ID.

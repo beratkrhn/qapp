@@ -105,6 +105,10 @@ private struct ForecastDayCard: View {
         Calendar.current.isDateInToday(day.date)
     }
 
+    private var isTomorrow: Bool {
+        Calendar.current.isDateInTomorrow(day.date)
+    }
+
     private var dateLabel: String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: appLanguage == .german ? "de_DE" : "ar_SA")
@@ -122,13 +126,18 @@ private struct ForecastDayCard: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(
-                            Capsule().fill(Theme.accent)
-                        )
+                        .background(Capsule().fill(Theme.accent))
+                } else if isTomorrow {
+                    Text("Morgen")
+                        .font(.caption.weight(.bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Capsule().fill(Theme.accent.opacity(0.7)))
                 }
                 Text(dateLabel)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundColor(isToday ? Theme.accent : Theme.textPrimary)
+                    .foregroundColor(isToday || isTomorrow ? Theme.accent : Theme.textPrimary)
                 Spacer()
             }
             .padding(.horizontal, 16)
@@ -156,13 +165,16 @@ private struct ForecastDayCard: View {
             RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous)
                 .fill(Theme.cardBackground)
                 .shadow(color: Theme.shadowColor,
-                        radius: isToday ? 10 : 6,
+                        radius: (isToday || isTomorrow) ? 10 : 6,
                         x: 0,
-                        y: isToday ? 5 : 3)
+                        y: (isToday || isTomorrow) ? 5 : 3)
         )
         .overlay(
             RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous)
-                .strokeBorder(isToday ? Theme.accent.opacity(0.35) : Color.clear, lineWidth: 1.5)
+                .strokeBorder(
+                    isToday    ? Theme.accent.opacity(0.35) :
+                    isTomorrow ? Theme.accent.opacity(0.2)  : Color.clear,
+                    lineWidth: 1.5)
         )
     }
 }
