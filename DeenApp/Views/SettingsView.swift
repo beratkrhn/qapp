@@ -117,7 +117,7 @@ struct SettingsView: View {
                                                         .frame(width: 38, height: 38)
                                                     Image(systemName: "checkmark")
                                                         .font(.system(size: 11, weight: .bold))
-                                                        .foregroundColor(.white)
+                                                        .foregroundColor(.primary)
                                                 }
                                             }
                                         }

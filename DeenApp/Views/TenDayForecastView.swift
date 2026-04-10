@@ -133,14 +133,14 @@ private struct ForecastDayCard: View {
                 if isToday {
                     Text("Heute")
                         .font(.caption.weight(.bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.primary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
                         .background(Capsule().fill(Theme.accent))
                 } else if isTomorrow {
                     Text("Morgen")
                         .font(.caption.weight(.bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.primary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
                         .background(Capsule().fill(Theme.accent.opacity(0.7)))

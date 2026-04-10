@@ -616,7 +616,9 @@ private struct LockScreenRectangularView: View {
         let nextTime = prayers[nextIdx].time
         let prevTime: Date = nextIdx > 0
             ? prayers[nextIdx - 1].time
-            : Calendar.current.startOfDay(for: entry.date)
+            // Anchor to midnight of *nextTime*'s day — not entry.date's day — so that
+            // when tomorrow's prayers are cached the bar doesn't span a 29-hour window.
+            : Calendar.current.startOfDay(for: nextTime)
         let total = nextTime.timeIntervalSince(prevTime)
         guard total > 0 else { return 0 }
         return min(max(entry.date.timeIntervalSince(prevTime) / total, 0), 1)
