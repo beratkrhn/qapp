@@ -116,7 +116,7 @@ extension DitibFederalState {
                 ("Ansbach", nil), ("Aschaffenburg", nil), ("Augsburg", "11036"),
                 ("Bamberg", nil), ("Bayreuth", nil), ("Coburg", nil),
                 ("Dachau", nil), ("Erlangen", nil), ("Freising", nil),
-                ("Fürth", nil), ("Günzburg", "10112"), ("Ingolstadt", nil),
+                ("Fürth", nil), ("Gersthofen", nil), ("Günzburg", "10112"), ("Ingolstadt", nil),
                 ("Kaufbeuren", nil), ("Kempten (Allgäu)", nil), ("Landsberg am Lech", nil),
                 ("Landshut", nil), ("Memmingen", nil), ("München", nil),
                 ("Neu-Ulm", nil), ("Nürnberg", nil), ("Passau", nil),

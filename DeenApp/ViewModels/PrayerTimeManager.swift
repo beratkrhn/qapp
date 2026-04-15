@@ -210,6 +210,7 @@ final class PrayerTimeManager: ObservableObject {
         updateNextPrayerAndCountdown()
         syncWidgetPrayers()
         startCountdownTimer()
+        rescheduleNotificationsIfEnabled()
     }
 
     // MARK: - Stale-Data Fallback
@@ -259,6 +260,7 @@ final class PrayerTimeManager: ObservableObject {
         updateNextPrayerAndCountdown()
         syncWidgetPrayers()
         startCountdownTimer()
+        rescheduleNotificationsIfEnabled()
     }
 
     // MARK: - Widget Sync
@@ -489,6 +491,7 @@ final class PrayerTimeManager: ObservableObject {
 
         // Re-evaluate: countdown timer will now find tomorrow's Fajr as nextPrayer.
         updateNextPrayerAndCountdown()
+        rescheduleNotificationsIfEnabled()
     }
 
     // MARK: - 10-Day Forecast
@@ -570,6 +573,19 @@ final class PrayerTimeManager: ObservableObject {
             }
         }
         return nil
+    }
+
+    // MARK: - Notifications
+
+    private func rescheduleNotificationsIfEnabled() {
+        guard NotificationScheduler.shared.isEnabled else { return }
+        let rawLang = UserDefaults.standard.string(forKey: "dailydee.appLanguage")
+        let language = rawLang.flatMap(AppLanguage.init(rawValue:)) ?? .german
+        NotificationScheduler.shared.schedulePrayerNotifications(
+            for: prayerTimes,
+            cityName: lastLoadedCityName,
+            language: language
+        )
     }
 
     deinit {

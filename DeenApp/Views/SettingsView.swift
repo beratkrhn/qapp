@@ -15,6 +15,9 @@ struct SettingsView: View {
 
     @State private var nameInput: String = ""
     @StateObject private var locationVM = LocationSearchViewModel()
+    @State private var notificationsEnabled: Bool = false
+    @State private var notificationsDenied: Bool = false
+    @State private var notificationMinutesBefore: Int = 15
 
     var body: some View {
         NavigationStack {
@@ -334,6 +337,137 @@ struct SettingsView: View {
                                 }
                             }
                         }
+                        // MARK: - Benachrichtigungen
+                        settingsCard {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Label {
+                                    Text(L10n.notificationsTitle(appState.appLanguage))
+                                        .font(.headline)
+                                        .foregroundColor(Theme.textPrimary)
+                                } icon: {
+                                    Image(systemName: "bell.fill")
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                Text(L10n.notificationsDescription(appState.appLanguage))
+                                    .font(.subheadline)
+                                    .foregroundColor(Theme.textSecondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+
+                                Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                Toggle(L10n.notificationsToggleLabel(appState.appLanguage), isOn: $notificationsEnabled)
+                                    .tint(Theme.accent)
+                                    .foregroundColor(Theme.textPrimary)
+                                    .onChange(of: notificationsEnabled) { _, enabled in
+                                        handleNotificationsToggle(enabled)
+                                    }
+
+                                if notificationsEnabled {
+                                    Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                    HStack {
+                                        Text(L10n.notificationsMinutesBefore(appState.appLanguage))
+                                            .font(.body)
+                                            .foregroundColor(Theme.textPrimary)
+                                        Spacer()
+                                        HStack(spacing: 6) {
+                                            ForEach(NotificationScheduler.allowedMinutes, id: \.self) { minutes in
+                                                Button(action: {
+                                                    notificationMinutesBefore = minutes
+                                                    NotificationScheduler.shared.minutesBeforePrayer = minutes
+                                                    NotificationScheduler.shared.schedulePrayerNotifications(
+                                                        for: prayerTimeManager.prayerTimes,
+                                                        cityName: prayerTimeManager.currentDitibCity?.name ?? "",
+                                                        language: appState.appLanguage
+                                                    )
+                                                }) {
+                                                    Text(L10n.notificationsMinutesUnit(appState.appLanguage, minutes: minutes))
+                                                        .font(.caption.weight(.semibold))
+                                                        .foregroundColor(notificationMinutesBefore == minutes ? Theme.background : Theme.textPrimary)
+                                                        .padding(.horizontal, 10)
+                                                        .padding(.vertical, 6)
+                                                        .background(
+                                                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                                                .fill(notificationMinutesBefore == minutes ? Theme.accent : Theme.background)
+                                                        )
+                                                }
+                                                .buttonStyle(.plain)
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if notificationsDenied {
+                                    Divider().overlay(Theme.textSecondary.opacity(0.2))
+                                    Button(action: openAppSettings) {
+                                        HStack {
+                                            Image(systemName: "gear")
+                                                .font(.system(size: 13))
+                                            Text(L10n.notificationsOpenSettings(appState.appLanguage))
+                                                .font(.subheadline)
+                                        }
+                                        .foregroundColor(Theme.accent)
+                                    }
+                                }
+                            }
+                        }
+
+                        // MARK: - Feedback & TestFlight
+                        settingsCard {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Label {
+                                    Text("Dein Feedback ist wichtig!")
+                                        .font(.headline)
+                                        .foregroundColor(Theme.textPrimary)
+                                } icon: {
+                                    Image(systemName: "heart.fill")
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                Text("Diese App ist noch in der Beta-Phase und dein Feedback hilft uns enorm, sie zu verbessern. Bitte teile uns deine Gedanken, Fehlerberichte und Wünsche mit.")
+                                    .font(.subheadline)
+                                    .foregroundColor(Theme.textSecondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+
+                                Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Feedback über TestFlight senden:")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(Theme.textPrimary)
+
+                                    HStack(alignment: .top, spacing: 8) {
+                                        Text("1.")
+                                            .font(.subheadline)
+                                            .foregroundColor(Theme.accent)
+                                        Text("Öffne die **TestFlight**-App auf deinem iPhone.")
+                                            .font(.subheadline)
+                                            .foregroundColor(Theme.textSecondary)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                    HStack(alignment: .top, spacing: 8) {
+                                        Text("2.")
+                                            .font(.subheadline)
+                                            .foregroundColor(Theme.accent)
+                                        Text("Tippe auf **Akh-ira** in der Liste der Beta-Apps.")
+                                            .font(.subheadline)
+                                            .foregroundColor(Theme.textSecondary)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                    HStack(alignment: .top, spacing: 8) {
+                                        Text("3.")
+                                            .font(.subheadline)
+                                            .foregroundColor(Theme.accent)
+                                        Text("Tippe auf **Feedback senden** und beschreibe dein Anliegen.")
+                                            .font(.subheadline)
+                                            .foregroundColor(Theme.textSecondary)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                }
+                            }
+                        }
+
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 24)
@@ -349,7 +483,60 @@ struct SettingsView: View {
                         .foregroundColor(Theme.accent)
                 }
             }
-            .onAppear { nameInput = appState.userName }
+            .onAppear {
+                nameInput = appState.userName
+                notificationMinutesBefore = NotificationScheduler.shared.minutesBeforePrayer
+                Task { await syncNotificationState() }
+            }
+        }
+    }
+
+    // MARK: - Notification Helpers
+
+    private func syncNotificationState() async {
+        let status = await NotificationScheduler.shared.authorizationStatus()
+        let saved = NotificationScheduler.shared.isEnabled
+        switch status {
+        case .authorized, .provisional, .ephemeral:
+            notificationsEnabled = saved
+            notificationsDenied = false
+        case .denied:
+            notificationsEnabled = false
+            notificationsDenied = saved // only show link if user previously tried to enable
+        default:
+            notificationsEnabled = false
+            notificationsDenied = false
+        }
+    }
+
+    private func handleNotificationsToggle(_ enabled: Bool) {
+        if enabled {
+            Task {
+                let granted = await NotificationScheduler.shared.requestPermission()
+                if granted {
+                    NotificationScheduler.shared.isEnabled = true
+                    notificationsDenied = false
+                    NotificationScheduler.shared.schedulePrayerNotifications(
+                        for: prayerTimeManager.prayerTimes,
+                        cityName: prayerTimeManager.currentDitibCity?.name ?? "",
+                        language: appState.appLanguage
+                    )
+                } else {
+                    NotificationScheduler.shared.isEnabled = false
+                    notificationsEnabled = false
+                    notificationsDenied = true
+                }
+            }
+        } else {
+            NotificationScheduler.shared.isEnabled = false
+            NotificationScheduler.shared.cancelAll()
+            notificationsDenied = false
+        }
+    }
+
+    private func openAppSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
         }
     }
 

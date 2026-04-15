@@ -15,6 +15,8 @@ enum Theme {
     static var background: Color {
         Color(uiColor: UIColor { trait in
             let accent = ThemeColor.current
+            // These two themes are system-mode independent — they always render the same way.
+            if accent == .darkGray { return UIColor(white: 0.10, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark:
                 return accent.uiDarkShade(brightness: 0.11, saturation: 0.28)
@@ -29,6 +31,7 @@ enum Theme {
     static var cardBackground: Color {
         Color(uiColor: UIColor { trait in
             let accent = ThemeColor.current
+            if accent == .darkGray { return UIColor(white: 0.15, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark:
                 return accent.uiDarkShade(brightness: 0.16, saturation: 0.32)
@@ -43,6 +46,7 @@ enum Theme {
     static var cardHighlightBackground: Color {
         Color(uiColor: UIColor { trait in
             let accent = ThemeColor.current
+            if accent == .darkGray { return UIColor(white: 0.17, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark:
                 return accent.uiDarkShade(brightness: 0.18, saturation: 0.34)
@@ -64,6 +68,8 @@ enum Theme {
 
     static var textPrimary: Color {
         Color(uiColor: UIColor { trait in
+            let accent = ThemeColor.current
+            if accent == .darkGray { return .white }
             switch trait.userInterfaceStyle {
             case .dark: return .white
             case .light, .unspecified: return UIColor(white: 0.12, alpha: 1)
@@ -74,6 +80,8 @@ enum Theme {
 
     static var textSecondary: Color {
         Color(uiColor: UIColor { trait in
+            let accent = ThemeColor.current
+            if accent == .darkGray { return UIColor(red: 0.65, green: 0.70, blue: 0.68, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark: return UIColor(red: 0.65, green: 0.70, blue: 0.68, alpha: 1)
             case .light, .unspecified: return UIColor(red: 0.38, green: 0.42, blue: 0.40, alpha: 1)
@@ -131,11 +139,8 @@ enum Theme {
 enum ThemeColor: String, CaseIterable, Identifiable {
     case seaBlue      = "sea_blue"
     case darkPurple   = "dark_purple"
-    case red          = "red"
     case beige        = "beige"
     case emeraldGreen = "emerald_green"
-    case warmGold     = "warm_gold"
-    case white        = "white"
     case darkGray     = "dark_gray"
 
     var id: String { rawValue }
@@ -144,11 +149,8 @@ enum ThemeColor: String, CaseIterable, Identifiable {
         switch self {
         case .seaBlue:      return "Sea Blue"
         case .darkPurple:   return "Dark Purple"
-        case .red:          return "Red"
         case .beige:        return "Beige"
         case .emeraldGreen: return "Emerald Green"
-        case .warmGold:     return "Warm Gold"
-        case .white:        return "White"
         case .darkGray:     return "Dark Gray"
         }
     }
@@ -157,11 +159,8 @@ enum ThemeColor: String, CaseIterable, Identifiable {
         switch self {
         case .seaBlue:      return Color(hex: "1E88E5")
         case .darkPurple:   return Color(hex: "7B2FBE")
-        case .red:          return Color(hex: "E53935")
         case .beige:        return Color(hex: "D4A574")
         case .emeraldGreen: return Color(hex: "36D080")
-        case .warmGold:     return Color(hex: "FFC107")
-        case .white:        return Color(hex: "F5F5F5")
         case .darkGray:     return Color(hex: "424242")
         }
     }
@@ -170,7 +169,8 @@ enum ThemeColor: String, CaseIterable, Identifiable {
     static var current: ThemeColor {
         let raw = UserDefaults.standard.string(forKey: "dailydee.accentTheme") ?? ""
         if raw == "slate_blue" { return .emeraldGreen }
-        if raw == "soft_gray"  { return .red }
+        if raw == "soft_gray"  { return .emeraldGreen }
+        if raw == "white"      { return .emeraldGreen }
         return ThemeColor(rawValue: raw) ?? .emeraldGreen
     }
 

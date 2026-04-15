@@ -110,9 +110,9 @@ enum L10n {
     // MARK: - Onboarding
     static func onboardingTitle(_ lang: AppLanguage) -> String {
         switch lang {
-        case .german, .germanArabic, .germanTurkish: return "Willkommen bei DailyDee"
-        case .english: return "Welcome to DailyDee"
-        case .turkish: return "DailyDee'ye Hoş Geldiniz"
+        case .german, .germanArabic, .germanTurkish: return "Akh-ira"
+        case .english: return "Akh-ira"
+        case .turkish: return "Akh-ira"
         }
     }
     static func onboardingNamePrompt(_ lang: AppLanguage) -> String {
@@ -314,6 +314,155 @@ enum L10n {
         }
     }
 
+    // MARK: - Notifications
+    static func notificationsTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Benachrichtigungen"
+        case .english: return "Notifications"
+        case .turkish: return "Bildirimler"
+        }
+    }
+    static func notificationsToggleLabel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Gebetszeit-Erinnerungen"
+        case .english: return "Prayer time reminders"
+        case .turkish: return "Namaz vakti hatırlatıcıları"
+        }
+    }
+    static func notificationsDescription(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Erhalte eine Benachrichtigung vor und zum Beginn jeder Gebetszeit."
+        case .english: return "Get notified before and at the start of each prayer time."
+        case .turkish: return "Her namaz vaktinden önce ve başlangıcında bildirim al."
+        }
+    }
+
+    static func notificationsMinutesBefore(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Vorankündigung"
+        case .english: return "Notify before"
+        case .turkish: return "Önceden bildir"
+        }
+    }
+
+    static func notificationsMinutesUnit(_ lang: AppLanguage, minutes: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "\(minutes) Min."
+        case .english: return "\(minutes) min"
+        case .turkish: return "\(minutes) dk"
+        }
+    }
+    static func notificationsOpenSettings(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "In iOS-Einstellungen aktivieren"
+        case .english: return "Enable in iOS Settings"
+        case .turkish: return "iOS Ayarlarında etkinleştir"
+        }
+    }
+    static func notificationAtPrayer(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zeit für das Gebet"
+        case .english: return "Time to pray"
+        case .turkish: return "Namaz vakti"
+        }
+    }
+    static func notificationBefore(_ lang: AppLanguage, prayerName: String, minutes: Int = 15) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "In \(minutes) Min: \(prayerName)"
+        case .english: return "In \(minutes) min: \(prayerName)"
+        case .turkish: return "\(minutes) dk sonra: \(prayerName)"
+        }
+    }
+    static func notificationGetReady(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Bereite dich aufs Gebet vor"
+        case .english: return "Get ready to pray"
+        case .turkish: return "Namaza hazırlan"
+        }
+    }
+
+    // MARK: - Per-prayer notification quotes (at prayer time)
+
+    /// Returns the hadith/Quran quote used as the notification body when a prayer begins.
+    /// Returns nil for Shuruuq so the default "Time to pray" message is used.
+    static func notificationPrayerQuote(_ kind: PrayerKind, _ lang: AppLanguage) -> String? {
+        switch kind {
+        case .shuruuq:
+            return nil  // keep default message
+
+        case .imsak:
+            switch lang {
+            case .german, .germanArabic, .germanTurkish:
+                return #"„Es gibt kein Gebet, das den Heuchlern schwerer fällt als das Fajr- (und das Isha)-Gebet.""#
+            case .english:
+                return "No prayer weighs heavier on the hypocrites than Fajr (and Isha)."
+            case .turkish:
+                return "Münafiqlara Fajr (ve Yatsi) namazindan daha agir gelen hicbir namaz yoktur."
+            }
+
+        case .dhuhr:
+            switch lang {
+            case .german, .germanArabic, .germanTurkish:
+                return #"„Dies ist eine Stunde, in der die Tore des Himmels geöffnet werden.""#
+            case .english:
+                return "This is an hour when the gates of heaven are opened."
+            case .turkish:
+                return "Bu, cennet kapilarinin acildigi bir vakittir."
+            }
+
+        case .asr:
+            switch lang {
+            case .german, .germanArabic, .germanTurkish:
+                return #"„Haltet die Gebete ein, und (besonders) das mittlere Gebet, und steht demütig vor Allah.""#
+            case .english:
+                return "Maintain the prayers, especially the middle prayer, and stand before Allah with humility."
+            case .turkish:
+                return "Namazlara, ozellikle orta namaza devam edin ve Allah'a boyun egererek durun."
+            }
+
+        case .maghrib:
+            switch lang {
+            case .german, .germanArabic, .germanTurkish:
+                return #"„Meine Ummah wird nicht aufhören, auf dem rechten Weg zu sein, solange sie das Maghrib-Gebet nicht verzögert.""#
+            case .english:
+                return "My Ummah will not cease to be upon goodness as long as they do not delay Maghrib."
+            case .turkish:
+                return "Ummetim Aksam namazini ertelemedigI surece hayir uzere olmaktan vazgecmeyecektir."
+            }
+
+        case .isha:
+            switch lang {
+            case .german, .germanArabic, .germanTurkish:
+                return #"„Es gibt kein Gebet, das den Heuchlern schwerer fällt als das (Fajr- und das) Isha-Gebet.""#
+            case .english:
+                return "No prayer weighs heavier on the hypocrites than Fajr and Isha."
+            case .turkish:
+                return "Munafiqlara Fajr ve Yatsi namazindan daha agir gelen hicbir namaz yoktur."
+            }
+        }
+    }
+
+    // MARK: - Jumu'ah notification
+
+    static func notificationJumuahTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Jumu'ah"
+        case .english: return "Jumu'ah"
+        case .turkish: return "Cuma Namazı"
+        }
+    }
+
+    static func notificationJumuahBody(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish:
+            return #"„O die ihr glaubt! Wenn zum Gebet gerufen wird am Freitag, dann eilt zum Gedenken Allahs und lasst das Verkaufen ruhen.""#
+        case .english:
+            return "O you who believe! When the call to prayer is made on Friday, hasten to the remembrance of Allah and leave off trading."
+        case .turkish:
+            return "Ey iman edenler! Cuma gunu namaz icin ezan okundugunda, Allah'i anmaya kosun ve alisverisi birakin."
+        }
+    }
+
     // MARK: - Besondere Zeiten (Expandable Prayer Card)
     static func specialTimes(_ lang: AppLanguage) -> String {
         switch lang {
@@ -342,5 +491,117 @@ enum L10n {
         case .english: return "Special Times"
         case .turkish: return "Özel Vakitler"
         }
+    }
+
+    // MARK: - Qada / Kaza Tracker
+
+    static func qadaTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german:        return "Qada-Tracker"
+        case .english:       return "Qada Tracker"
+        case .turkish:       return "Kaza Takipçisi"
+        case .germanArabic:  return "Qada Tracker"
+        case .germanTurkish: return "Kaza Tracker"
+        }
+    }
+
+    static func qadaSetupPrompt(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Nachholgebete einrichten"
+        case .english: return "Set up your missed prayers"
+        case .turkish: return "Kaza namazlarını ayarla"
+        }
+    }
+
+    static func qadaMissedLabel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "ausstehend"
+        case .english: return "outstanding"
+        case .turkish: return "kaza"
+        }
+    }
+
+    static func qadaStartDateQuestion(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Wann musstest du anfangen zu beten?"
+        case .english: return "When did you need to start praying?"
+        case .turkish: return "Ne zaman namaz kılmaya başlaman gerekti?"
+        }
+    }
+
+    static func qadaHowManyPrayed(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Wie viele Gebete hast du von jedem Gebet seitdem gebetet?"
+        case .english: return "How many of each prayer have you prayed since then?"
+        case .turkish: return "O günden bu yana her namazdan kaçını kıldın?"
+        }
+    }
+
+    static func qadaSinceDate(_ lang: AppLanguage, date: Date) -> String {
+        let f = qadaDateFormatter(lang)
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Seit \(f.string(from: date))"
+        case .english: return "Since \(f.string(from: date))"
+        case .turkish: return "\(f.string(from: date)) tarihinden bu yana"
+        }
+    }
+
+    static func qadaTotalLabel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "AUSSTEHENDE GEBETE"
+        case .english: return "OUTSTANDING PRAYERS"
+        case .turkish: return "TOPLAM KAZA"
+        }
+    }
+
+    static func qadaBack(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zurück"
+        case .english: return "Back"
+        case .turkish: return "Geri"
+        }
+    }
+
+    static func qadaCalculate(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Berechnen"
+        case .english: return "Calculate"
+        case .turkish: return "Hesapla"
+        }
+    }
+
+    static func qadaReset(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zurücksetzen"
+        case .english: return "Reset"
+        case .turkish: return "Sıfırla"
+        }
+    }
+
+    static func qadaResetQuestion(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Kaza-Tracker wirklich zurücksetzen?"
+        case .english: return "Reset Qada Tracker?"
+        case .turkish: return "Kaza takipçisini sıfırla?"
+        }
+    }
+
+    static func qadaEditHint(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Tippe auf eine Zahl, um sie direkt zu bearbeiten."
+        case .english: return "Tap a number to edit it directly."
+        case .turkish: return "Bir sayıya dokun ve doğrudan düzenle."
+        }
+    }
+
+    private static func qadaDateFormatter(_ lang: AppLanguage) -> DateFormatter {
+        let f = DateFormatter()
+        f.dateStyle = .long
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: f.locale = Locale(identifier: "de_DE")
+        case .english: f.locale = Locale(identifier: "en_US")
+        case .turkish: f.locale = Locale(identifier: "tr_TR")
+        }
+        return f
     }
 }

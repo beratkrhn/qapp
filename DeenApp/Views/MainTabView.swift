@@ -87,9 +87,11 @@ private struct DisclaimerSheetView: View {
                         "Fehler können immer vorkommen. " +
                         "Es ist daher empfehlenswert, die Zeiten noch einmal gegenzuprüfen."
                     )
-                    Text("wAllahu a3lam")
+
+                    Text("وَاللهُ أَعْلَمُ")
                         .font(.body.weight(.semibold))
                         .foregroundStyle(Theme.accent)
+                        .environment(\.layoutDirection, .rightToLeft)
                 }
                 .font(.body)
                 .foregroundStyle(Theme.textSecondary)

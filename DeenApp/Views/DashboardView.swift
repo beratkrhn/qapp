@@ -11,6 +11,7 @@ struct DashboardView: View {
     @EnvironmentObject var prayerTimeManager: PrayerTimeManager
     @EnvironmentObject var appState: AppState
     @Binding var showSettings: Bool
+    @State private var showQadaTracker = false
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -50,6 +51,8 @@ struct DashboardView: View {
                     )
                 }
 
+                QadaTrackerCard(onTap: { showQadaTracker = true })
+
                 DailyReadingGoalCard(appState: appState, language: appState.appLanguage)
 
                 BottomInfoCardsView(language: appState.appLanguage)
@@ -59,6 +62,9 @@ struct DashboardView: View {
             .padding(.bottom, 120)
         }
         .background(Theme.background)
+        .sheet(isPresented: $showQadaTracker) {
+            QadaTrackerView()
+        }
     }
 
     private var loadingCard: some View {

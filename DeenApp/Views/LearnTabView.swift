@@ -65,11 +65,10 @@ struct LearnTabView: View {
                         title: "Surah Reveal",
                         subtitle: "Reveal Ayat one by one to memorise",
                         icon: "eye.slash.fill",
-                        accentColor: Theme.accent
+                        accentColor: Theme.accent,
+                        comingSoon: true
                     ) {
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            selectedMode = .surahReveal
-                        }
+                        // disabled — coming soon
                     }
 
                     LearnModeCard(
@@ -98,6 +97,7 @@ private struct LearnModeCard: View {
     let subtitle: String
     let icon: String
     let accentColor: Color
+    var comingSoon: Bool = false
     let action: () -> Void
 
     var body: some View {
@@ -105,28 +105,38 @@ private struct LearnModeCard: View {
             HStack(spacing: 16) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14)
-                        .fill(accentColor.opacity(0.15))
+                        .fill(accentColor.opacity(comingSoon ? 0.07 : 0.15))
                         .frame(width: 56, height: 56)
                     Image(systemName: icon)
                         .font(.title2.weight(.semibold))
-                        .foregroundStyle(accentColor)
+                        .foregroundStyle(accentColor.opacity(comingSoon ? 0.4 : 1.0))
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(.headline)
-                        .foregroundStyle(Theme.textPrimary)
+                        .foregroundStyle(Theme.textPrimary.opacity(comingSoon ? 0.4 : 1.0))
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundStyle(Theme.textSecondary)
+                        .foregroundStyle(Theme.textSecondary.opacity(comingSoon ? 0.4 : 1.0))
                         .lineLimit(2)
+                    if comingSoon {
+                        Text("Bald verfügbar")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(Theme.textSecondary)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(
+                                Capsule().fill(Theme.textSecondary.opacity(0.15))
+                            )
+                    }
                 }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
                     .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.textSecondary.opacity(0.5))
+                    .foregroundStyle(Theme.textSecondary.opacity(0.25))
             }
             .padding(20)
             .background(
@@ -136,6 +146,7 @@ private struct LearnModeCard: View {
             )
         }
         .buttonStyle(.plain)
+        .disabled(comingSoon)
     }
 }
 
