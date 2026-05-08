@@ -12,6 +12,7 @@ struct DashboardView: View {
     @EnvironmentObject var appState: AppState
     @Binding var showSettings: Bool
     @State private var showQadaTracker = false
+    @State private var showQiblaCompass = false
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -51,6 +52,8 @@ struct DashboardView: View {
                     )
                 }
 
+                QiblaCompassCard(onTap: { showQiblaCompass = true })
+
                 QadaTrackerCard(onTap: { showQadaTracker = true })
 
                 DailyReadingGoalCard(appState: appState, language: appState.appLanguage)
@@ -64,6 +67,10 @@ struct DashboardView: View {
         .background(Theme.background)
         .sheet(isPresented: $showQadaTracker) {
             QadaTrackerView()
+        }
+        .sheet(isPresented: $showQiblaCompass) {
+            QiblaCompassView()
+                .environmentObject(appState)
         }
     }
 
@@ -79,6 +86,45 @@ struct DashboardView: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 24)
         }
+    }
+}
+
+struct QiblaCompassCard: View {
+    @EnvironmentObject var appState: AppState
+    var onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            CardContainer {
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(Theme.accent.opacity(0.12))
+                            .frame(width: 44, height: 44)
+                        Image(systemName: "location.north.line.fill")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.accent)
+                    }
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("QIBLA-KOMPASS")
+                            .font(.caption.weight(.medium))
+                            .tracking(0.8)
+                            .foregroundStyle(Theme.textSection)
+                        Text(appState.homeCity == nil
+                             ? "Richtung zur Kaaba & Seferi-Distanz"
+                             : "Richtung zur Kaaba — Heimat: \(appState.homeCity!.name)")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.textSecondary)
+                            .lineLimit(1)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.textSecondary.opacity(0.5))
+                }
+            }
+        }
+        .buttonStyle(.plain)
     }
 }
 

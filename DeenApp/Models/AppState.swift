@@ -9,6 +9,41 @@ import SwiftUI
 import Combine
 import WidgetKit
 
+// MARK: - Quran PDF Source
+
+enum QuranPDFSource: String, CaseIterable {
+    case diyanet       = "diyanet"
+    case kuranschrift2 = "kuranschrift2"
+    case pc2web        = "pc2web"
+
+    var displayName: String {
+        switch self {
+        case .diyanet:       return "Diyanet PDF"
+        case .kuranschrift2: return "Quran-Schrift 2"
+        case .pc2web:        return "Mushaf-Bilder"
+        }
+    }
+
+    /// Bundle resource name of the underlying PDF file (without extension).
+    /// Image-based sources have no PDF and return `nil`.
+    var pdfResourceName: String? {
+        switch self {
+        case .diyanet:       return "kuranpdfdiyanet"
+        case .kuranschrift2: return "kuranschrift2"
+        case .pc2web:        return nil
+        }
+    }
+
+    /// Short subtitle shown in the viewer's bottom bar.
+    var bottomBarLabel: String {
+        switch self {
+        case .diyanet:       return "Diyanet Mushaf · PDF"
+        case .kuranschrift2: return "Quran-Schrift 2 · PDF"
+        case .pc2web:        return "Mushaf-Bilder · PC2"
+        }
+    }
+}
+
 private enum UserDefaultsKeys {
     static let onboardingCompleted = "dailydee.onboardingCompleted"
     static let userName = "dailydee.userName"
@@ -25,6 +60,9 @@ private enum UserDefaultsKeys {
     static let isTajweedEnabled = "dailydee.isTajweedEnabled"
     static let isReadingModeEnabled = "dailydee.isReadingModeEnabled"
     static let accentTheme = "dailydee.accentTheme"
+    static let quranPDFSource = "dailydee.quranPDFSource"
+    static let autoLocationEnabled = "dailydee.autoLocationEnabled"
+    static let homeCity = "dailydee.homeCity_v1"
 }
 
 final class AppState: ObservableObject {
@@ -64,6 +102,11 @@ final class AppState: ObservableObject {
         didSet { UserDefaults.standard.set(isReadingModeEnabled, forKey: UserDefaultsKeys.isReadingModeEnabled) }
     }
 
+    // MARK: - Quran PDF Source (Diyanet PDF vs. pc2-web page images)
+    @Published var quranPDFSource: QuranPDFSource {
+        didSet { UserDefaults.standard.set(quranPDFSource.rawValue, forKey: UserDefaultsKeys.quranPDFSource) }
+    }
+
     // MARK: - Accent Theme
     @Published var accentTheme: ThemeColor {
         didSet {
@@ -71,6 +114,22 @@ final class AppState: ObservableObject {
             // Sync to App Group so the widget extension can read the current theme
             UserDefaults(suiteName: "group.d.DailyDee")?.set(accentTheme.rawValue, forKey: UserDefaultsKeys.accentTheme)
             WidgetCenter.shared.reloadAllTimelines()
+        }
+    }
+
+    // MARK: - Auto-Location (GPS-based city follow)
+    @Published var autoLocationEnabled: Bool {
+        didSet { UserDefaults.standard.set(autoLocationEnabled, forKey: UserDefaultsKeys.autoLocationEnabled) }
+    }
+
+    // MARK: - Heimatstadt (used by the Seferi-distance calculation)
+    @Published var homeCity: HomeCity? {
+        didSet {
+            if let city = homeCity, let data = try? JSONEncoder().encode(city) {
+                UserDefaults.standard.set(data, forKey: UserDefaultsKeys.homeCity)
+            } else if homeCity == nil {
+                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.homeCity)
+            }
         }
     }
 
@@ -110,12 +169,34 @@ final class AppState: ObservableObject {
         // Reading mode: defaults to false (dark theme)
         self.isReadingModeEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isReadingModeEnabled)
 
-        // Accent theme: defaults to Emerald Green
-        let rawTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme)
-        if rawTheme == "slate_blue" {
-            UserDefaults.standard.set(ThemeColor.emeraldGreen.rawValue, forKey: UserDefaultsKeys.accentTheme)
+        // Auto-location: defaults to false; user opts in from Settings.
+        self.autoLocationEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.autoLocationEnabled)
+
+        // Heimatstadt: optional, only set once the user picks one.
+        if let data = UserDefaults.standard.data(forKey: UserDefaultsKeys.homeCity),
+           let decoded = try? JSONDecoder().decode(HomeCity.self, from: data) {
+            self.homeCity = decoded
+        } else {
+            self.homeCity = nil
         }
-        let resolvedTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme).flatMap(ThemeColor.init(rawValue:)) ?? .emeraldGreen
+
+        // Quran PDF source: defaults to Diyanet PDF
+        let rawPDFSource = UserDefaults.standard.string(forKey: UserDefaultsKeys.quranPDFSource)
+        self.quranPDFSource = rawPDFSource.flatMap(QuranPDFSource.init(rawValue:)) ?? .diyanet
+
+        // Accent theme: defaults to Emerald Green. Legacy / removed values
+        // (slate_blue, dark_gray, etc.) get migrated to the default so the
+        // didSet writes the new raw value back to UserDefaults.
+        let rawTheme = UserDefaults.standard.string(forKey: UserDefaultsKeys.accentTheme)
+        let migratedRaw: String?
+        switch rawTheme {
+        case "slate_blue", "soft_gray", "white", "dark_gray":
+            migratedRaw = ThemeColor.emeraldGreen.rawValue
+            UserDefaults.standard.set(migratedRaw, forKey: UserDefaultsKeys.accentTheme)
+        default:
+            migratedRaw = rawTheme
+        }
+        let resolvedTheme = migratedRaw.flatMap(ThemeColor.init(rawValue:)) ?? .emeraldGreen
         self.accentTheme = resolvedTheme
         // Sync initial theme to App Group for widget
         UserDefaults(suiteName: "group.d.DailyDee")?.set(resolvedTheme.rawValue, forKey: UserDefaultsKeys.accentTheme)
@@ -194,6 +275,11 @@ final class AppState: ObservableObject {
     /// Persists a dynamically selected DITIB city and syncs the display name.
     func updateDitibCity(_ city: DitibCity) {
         selectedDitibCity = city
+    }
+
+    /// Persists the user's home city used by the Seferi-distance calculation.
+    func updateHomeCity(_ city: HomeCity?) {
+        homeCity = city
     }
 
     /// Reactive display name: DITIB city if set, otherwise the legacy static city.

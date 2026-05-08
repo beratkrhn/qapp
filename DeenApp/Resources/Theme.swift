@@ -15,8 +15,6 @@ enum Theme {
     static var background: Color {
         Color(uiColor: UIColor { trait in
             let accent = ThemeColor.current
-            // These two themes are system-mode independent — they always render the same way.
-            if accent == .darkGray { return UIColor(white: 0.10, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark:
                 return accent.uiDarkShade(brightness: 0.11, saturation: 0.28)
@@ -31,7 +29,6 @@ enum Theme {
     static var cardBackground: Color {
         Color(uiColor: UIColor { trait in
             let accent = ThemeColor.current
-            if accent == .darkGray { return UIColor(white: 0.15, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark:
                 return accent.uiDarkShade(brightness: 0.16, saturation: 0.32)
@@ -46,7 +43,6 @@ enum Theme {
     static var cardHighlightBackground: Color {
         Color(uiColor: UIColor { trait in
             let accent = ThemeColor.current
-            if accent == .darkGray { return UIColor(white: 0.17, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark:
                 return accent.uiDarkShade(brightness: 0.18, saturation: 0.34)
@@ -68,8 +64,6 @@ enum Theme {
 
     static var textPrimary: Color {
         Color(uiColor: UIColor { trait in
-            let accent = ThemeColor.current
-            if accent == .darkGray { return .white }
             switch trait.userInterfaceStyle {
             case .dark: return .white
             case .light, .unspecified: return UIColor(white: 0.12, alpha: 1)
@@ -80,8 +74,6 @@ enum Theme {
 
     static var textSecondary: Color {
         Color(uiColor: UIColor { trait in
-            let accent = ThemeColor.current
-            if accent == .darkGray { return UIColor(red: 0.65, green: 0.70, blue: 0.68, alpha: 1) }
             switch trait.userInterfaceStyle {
             case .dark: return UIColor(red: 0.65, green: 0.70, blue: 0.68, alpha: 1)
             case .light, .unspecified: return UIColor(red: 0.38, green: 0.42, blue: 0.40, alpha: 1)
@@ -141,7 +133,8 @@ enum ThemeColor: String, CaseIterable, Identifiable {
     case darkPurple   = "dark_purple"
     case beige        = "beige"
     case emeraldGreen = "emerald_green"
-    case darkGray     = "dark_gray"
+    case sunsetCoral  = "sunset_coral"
+    case royalTeal    = "royal_teal"
 
     var id: String { rawValue }
 
@@ -151,7 +144,8 @@ enum ThemeColor: String, CaseIterable, Identifiable {
         case .darkPurple:   return "Dark Purple"
         case .beige:        return "Beige"
         case .emeraldGreen: return "Emerald Green"
-        case .darkGray:     return "Dark Gray"
+        case .sunsetCoral:  return "Sunset Coral"
+        case .royalTeal:    return "Royal Teal"
         }
     }
 
@@ -161,17 +155,21 @@ enum ThemeColor: String, CaseIterable, Identifiable {
         case .darkPurple:   return Color(hex: "7B2FBE")
         case .beige:        return Color(hex: "D4A574")
         case .emeraldGreen: return Color(hex: "36D080")
-        case .darkGray:     return Color(hex: "424242")
+        case .sunsetCoral:  return Color(hex: "F26D5B")
+        case .royalTeal:    return Color(hex: "0EA5A4")
         }
     }
 
-    /// Persistierte Auswahl; `slate_blue` und `soft_gray` (legacy) werden gemappt.
+    /// Persistierte Auswahl; alte / entfernte Werte werden auf `emeraldGreen`
+    /// zurückgemappt, damit Bestandsnutzer nicht plötzlich ohne Akzent dastehen.
     static var current: ThemeColor {
         let raw = UserDefaults.standard.string(forKey: "dailydee.accentTheme") ?? ""
-        if raw == "slate_blue" { return .emeraldGreen }
-        if raw == "soft_gray"  { return .emeraldGreen }
-        if raw == "white"      { return .emeraldGreen }
-        return ThemeColor(rawValue: raw) ?? .emeraldGreen
+        switch raw {
+        case "slate_blue", "soft_gray", "white", "dark_gray":
+            return .emeraldGreen
+        default:
+            return ThemeColor(rawValue: raw) ?? .emeraldGreen
+        }
     }
 
     fileprivate static var resolvedSwiftUIColor: Color { ThemeColor.current.color }

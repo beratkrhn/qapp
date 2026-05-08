@@ -15,6 +15,7 @@ import UIKit
 enum QuranDisplayMode: String, CaseIterable {
     case mushaf = "mushaf"
     case list   = "list"
+    case pdf    = "pdf"
 }
 
 // MARK: - Navigation Target
@@ -23,6 +24,7 @@ enum QuranNavigationTarget: Hashable {
     case mushafPage(Int)
     case suraList(Int)
     case lastRead
+    case pdfMushafPage(Int)
 }
 
 // MARK: - Hardcoded Arabic font (Uthmanic Hafs mandatory)
@@ -39,6 +41,7 @@ struct QuranView: View {
     @State private var translationOption: QuranTranslationOption = .none
     @State private var showSettings = false
     @State private var navigationPath = NavigationPath()
+    @State private var pdfCurrentPage: Int = 1
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -56,7 +59,8 @@ struct QuranView: View {
                     arabicFontSize: $arabicFontSize,
                     translationOption: $translationOption,
                     language: appState.appLanguage,
-                    showSettings: $showSettings
+                    showSettings: $showSettings,
+                    pdfCurrentPage: $pdfCurrentPage
                 )
             }
         }
@@ -66,7 +70,8 @@ struct QuranView: View {
                 arabicFontSize: $arabicFontSize,
                 translationOption: $translationOption,
                 isTajweedEnabled: $appState.isTajweedEnabled,
-                isReadingModeEnabled: $appState.isReadingModeEnabled
+                isReadingModeEnabled: $appState.isReadingModeEnabled,
+                pdfSource: $appState.quranPDFSource
             )
         }
     }
@@ -112,7 +117,7 @@ struct QuranIndexView: View {
     private var modePicker: some View {
         Picker("", selection: $displayMode) {
             Text(L10n.quranMushaf(language)).tag(QuranDisplayMode.mushaf)
-            Text(L10n.quranList(language)).tag(QuranDisplayMode.list)
+            Text(L10n.quranPDF(language)).tag(QuranDisplayMode.pdf)
         }
         .pickerStyle(.segmented)
         .padding(.horizontal, 20)
@@ -353,10 +358,13 @@ struct QuranIndexView: View {
 
     private func surahRow(_ sura: QuranSuraInfo) -> some View {
         Button(action: {
-            if displayMode == .mushaf {
+            switch displayMode {
+            case .mushaf:
                 onNavigate(.mushafPage(sura.pageNumber))
-            } else {
+            case .list:
                 onNavigate(.suraList(sura.number))
+            case .pdf:
+                onNavigate(.pdfMushafPage(sura.pageNumber))
             }
         }) {
             HStack(spacing: 12) {
@@ -416,6 +424,7 @@ struct QuranReaderView: View {
     @Binding var translationOption: QuranTranslationOption
     let language: AppLanguage
     @Binding var showSettings: Bool
+    @Binding var pdfCurrentPage: Int
 
     private var readingMode: Bool { appState.isReadingModeEnabled }
     private var readerBg: Color { readingMode ? .white : Theme.background }
@@ -451,6 +460,13 @@ struct QuranReaderView: View {
                             readingMode: readingMode
                         )
                     }
+                case .pdf:
+                    MushafPDFPageView(
+                        suraList: store.suraList,
+                        language: language,
+                        pdfSource: appState.quranPDFSource,
+                        currentMushafPage: $pdfCurrentPage
+                    )
                 }
             }
         }
@@ -474,19 +490,32 @@ struct QuranReaderView: View {
                 store.selectSura(surah)
             case .lastRead:
                 displayMode = .mushaf
+            case .pdfMushafPage(let page):
+                displayMode = .pdf
+                pdfCurrentPage = page
             }
         }
         .onChange(of: displayMode) { oldMode, newMode in
             switch (oldMode, newMode) {
             case (.mushaf, .list):
-                // Derive which Surah is on the current Mushaf page and load it in the list.
                 let surah = store.surahNumberForMushafPage(store.currentMushafPageNumber)
                 store.selectSura(surah)
             case (.list, .mushaf):
-                // Jump the Mushaf to the first page of the currently displayed Surah.
                 if let surah = store.selectedSuraNumber,
                    let page = QuranStore.surahFirstPage[surah] {
                     store.goToMushafPage(page)
+                }
+            case (.pdf, .mushaf):
+                store.goToMushafPage(pdfCurrentPage)
+            case (.pdf, .list):
+                let surah = store.surahNumberForMushafPage(pdfCurrentPage)
+                store.selectSura(surah)
+            case (.mushaf, .pdf):
+                pdfCurrentPage = store.currentMushafPageNumber
+            case (.list, .pdf):
+                if let surah = store.selectedSuraNumber,
+                   let page = QuranStore.surahFirstPage[surah] {
+                    pdfCurrentPage = page
                 }
             default:
                 break
@@ -497,7 +526,7 @@ struct QuranReaderView: View {
     private var modePicker: some View {
         Picker("", selection: $displayMode) {
             Text(L10n.quranMushaf(language)).tag(QuranDisplayMode.mushaf)
-            Text(L10n.quranList(language)).tag(QuranDisplayMode.list)
+            Text(L10n.quranPDF(language)).tag(QuranDisplayMode.pdf)
         }
         .pickerStyle(.segmented)
         .padding(.horizontal, 20)
@@ -515,6 +544,8 @@ struct QuranReaderView: View {
                 return info.nameTransliteration
             }
             return L10n.tabQuran(language)
+        case .pdf:
+            return "\(L10n.quranPage(language)) \(pdfCurrentPage) · PDF"
         }
     }
 }
@@ -922,59 +953,6 @@ private struct TranslationBottomSheet: View {
     }
 }
 
-// MARK: - RTL Flow Layout (iOS 16+)
-
-private struct RTLWordFlowLayout: Layout {
-    var horizontalSpacing: CGFloat = 5
-    var verticalSpacing: CGFloat = 8
-
-    private struct Row {
-        var items: [(subview: LayoutSubview, size: CGSize)] = []
-        var maxHeight: CGFloat = 0
-        var totalWidth: CGFloat = 0
-    }
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let containerWidth = proposal.replacingUnspecifiedDimensions().width
-        let rows = computeRows(subviews: subviews, containerWidth: containerWidth)
-        let totalHeight = rows.enumerated().reduce(CGFloat(0)) { acc, el in
-            acc + el.element.maxHeight + (el.offset < rows.count - 1 ? verticalSpacing : 0)
-        }
-        return CGSize(width: containerWidth, height: max(totalHeight, 0))
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let rows = computeRows(subviews: subviews, containerWidth: bounds.width)
-        var yPos = bounds.minY
-        for row in rows {
-            var xPos = bounds.maxX
-            for item in row.items {
-                xPos -= item.size.width
-                item.subview.place(at: CGPoint(x: xPos, y: yPos), proposal: ProposedViewSize(item.size))
-                xPos -= horizontalSpacing
-            }
-            yPos += row.maxHeight + verticalSpacing
-        }
-    }
-
-    private func computeRows(subviews: Subviews, containerWidth: CGFloat) -> [Row] {
-        var rows: [Row] = [Row()]
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            let last = rows.last!
-            let addedWidth = last.totalWidth + size.width + (last.items.isEmpty ? 0 : horizontalSpacing)
-            if addedWidth > containerWidth && !last.items.isEmpty {
-                rows.append(Row(items: [(subview, size)], maxHeight: size.height, totalWidth: size.width))
-            } else {
-                rows[rows.count - 1].items.append((subview, size))
-                rows[rows.count - 1].maxHeight = max(rows[rows.count - 1].maxHeight, size.height)
-                rows[rows.count - 1].totalWidth = addedWidth
-            }
-        }
-        return rows
-    }
-}
-
 // MARK: - List View with Tajweed + Transliteration + Translation
 
 struct QuranListView: View {
@@ -983,9 +961,6 @@ struct QuranListView: View {
     let translationOption: QuranTranslationOption
     let isTajweedEnabled: Bool
     let readingMode: Bool
-
-    @State private var selectedWord: String? = nil
-    @State private var showWordSheet = false
 
     private var primaryText: Color { readingMode ? .black : Theme.textPrimary }
     private var secondaryText: Color { readingMode ? Color(hex: "555555") : Theme.textSecondary }
@@ -1023,11 +998,12 @@ struct QuranListView: View {
                         VStack(alignment: .trailing, spacing: 10) {
 
                             // 1. Arabic text
-                            // When Tajweed is on we always use the AttributedString path so the
-                            // layout never jumps: plain Hafs/white is shown while the API call
-                            // is in-flight, then colours appear once the HTML data arrives.
+                            // The tajweed-edition text is used as the primary source for both paths
+                            // so the KFGQPC Hafs font always receives the Uthmanic character set it
+                            // was designed for. The plain (quran-uthmani) verse.arabic is only used
+                            // as a brief fallback while the tajweed fetch is in-flight.
+                            let tajweedHTML = store.suraTajweedTexts[verse.verseNumber]
                             if isTajweedEnabled {
-                                let tajweedHTML = store.suraTajweedTexts[verse.verseNumber]
                                 Text(QuranStore.parseTajweedAttributedString(
                                     tajweedHTML ?? verse.arabic,
                                     fontSize: arabicFontSize,
@@ -1038,30 +1014,16 @@ struct QuranListView: View {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .environment(\.layoutDirection, .rightToLeft)
                             } else {
-                                // Sanitize through the same whitelist as the Tajweed path so
-                                // characters the KFGQPC font can't render don't appear as circles.
-                                let words = TajweedParser.stripAllTags(verse.arabic)
-                                    .split(separator: " ")
-                                    .map(String.init)
-                                    .filter { !$0.isEmpty }
-
-                                RTLWordFlowLayout(horizontalSpacing: 4, verticalSpacing: 6) {
-                                    ForEach(Array(words.enumerated()), id: \.offset) { _, word in
-                                        Button(action: {
-                                            selectedWord = word
-                                            showWordSheet = true
-                                        }) {
-                                            Text(word)
-                                                .font(kArabicFont.font(size: arabicFontSize))
-                                                .foregroundColor(primaryText)
-                                                .padding(.horizontal, 3)
-                                                .padding(.vertical, 2)
-                                                .contentShape(Rectangle())
-                                        }
-                                        .buttonStyle(.plain)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                // Strip bracket tags from the tajweed text (or fall back to the
+                                // plain arabic). Render as a single Text so Arabic shaping works
+                                // across the full verse — splitting into per-word views breaks
+                                // the font's contextual glyph selection for ي، ا، و etc.
+                                Text(TajweedParser.stripAllTags(tajweedHTML ?? verse.arabic))
+                                    .font(kArabicFont.font(size: arabicFontSize))
+                                    .foregroundColor(primaryText)
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .environment(\.layoutDirection, .rightToLeft)
                             }
 
                             // 2. Transliteration (DIN 31635)
@@ -1115,67 +1077,6 @@ struct QuranListView: View {
             async let tajweed: () = store.loadSuraTajweed(surahNum)
             _ = await (translit, tajweed)
         }
-        .sheet(isPresented: $showWordSheet) {
-            if let word = selectedWord {
-                WordTranslationSheet(word: word)
-                    .presentationDetents([.height(240)])
-                    .presentationDragIndicator(.visible)
-                    .presentationBackground(Theme.background)
-            }
-        }
-    }
-}
-
-// MARK: - Word Translation Sheet
-
-private struct WordTranslationSheet: View {
-    let word: String
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Capsule()
-                .fill(Theme.textSecondary.opacity(0.3))
-                .frame(width: 36, height: 4)
-                .padding(.top, 8)
-
-            Text(word)
-                .font(.system(size: 52, weight: .medium))
-                .foregroundColor(Theme.textPrimary)
-                .environment(\.layoutDirection, .rightToLeft)
-                .padding(.top, 4)
-
-            ornamentalDivider
-
-            VStack(spacing: 6) {
-                Text("Wort-für-Wort Übersetzung")
-                    .font(.caption.weight(.medium))
-                    .tracking(0.6)
-                    .foregroundColor(Theme.textSection)
-                Text("Übersetzung: \(word)")
-                    .font(.title3.weight(.medium))
-                    .foregroundColor(Theme.accent)
-                    .multilineTextAlignment(.center)
-                Text("Vollständige Wortdatenbank demnächst verfügbar.")
-                    .font(.caption)
-                    .foregroundColor(Theme.textSecondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 2)
-            }
-
-            Spacer()
-        }
-        .padding(.horizontal, 32)
-        .frame(maxWidth: .infinity)
-        .background(Theme.background)
-    }
-
-    private var ornamentalDivider: some View {
-        HStack(spacing: 6) {
-            Rectangle().frame(height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.4))
-            Image(systemName: "diamond.fill").font(.system(size: 5)).foregroundColor(Theme.iconFajr.opacity(0.7))
-            Rectangle().frame(height: 0.5).foregroundColor(Theme.iconFajr.opacity(0.4))
-        }
     }
 }
 
@@ -1187,6 +1088,7 @@ struct QuranSettingsSheet: View {
     @Binding var translationOption: QuranTranslationOption
     @Binding var isTajweedEnabled: Bool
     @Binding var isReadingModeEnabled: Bool
+    @Binding var pdfSource: QuranPDFSource
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -1226,6 +1128,21 @@ struct QuranSettingsSheet: View {
                         .foregroundColor(Theme.textSecondary)
                 } header: {
                     Text(L10n.quranReadingMode(language))
+                }
+                .listRowBackground(Theme.cardBackground)
+
+                Section("PDF-Ansicht") {
+                    Picker("Quelle", selection: $pdfSource) {
+                        ForEach(QuranPDFSource.allCases, id: \.rawValue) { source in
+                            Text(source.displayName).tag(source)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(Theme.accent)
+                    .foregroundStyle(Theme.textPrimary)
+                    Text("Diyanet PDF & Quran-Schrift 2: Original-PDFs in unterschiedlichen Schriftstilen · Mushaf-Bilder: hochauflösende Seitenfotos (pc2-web)")
+                        .font(.caption)
+                        .foregroundColor(Theme.textSecondary)
                 }
                 .listRowBackground(Theme.cardBackground)
             }

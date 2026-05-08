@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var prayerTimeManager: PrayerTimeManager
+    @EnvironmentObject var locationAutoUpdater: LocationAutoUpdater
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
 
@@ -24,7 +26,7 @@ struct SettingsView: View {
             ZStack {
                 Theme.background.ignoresSafeArea()
 
-                ScrollView {
+                ScrollView(.vertical) {
                     VStack(spacing: 24) {
 
                         // MARK: - Name
@@ -165,6 +167,73 @@ struct SettingsView: View {
                                 .padding(.vertical, 4)
                                 .padding(.horizontal, 4)
 
+                                // Auto-Standort: GPS-basierte Stadtaktualisierung alle 10 Minuten
+                                Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                Toggle(isOn: Binding(
+                                    get: { appState.autoLocationEnabled },
+                                    set: { handleAutoLocationToggle($0) }
+                                )) {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Standort automatisch erkennen")
+                                            .font(.body.weight(.semibold))
+                                            .foregroundColor(Theme.textPrimary)
+                                        Text("Aktualisiert die Stadt alle 10 Minuten anhand deiner GPS-Position.")
+                                            .font(.caption)
+                                            .foregroundColor(Theme.textSecondary)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                }
+                                .tint(Theme.accent)
+                                .padding(.horizontal, 4)
+
+                                if appState.autoLocationEnabled {
+                                    if let detected = locationAutoUpdater.lastDetectedCityName {
+                                        HStack(spacing: 8) {
+                                            Image(systemName: "location.fill")
+                                                .font(.system(size: 11))
+                                                .foregroundColor(Theme.accent)
+                                            Text("Erkannt: \(detected)")
+                                                .font(.caption)
+                                                .foregroundColor(Theme.textSecondary)
+                                        }
+                                        .padding(.horizontal, 4)
+                                    } else if locationAutoUpdater.isFetching {
+                                        HStack(spacing: 8) {
+                                            ProgressView().scaleEffect(0.7)
+                                            Text("Standort wird ermittelt…")
+                                                .font(.caption)
+                                                .foregroundColor(Theme.textSecondary)
+                                        }
+                                        .padding(.horizontal, 4)
+                                    }
+                                }
+
+                                if let err = locationAutoUpdater.lastErrorMessage,
+                                   appState.autoLocationEnabled || locationAutoUpdater.authorizationStatus == .denied {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "exclamationmark.triangle.fill")
+                                            .font(.system(size: 11))
+                                            .foregroundColor(.orange)
+                                        Text(err)
+                                            .font(.caption)
+                                            .foregroundColor(Theme.textSecondary)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                    .padding(.horizontal, 4)
+
+                                    if locationAutoUpdater.authorizationStatus == .denied {
+                                        Button(action: openAppSettings) {
+                                            HStack {
+                                                Image(systemName: "gear").font(.system(size: 13))
+                                                Text("In iOS-Einstellungen öffnen").font(.subheadline)
+                                            }
+                                            .foregroundColor(Theme.accent)
+                                            .padding(.horizontal, 4)
+                                        }
+                                    }
+                                }
+
                                 // Recent cities — shown directly (no hidden button)
                                 if !locationVM.recentCities.isEmpty {
                                     Divider().overlay(Theme.textSecondary.opacity(0.2))
@@ -218,6 +287,82 @@ struct SettingsView: View {
                                             .foregroundColor(Theme.textSecondary.opacity(0.5))
                                     }
                                     .padding(.vertical, 8)
+                                    .padding(.horizontal, 4)
+                                }
+                            }
+                        }
+
+                        // MARK: - Heimatstadt (für Seferi-Berechnung)
+                        settingsCard {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Label {
+                                    Text("Heimatstadt")
+                                        .font(.headline)
+                                        .foregroundColor(Theme.textPrimary)
+                                } icon: {
+                                    Image(systemName: "house.fill")
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                Text("Wird für die Seferi-Distanz im Qibla-Kompass verwendet (>90 km Luftlinie = Seferi).")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textSecondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+
+                                if let home = appState.homeCity {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(home.name)
+                                                .font(.body.weight(.semibold))
+                                                .foregroundColor(Theme.textPrimary)
+                                            Text("Aktuelle Heimatstadt")
+                                                .font(.caption)
+                                                .foregroundColor(Theme.textSecondary)
+                                        }
+                                        Spacer()
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(Theme.accent)
+                                    }
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 4)
+                                } else {
+                                    Text("Noch nicht festgelegt")
+                                        .font(.subheadline)
+                                        .foregroundColor(Theme.textSecondary)
+                                        .padding(.horizontal, 4)
+                                }
+
+                                Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                NavigationLink {
+                                    HomeCityPickerView()
+                                        .environmentObject(appState)
+                                } label: {
+                                    HStack {
+                                        Text(appState.homeCity == nil ? "Heimatstadt wählen" : "Heimatstadt ändern")
+                                            .font(.body)
+                                            .foregroundColor(Theme.accent)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption.weight(.semibold))
+                                            .foregroundColor(Theme.textSecondary.opacity(0.5))
+                                    }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 4)
+                                }
+
+                                if appState.homeCity != nil {
+                                    Button(role: .destructive) {
+                                        appState.updateHomeCity(nil)
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "xmark.circle")
+                                                .font(.system(size: 13))
+                                            Text("Heimatstadt entfernen")
+                                                .font(.subheadline)
+                                        }
+                                        .foregroundColor(.red)
+                                    }
                                     .padding(.horizontal, 4)
                                 }
                             }
@@ -471,6 +616,7 @@ struct SettingsView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 24)
+                    .frame(maxWidth: .infinity)
                 }
             }
             .navigationTitle(L10n.settingsTitle(appState.appLanguage))
@@ -540,6 +686,15 @@ struct SettingsView: View {
         }
     }
 
+    private func handleAutoLocationToggle(_ enabled: Bool) {
+        appState.autoLocationEnabled = enabled
+        if enabled {
+            locationAutoUpdater.start()
+        } else {
+            locationAutoUpdater.stop()
+        }
+    }
+
     private var accentSelectionRingColor: Color {
         colorScheme == .dark ? Color.white : Color.black.opacity(0.85)
     }
@@ -559,4 +714,5 @@ struct SettingsView: View {
     SettingsView()
         .environmentObject(AppState())
         .environmentObject(PrayerTimeManager())
+        .environmentObject(LocationAutoUpdater())
 }

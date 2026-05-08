@@ -11,6 +11,7 @@ import SwiftUI
 struct DeenAppApp: App {
     @StateObject private var prayerTimeManager = PrayerTimeManager()
     @StateObject private var appState = AppState()
+    @StateObject private var locationAutoUpdater = LocationAutoUpdater()
 
     var body: some Scene {
         WindowGroup {
@@ -23,7 +24,15 @@ struct DeenAppApp: App {
             }
             .environmentObject(prayerTimeManager)
             .environmentObject(appState)
+            .environmentObject(locationAutoUpdater)
             .preferredColorScheme(appState.preferredSwiftUIColorScheme)
+            .task {
+                locationAutoUpdater.bind(appState: appState,
+                                         prayerTimeManager: prayerTimeManager)
+                if appState.autoLocationEnabled {
+                    locationAutoUpdater.start()
+                }
+            }
         }
     }
 }
