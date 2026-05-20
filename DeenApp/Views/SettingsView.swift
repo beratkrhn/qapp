@@ -12,21 +12,22 @@ struct SettingsView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var prayerTimeManager: PrayerTimeManager
     @EnvironmentObject var locationAutoUpdater: LocationAutoUpdater
+    @EnvironmentObject var accountVM: AccountViewModel
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
 
     @State private var nameInput: String = ""
     @StateObject private var locationVM = LocationSearchViewModel()
     @State private var notificationsEnabled: Bool = false
     @State private var notificationsDenied: Bool = false
     @State private var notificationMinutesBefore: Int = 15
+    @State private var notificationReframe: NotificationReframe = .hadithQuotes
 
     var body: some View {
         NavigationStack {
             ZStack {
                 Theme.background.ignoresSafeArea()
 
-                ScrollView(.vertical) {
+                ScrollView(.vertical, showsIndicators: true) {
                     VStack(spacing: 24) {
 
                         // MARK: - Name
@@ -56,6 +57,41 @@ struct SettingsView: View {
                                     }
                             }
                         }
+
+                        // MARK: - Konto & Freunde
+                        NavigationLink {
+                            AccountHomeView()
+                                .environmentObject(appState)
+                                .environmentObject(accountVM)
+                        } label: {
+                            settingsCard {
+                                HStack(spacing: 14) {
+                                    Image(systemName: "person.2.fill")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(Theme.accent)
+                                        .frame(width: 34, height: 34)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                                                .fill(Theme.accent.opacity(0.15))
+                                        )
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(L10n.accountSection(appState.appLanguage))
+                                            .font(.headline)
+                                            .foregroundColor(Theme.textPrimary)
+                                        Text(accountVM.isSignedIn
+                                             ? "@\(accountVM.account?.username ?? "")"
+                                             : L10n.accountSubtitleGuest(appState.appLanguage))
+                                            .font(.caption)
+                                            .foregroundColor(Theme.textSecondary)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundColor(Theme.textSecondary.opacity(0.45))
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
 
                         // MARK: - Sprache
                         settingsCard {
@@ -511,11 +547,10 @@ struct SettingsView: View {
                                 if notificationsEnabled {
                                     Divider().overlay(Theme.textSecondary.opacity(0.2))
 
-                                    HStack {
+                                    VStack(alignment: .leading, spacing: 8) {
                                         Text(L10n.notificationsMinutesBefore(appState.appLanguage))
                                             .font(.body)
                                             .foregroundColor(Theme.textPrimary)
-                                        Spacer()
                                         HStack(spacing: 6) {
                                             ForEach(NotificationScheduler.allowedMinutes, id: \.self) { minutes in
                                                 Button(action: {
@@ -530,8 +565,8 @@ struct SettingsView: View {
                                                     Text(L10n.notificationsMinutesUnit(appState.appLanguage, minutes: minutes))
                                                         .font(.caption.weight(.semibold))
                                                         .foregroundColor(notificationMinutesBefore == minutes ? Theme.background : Theme.textPrimary)
-                                                        .padding(.horizontal, 10)
-                                                        .padding(.vertical, 6)
+                                                        .frame(maxWidth: .infinity)
+                                                        .padding(.vertical, 8)
                                                         .background(
                                                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                                                                 .fill(notificationMinutesBefore == minutes ? Theme.accent : Theme.background)
@@ -539,6 +574,54 @@ struct SettingsView: View {
                                                 }
                                                 .buttonStyle(.plain)
                                             }
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                                    Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                    VStack(alignment: .leading, spacing: 10) {
+                                        Text(L10n.notificationReframeTitle(appState.appLanguage))
+                                            .font(.subheadline.weight(.semibold))
+                                            .foregroundColor(Theme.textPrimary)
+                                        Text(L10n.notificationReframeSubtitle(appState.appLanguage))
+                                            .font(.caption)
+                                            .foregroundColor(Theme.textSecondary)
+
+                                        ForEach(NotificationReframe.allCases) { option in
+                                            Button {
+                                                selectReframe(option)
+                                            } label: {
+                                                HStack(spacing: 12) {
+                                                    Image(systemName: option.sfSymbol)
+                                                        .font(.system(size: 14, weight: .semibold))
+                                                        .foregroundColor(notificationReframe == option ? Theme.accent : Theme.textSecondary)
+                                                        .frame(width: 22, alignment: .center)
+                                                    Text(option.title(appState.appLanguage))
+                                                        .font(.subheadline.weight(notificationReframe == option ? .semibold : .regular))
+                                                        .foregroundColor(notificationReframe == option ? Theme.accent : Theme.textPrimary)
+                                                    Spacer()
+                                                    if notificationReframe == option {
+                                                        Image(systemName: "checkmark")
+                                                            .font(.system(size: 13, weight: .bold))
+                                                            .foregroundColor(Theme.accent)
+                                                    }
+                                                }
+                                                .padding(.vertical, 10)
+                                                .padding(.horizontal, 12)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                                        .fill(Theme.background)
+                                                        .overlay(
+                                                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                                                .strokeBorder(
+                                                                    notificationReframe == option ? Theme.accent : Color.clear,
+                                                                    lineWidth: 1.5
+                                                                )
+                                                        )
+                                                )
+                                            }
+                                            .buttonStyle(.plain)
                                         }
                                     }
                                 }
@@ -622,7 +705,7 @@ struct SettingsView: View {
             .navigationTitle(L10n.settingsTitle(appState.appLanguage))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Theme.cardBackground, for: .navigationBar)
-            .toolbarColorScheme(colorScheme == .dark ? .dark : .light, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(L10n.settingsDone(appState.appLanguage)) { dismiss() }
@@ -632,6 +715,7 @@ struct SettingsView: View {
             .onAppear {
                 nameInput = appState.userName
                 notificationMinutesBefore = NotificationScheduler.shared.minutesBeforePrayer
+                notificationReframe = NotificationScheduler.shared.reframe
                 Task { await syncNotificationState() }
             }
         }
@@ -686,6 +770,18 @@ struct SettingsView: View {
         }
     }
 
+    private func selectReframe(_ option: NotificationReframe) {
+        guard notificationReframe != option else { return }
+        notificationReframe = option
+        NotificationScheduler.shared.reframe = option
+        // Re-schedule so already-queued notifications pick up the new body.
+        NotificationScheduler.shared.schedulePrayerNotifications(
+            for: prayerTimeManager.prayerTimes,
+            cityName: prayerTimeManager.currentDitibCity?.name ?? "",
+            language: appState.appLanguage
+        )
+    }
+
     private func handleAutoLocationToggle(_ enabled: Bool) {
         appState.autoLocationEnabled = enabled
         if enabled {
@@ -695,9 +791,7 @@ struct SettingsView: View {
         }
     }
 
-    private var accentSelectionRingColor: Color {
-        colorScheme == .dark ? Color.white : Color.black.opacity(0.85)
-    }
+    private var accentSelectionRingColor: Color { .white }
 
     @ViewBuilder
     private func settingsCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {

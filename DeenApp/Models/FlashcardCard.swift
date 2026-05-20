@@ -10,9 +10,10 @@ import Foundation
 // MARK: - Learning Status
 
 enum CardStatus: String, Codable, CaseIterable {
-    case new       = "new"
-    case learning  = "learning"
-    case graduated = "graduated"
+    case new        = "new"
+    case learning   = "learning"
+    case graduated  = "graduated"
+    case relearning = "relearning"
 }
 
 // MARK: - SRS Rating (4-Button SM-2)
@@ -52,14 +53,15 @@ struct FlashcardCard: Identifiable, Codable {
 
     // MARK: SRS state (mutable — persisted via UserDefaults in SRSViewModel)
     var status: CardStatus  = .new
-    var interval: Int       = 0     // Days until next review
-    var easeFactor: Double  = 2.5   // SM-2 EF (min 1.3)
-    var repetitions: Int    = 0     // Consecutive correct answers
+    var interval: Int       = 0     // Days until next review (review/relearning target)
+    var easeFactor: Double  = 2.5   // Anki ease (min 1.3)
+    var repetitions: Int    = 0     // Successful reviews after graduation
+    var learningStep: Int   = 0     // Index into learning / relearning steps
     var nextReviewDate: Date = .distantPast
 
     private enum CodingKeys: String, CodingKey {
         case id, arabic, meaningEN, frequency
-        case status, interval, easeFactor, repetitions, nextReviewDate
+        case status, interval, easeFactor, repetitions, learningStep, nextReviewDate
         case legacyTranslation = "translation"
     }
 
@@ -86,6 +88,7 @@ struct FlashcardCard: Identifiable, Codable {
         interval = try c.decodeIfPresent(Int.self, forKey: .interval) ?? 0
         easeFactor = try c.decodeIfPresent(Double.self, forKey: .easeFactor) ?? 2.5
         repetitions = try c.decodeIfPresent(Int.self, forKey: .repetitions) ?? 0
+        learningStep = try c.decodeIfPresent(Int.self, forKey: .learningStep) ?? 0
         nextReviewDate = try c.decodeIfPresent(Date.self, forKey: .nextReviewDate) ?? .distantPast
     }
 
@@ -99,6 +102,7 @@ struct FlashcardCard: Identifiable, Codable {
         try c.encode(interval, forKey: .interval)
         try c.encode(easeFactor, forKey: .easeFactor)
         try c.encode(repetitions, forKey: .repetitions)
+        try c.encode(learningStep, forKey: .learningStep)
         try c.encode(nextReviewDate, forKey: .nextReviewDate)
     }
 }

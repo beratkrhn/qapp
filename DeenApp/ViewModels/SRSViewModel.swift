@@ -2,14 +2,34 @@
 //  SRSViewModel.swift
 //  DeenApp
 //
-//  SM-2-basiertes Spaced-Repetition-System für Quran-Vokabeln.
-//  Enthält Mock-Daten, die gegen echte Daten ausgetauscht werden können.
+//  Anki-faithful SRS (SM-2 variant with learning/relearning steps).
 //
 
 import Foundation
 import Observation
 
 private let kSRSCardsKey = "dailydee.srsCards"
+
+// MARK: - Anki defaults (matches Anki's stock deck options)
+
+private enum AnkiConfig {
+    static let learningStepsMinutes: [Int]   = [1, 10]
+    static let relearningStepsMinutes: [Int] = [10]
+    static let graduatingIntervalDays: Int   = 1
+    static let easyIntervalDays: Int         = 4
+    static let initialEase: Double           = 2.5
+    static let minEase: Double               = 1.3
+    static let easyBonus: Double             = 1.3
+    static let hardIntervalMultiplier: Double = 1.2
+    static let intervalModifier: Double      = 1.0
+    static let newIntervalAfterLapse: Double = 0.0
+    static let maxIntervalDays: Int          = 36500
+}
+
+struct SRSPreview {
+    let dueDate: Date
+    let label: String
+}
 
 @Observable
 final class SRSViewModel {
@@ -131,18 +151,40 @@ final class SRSViewModel {
         return sessionQueue[currentIndex]
     }
 
-    /// Vorschau: Datum der nächsten Wiederholung, **ohne** die Karte zu speichern (gleiche Logik wie `applyAlgorithm`).
+    /// Preview the next due date for a rating without persisting.
     func previewNextReviewDate(for card: FlashcardCard, rating: SRSRating) -> Date {
         var copy = card
         applyAlgorithm(rating: rating, to: &copy)
         return copy.nextReviewDate
     }
 
-    /// Vorschau: Intervall in Tagen nach Bewertung (SM-2).
-    func previewIntervalDays(for card: FlashcardCard, rating: SRSRating) -> Int {
-        var copy = card
-        applyAlgorithm(rating: rating, to: &copy)
-        return copy.interval
+    /// Preview an Anki-style interval label (e.g. "1m", "10m", "1d", "6d", "1.4mo").
+    func previewLabel(for card: FlashcardCard, rating: SRSRating) -> String {
+        let now = Date()
+        let due = previewNextReviewDate(for: card, rating: rating)
+        return Self.intervalLabel(from: now, to: due)
+    }
+
+    static func intervalLabel(from start: Date, to end: Date) -> String {
+        let seconds = max(0, end.timeIntervalSince(start))
+        let minutes = Int((seconds / 60.0).rounded())
+        if minutes < 60 {
+            return "\(max(1, minutes))m"
+        }
+        let days = Int((seconds / 86_400.0).rounded())
+        if days < 1 {
+            let hours = Int((seconds / 3600.0).rounded())
+            return "\(hours)h"
+        }
+        if days < 30 {
+            return "\(days)d"
+        }
+        if days < 365 {
+            let months = Double(days) / 30.0
+            return String(format: "%.1fmo", months)
+        }
+        let years = Double(days) / 365.0
+        return String(format: "%.1fy", years)
     }
 
     func rate(_ rating: SRSRating) {
@@ -169,6 +211,14 @@ final class SRSViewModel {
         sessionFinished = false
     }
 
+    func goToPreviousCard() {
+        guard currentIndex > 0 else { return }
+        currentIndex -= 1
+        sessionFinished = false
+    }
+
+    var canGoBack: Bool { currentIndex > 0 }
+
     /// Resets every card to its initial `.new` state and clears persisted SRS data.
     func resetProgress() {
         allCards = Self.loadVocabularyFromJSON()
@@ -176,38 +226,145 @@ final class SRSViewModel {
         resetSession()
     }
 
-    // MARK: - SM-2 Core Algorithm
+    // MARK: - Anki Algorithm
 
+    /// Anki SM-2 variant: learning steps for new cards, ease-modified review intervals
+    /// for graduated cards, relearning steps after a lapse. Mutates the card in place.
     private func applyAlgorithm(rating: SRSRating, to card: inout FlashcardCard) {
-        let q = rating.quality
+        let now = Date()
 
-        if q < 3 {
-            // Failed — reset streak, keep short re-review interval
-            card.repetitions = 0
-            card.interval    = (q == 0) ? 1 : 2
-            card.status      = .learning
-        } else {
-            // Passed — standard SM-2 interval progression
-            let newInterval: Int
-            switch card.repetitions {
-            case 0:  newInterval = 1
-            case 1:  newInterval = 3
-            default: newInterval = max(1, Int((Double(card.interval) * card.easeFactor).rounded()))
-            }
-            card.interval    = newInterval
-            card.repetitions += 1
-
-            // Graduate on Easy or after 3 consecutive correct answers
-            card.status = (rating == .easy || card.repetitions >= 3) ? .graduated : .learning
+        switch card.status {
+        case .new, .learning:
+            applyLearning(rating: rating, to: &card, now: now)
+        case .relearning:
+            applyRelearning(rating: rating, to: &card, now: now)
+        case .graduated:
+            applyReview(rating: rating, to: &card, now: now)
         }
+    }
 
-        // SM-2 ease-factor adjustment (clamped to min 1.3)
-        let delta = 0.1 - Double(5 - q) * (0.08 + Double(5 - q) * 0.02)
-        card.easeFactor = max(1.3, card.easeFactor + delta)
+    private func applyLearning(rating: SRSRating, to card: inout FlashcardCard, now: Date) {
+        let steps = AnkiConfig.learningStepsMinutes
+        let currentStep = max(0, min(card.learningStep, steps.count - 1))
 
-        card.nextReviewDate = Calendar.current.date(
-            byAdding: .day, value: max(1, card.interval), to: Date()
-        ) ?? Date()
+        switch rating {
+        case .again:
+            card.learningStep = 0
+            card.status = .learning
+            scheduleMinutes(steps[0], on: &card, now: now)
+
+        case .hard:
+            card.learningStep = currentStep
+            card.status = .learning
+            scheduleMinutes(steps[currentStep], on: &card, now: now)
+
+        case .good:
+            let nextStep = currentStep + 1
+            if nextStep >= steps.count {
+                graduate(to: &card, intervalDays: AnkiConfig.graduatingIntervalDays, now: now)
+            } else {
+                card.learningStep = nextStep
+                card.status = .learning
+                scheduleMinutes(steps[nextStep], on: &card, now: now)
+            }
+
+        case .easy:
+            graduate(to: &card, intervalDays: AnkiConfig.easyIntervalDays, now: now)
+        }
+    }
+
+    private func applyRelearning(rating: SRSRating, to card: inout FlashcardCard, now: Date) {
+        let steps = AnkiConfig.relearningStepsMinutes
+        let currentStep = max(0, min(card.learningStep, steps.count - 1))
+
+        switch rating {
+        case .again:
+            card.learningStep = 0
+            card.status = .relearning
+            scheduleMinutes(steps[0], on: &card, now: now)
+
+        case .hard:
+            card.learningStep = currentStep
+            card.status = .relearning
+            scheduleMinutes(steps[currentStep], on: &card, now: now)
+
+        case .good:
+            let nextStep = currentStep + 1
+            if nextStep >= steps.count {
+                let resumeInterval = max(1, card.interval)
+                graduate(to: &card, intervalDays: resumeInterval, now: now)
+            } else {
+                card.learningStep = nextStep
+                card.status = .relearning
+                scheduleMinutes(steps[nextStep], on: &card, now: now)
+            }
+
+        case .easy:
+            let resumeInterval = max(1, card.interval) + 1
+            graduate(to: &card, intervalDays: resumeInterval, now: now)
+        }
+    }
+
+    private func applyReview(rating: SRSRating, to card: inout FlashcardCard, now: Date) {
+        let prevInterval = max(1, card.interval)
+        var ef = card.easeFactor
+
+        switch rating {
+        case .again:
+            ef = max(AnkiConfig.minEase, ef - 0.20)
+            let postLapseInterval = max(1, Int((Double(prevInterval) * AnkiConfig.newIntervalAfterLapse).rounded()))
+            card.easeFactor = ef
+            card.interval = min(postLapseInterval, AnkiConfig.maxIntervalDays)
+            card.status = .relearning
+            card.learningStep = 0
+            scheduleMinutes(AnkiConfig.relearningStepsMinutes[0], on: &card, now: now)
+
+        case .hard:
+            ef = max(AnkiConfig.minEase, ef - 0.15)
+            let raw = Double(prevInterval) * AnkiConfig.hardIntervalMultiplier * AnkiConfig.intervalModifier
+            let next = max(prevInterval + 1, Int(raw.rounded()))
+            card.easeFactor = ef
+            card.interval = min(next, AnkiConfig.maxIntervalDays)
+            card.status = .graduated
+            card.repetitions += 1
+            scheduleDays(card.interval, on: &card, now: now)
+
+        case .good:
+            let raw = Double(prevInterval) * ef * AnkiConfig.intervalModifier
+            let next = max(prevInterval + 1, Int(raw.rounded()))
+            card.interval = min(next, AnkiConfig.maxIntervalDays)
+            card.status = .graduated
+            card.repetitions += 1
+            scheduleDays(card.interval, on: &card, now: now)
+
+        case .easy:
+            ef = ef + 0.15
+            let raw = Double(prevInterval) * ef * AnkiConfig.easyBonus * AnkiConfig.intervalModifier
+            // Easy must beat Good's interval by at least one day (Anki guarantee).
+            let goodFloor = max(prevInterval + 1, Int((Double(prevInterval) * card.easeFactor * AnkiConfig.intervalModifier).rounded()))
+            let next = max(goodFloor + 1, Int(raw.rounded()))
+            card.easeFactor = ef
+            card.interval = min(next, AnkiConfig.maxIntervalDays)
+            card.status = .graduated
+            card.repetitions += 1
+            scheduleDays(card.interval, on: &card, now: now)
+        }
+    }
+
+    private func graduate(to card: inout FlashcardCard, intervalDays: Int, now: Date) {
+        card.status = .graduated
+        card.learningStep = 0
+        card.repetitions += 1
+        card.interval = min(max(1, intervalDays), AnkiConfig.maxIntervalDays)
+        scheduleDays(card.interval, on: &card, now: now)
+    }
+
+    private func scheduleMinutes(_ minutes: Int, on card: inout FlashcardCard, now: Date) {
+        card.nextReviewDate = Calendar.current.date(byAdding: .minute, value: max(1, minutes), to: now) ?? now
+    }
+
+    private func scheduleDays(_ days: Int, on card: inout FlashcardCard, now: Date) {
+        card.nextReviewDate = Calendar.current.date(byAdding: .day, value: max(1, days), to: now) ?? now
     }
 
     // MARK: - Helpers

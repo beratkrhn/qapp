@@ -36,9 +36,6 @@ struct SharedPrayerData: Codable {
     static let suiteName      = "group.d.DailyDee"
     static let key            = "widgetPrayerTimes"
     static let cityKey        = "widgetCityName"
-    static let latKey         = "widgetLatitude"
-    static let lonKey         = "widgetLongitude"
-    static let methodKey      = "widgetMethodId"
     static let todayPrayersKey = "widgetTodayPrayers"
 
     // MARK: - Standalone Sync (readable by widget even without full prayer data)
@@ -47,28 +44,6 @@ struct SharedPrayerData: Codable {
         guard let defaults = UserDefaults(suiteName: suiteName) else { return }
         defaults.set(name, forKey: cityKey)
         defaults.synchronize()
-    }
-
-    static func loadCity() -> String? {
-        guard let defaults = UserDefaults(suiteName: suiteName) else { return nil }
-        return defaults.string(forKey: cityKey)
-    }
-
-    static func saveLocation(latitude: Double, longitude: Double, methodId: Int) {
-        guard let defaults = UserDefaults(suiteName: suiteName) else { return }
-        defaults.set(latitude, forKey: latKey)
-        defaults.set(longitude, forKey: lonKey)
-        defaults.set(methodId, forKey: methodKey)
-        defaults.synchronize()
-    }
-
-    static func loadLocation() -> (lat: Double, lon: Double, method: Int)? {
-        guard let defaults = UserDefaults(suiteName: suiteName) else { return nil }
-        let lat = defaults.double(forKey: latKey)
-        let lon = defaults.double(forKey: lonKey)
-        let method = defaults.integer(forKey: methodKey)
-        guard lat != 0 || lon != 0 else { return nil }
-        return (lat, lon, method)
     }
 
     init(fajr: String, sunrise: String, dhuhr: String, asr: String,
@@ -134,31 +109,6 @@ struct SharedPrayerData: Codable {
         return dateString == formatter.string(from: Date())
     }
 
-    var allSlots: [(label: String, time: String, icon: String)] {
-        [
-            ("İmsak",   fajr,    "moon.haze.fill"),
-            ("Güneş",   sunrise, "sunrise.fill"),
-            ("Dhuhr",   dhuhr,   "sun.max.fill"),
-            ("Asr",     asr,     "cloud.sun.fill"),
-            ("Maghrib", maghrib, "sunset.fill"),
-            ("Isha",    isha,    "moon.stars.fill"),
-        ]
-    }
-
-    func dateFrom(timeString: String) -> Date? {
-        let parts = timeString.split(separator: ":").compactMap { Int($0) }
-        guard parts.count >= 2 else { return nil }
-        var cal = Calendar.current
-        if let tz = TimeZone(identifier: timezone) { cal.timeZone = tz }
-        return cal.date(bySettingHour: parts[0], minute: parts[1], second: 0, of: Date())
-    }
-
-    func nextSlotIndex() -> Int? {
-        let now = Date()
-        let times = allSlots.map { dateFrom(timeString: $0.time) }
-        return times.firstIndex(where: { ($0 ?? .distantPast) > now })
-    }
-
     // MARK: - Today's 5 Display Prayers (widget-facing)
 
     /// Persist the 5 display prayers (Fajr/Dhuhr/Asr/Maghrib/Isha – no Sunrise)
@@ -168,11 +118,5 @@ struct SharedPrayerData: Codable {
               let data = try? JSONEncoder().encode(entries) else { return }
         defaults.set(data, forKey: todayPrayersKey)
         defaults.synchronize()
-    }
-
-    static func loadTodayPrayers() -> [WidgetPrayerEntry]? {
-        guard let defaults = UserDefaults(suiteName: suiteName),
-              let data = defaults.data(forKey: todayPrayersKey) else { return nil }
-        return try? JSONDecoder().decode([WidgetPrayerEntry].self, from: data)
     }
 }

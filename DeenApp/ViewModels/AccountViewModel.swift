@@ -1,0 +1,153 @@
+//
+//  AccountViewModel.swift
+//  DeenApp
+//
+//  Hält den Auth-Zustand sowie die Freunde-/Anfrage-Listen.
+//  Wird in DeenAppApp als @StateObject erzeugt und per .environmentObject
+//  in den View-Baum gereicht.
+//
+
+import Foundation
+import Combine
+import FirebaseFirestore
+
+@MainActor
+final class AccountViewModel: ObservableObject {
+
+    // MARK: - Published state
+
+    @Published private(set) var account: UserAccount?
+    @Published private(set) var friends: [FriendInfo] = []
+    @Published private(set) var incomingRequests: [FriendRequest] = []
+    @Published private(set) var outgoingRequests: [FriendRequest] = []
+    @Published var isWorking: Bool = false
+    @Published var errorMessage: String?
+
+    var isSignedIn: Bool { account != nil }
+
+    // MARK: - Internal
+
+    private var accountSub: AnyCancellable?
+    private var friendsListener: ListenerRegistration?
+    private var incomingListener: ListenerRegistration?
+    private var outgoingListener: ListenerRegistration?
+
+    init() {
+        accountSub = AuthService.shared.currentAccountSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] account in
+                guard let self else { return }
+                self.account = account
+                self.tearDownListeners()
+                if let account { self.attachListeners(uid: account.id) }
+                else { self.clearLists() }
+            }
+    }
+
+    deinit {
+        friendsListener?.remove()
+        incomingListener?.remove()
+        outgoingListener?.remove()
+    }
+
+    // MARK: - Auth actions
+
+    func signUp(email: String, password: String, username: String, displayName: String?) async {
+        await perform {
+            _ = try await AuthService.shared.signUp(
+                email: email, password: password,
+                username: username, displayName: displayName
+            )
+        }
+    }
+
+    func signIn(email: String, password: String) async {
+        await perform {
+            _ = try await AuthService.shared.signIn(email: email, password: password)
+        }
+    }
+
+    func signOut() {
+        do { try AuthService.shared.signOut() }
+        catch { errorMessage = error.localizedDescription }
+    }
+
+    // MARK: - Friend actions
+
+    func sendRequest(toUsername raw: String) async {
+        guard let me = account else { errorMessage = AuthError.notSignedIn.localizedDescription; return }
+        await perform {
+            guard let other = try await FriendsService.shared.findUser(byUsername: raw) else {
+                throw FriendsError.userNotFound
+            }
+            try await FriendsService.shared.sendRequest(to: other, from: me)
+        }
+    }
+
+    func accept(_ request: FriendRequest) async {
+        guard let me = account else { return }
+        await perform {
+            // We need the requester's profile for denormalised friend doc.
+            let other = try await AuthService.shared.loadAccount(uid: request.id)
+            try await FriendsService.shared.acceptIncomingRequest(from: other, me: me)
+        }
+    }
+
+    func reject(_ request: FriendRequest) async {
+        guard let me = account else { return }
+        await perform {
+            try await FriendsService.shared.rejectIncomingRequest(fromUid: request.id, myUid: me.id)
+        }
+    }
+
+    func cancelOutgoing(_ request: FriendRequest) async {
+        guard let me = account else { return }
+        await perform {
+            try await FriendsService.shared.cancelOutgoingRequest(toUid: request.id, myUid: me.id)
+        }
+    }
+
+    func remove(_ friend: FriendInfo) async {
+        guard let me = account else { return }
+        await perform {
+            try await FriendsService.shared.removeFriend(otherUid: friend.id, myUid: me.id)
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func perform(_ block: @escaping () async throws -> Void) async {
+        errorMessage = nil
+        isWorking = true
+        do {
+            try await block()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isWorking = false
+    }
+
+    private func attachListeners(uid: String) {
+        friendsListener = FriendsService.shared.observeFriends(uid: uid) { [weak self] in
+            self?.friends = $0
+        }
+        incomingListener = FriendsService.shared.observeIncoming(uid: uid) { [weak self] in
+            self?.incomingRequests = $0
+        }
+        outgoingListener = FriendsService.shared.observeOutgoing(uid: uid) { [weak self] in
+            self?.outgoingRequests = $0
+        }
+    }
+
+    private func tearDownListeners() {
+        friendsListener?.remove(); friendsListener = nil
+        incomingListener?.remove(); incomingListener = nil
+        outgoingListener?.remove(); outgoingListener = nil
+    }
+
+    private func clearLists() {
+        friends = []
+        incomingRequests = []
+        outgoingRequests = []
+    }
+}

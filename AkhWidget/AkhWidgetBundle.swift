@@ -12,5 +12,9 @@ import SwiftUI
 struct AkhWidgetBundle: WidgetBundle {
     var body: some Widget {
         DeenWidget()
+        CountdownWidget()
+        MorningPrayersWidget()
+        EveningPrayersWidget()
+        DailyVerseWidget()
     }
 }

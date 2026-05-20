@@ -15,6 +15,7 @@ final class NotificationScheduler {
 
     static let enabledKey = "dailydee.notificationsEnabled"
     static let minutesBeforeKey = "dailydee.notificationMinutesBefore"
+    static let reframeKey = "dailydee.notificationReframe"
     static let allowedMinutes = [15, 30, 45, 60]
 
     var isEnabled: Bool {
@@ -30,6 +31,16 @@ final class NotificationScheduler {
             return stored > 0 ? stored : 15
         }
         set { UserDefaults.standard.set(newValue, forKey: Self.minutesBeforeKey) }
+    }
+
+    /// User-selected phrasing for the prayer-time notification body.
+    /// Defaults to the original hadith-quote rotation.
+    var reframe: NotificationReframe {
+        get {
+            UserDefaults.standard.string(forKey: Self.reframeKey)
+                .flatMap(NotificationReframe.init(rawValue:)) ?? .hadithQuotes
+        }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: Self.reframeKey) }
     }
 
     // MARK: - Permission
@@ -96,9 +107,8 @@ final class NotificationScheduler {
 
         if minutesBefore == 0 {
             content.title = prayerName
-            // Use the per-prayer hadith quote as body; fall back to default for Shuruuq
-            let quote = L10n.notificationPrayerQuote(prayer.kind, language)
-            content.body = (quote ?? L10n.notificationAtPrayer(language)) + " · " + cityName
+            // Body is driven by the user-selected reframe — hadith quotes by default.
+            content.body = reframe.body(for: prayer.kind, language: language) + " · " + cityName
         } else {
             content.title = L10n.notificationBefore(language, prayerName: prayerName, minutes: minutesBefore)
             content.body = L10n.notificationGetReady(language) + " · " + cityName

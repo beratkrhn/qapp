@@ -38,13 +38,10 @@ private struct WDitibResponse: Decodable { let data: [WDitibDay] }
 private let themeHexMap: [String: String] = [
     "sea_blue":      "1E88E5",
     "dark_purple":   "7B2FBE",
-    "soft_gray":     "E53935",  // legacy → mapped to Red
-    "red":           "E53935",
     "beige":         "D4A574",
     "emerald_green": "36D080",
-    "warm_gold":     "FFC107",
-    "white":         "F5F5F5",
-    "dark_gray":     "424242",
+    "sunset_coral":  "F26D5B",
+    "royal_teal":    "0EA5A4",
 ]
 
 private func accentColorForRaw(_ raw: String) -> Color {
@@ -52,15 +49,11 @@ private func accentColorForRaw(_ raw: String) -> Color {
     return Color(widgetHex: hex)
 }
 
-/// Compute the widget background color from the accent hue, adapted for light/dark mode.
-private func computeWidgetBgColor(accentUIColor: UIColor, colorScheme: ColorScheme) -> Color {
+/// Dark-mode widget background tinted by the accent hue.
+private func computeWidgetBgColor(accentUIColor: UIColor) -> Color {
     var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
     accentUIColor.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
-    if colorScheme == .dark {
-        return Color(UIColor(hue: h, saturation: 0.28, brightness: 0.11, alpha: 1))
-    } else {
-        return Color(UIColor(hue: h, saturation: 0.06, brightness: 0.97, alpha: 1))
-    }
+    return Color(UIColor(hue: h, saturation: 0.28, brightness: 0.11, alpha: 1))
 }
 
 extension Color {
@@ -386,8 +379,8 @@ private struct PrayerPill: View {
                 .foregroundStyle(isNext ? accentColor : Color.primary.opacity(0.65))
                 .widgetAccentable(isNext)
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 7)
+        .padding(.vertical, 5)
+        .padding(.horizontal, 4)
         .background {
             if isNext {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -406,10 +399,8 @@ private struct PrayerPill: View {
 private struct MediumWidgetView: View {
     let entry: DeenEntry
 
-    // Shuruuq (Sunrise) is excluded from the medium widget pills — six pills
-    // don't fit the medium canvas without becoming unreadably small.
     private var mediumPrayers: [WidgetPrayer] {
-        entry.prayers.filter { $0.kindRaw != "Sunrise" }
+        entry.prayers
     }
 
     var body: some View {
@@ -452,7 +443,7 @@ private struct MediumWidgetView: View {
                 .frame(height: 0.5)
                 .padding(.vertical, 8)
 
-            // ── Prayer pills (5 prayers, Shuruuq excluded) ───────────────────
+            // ── Prayer pills (all 6 prayers including Shuruuq) ───────────────
             HStack(spacing: 0) {
                 ForEach(mediumPrayers) { prayer in
                     PrayerPill(
@@ -697,7 +688,6 @@ private struct LockScreenRectangularView: View {
 
 struct DeenWidgetEntryView: View {
     @Environment(\.widgetFamily) private var family
-    @Environment(\.colorScheme) private var colorScheme
     let entry: DeenEntry
 
     var body: some View {
@@ -707,12 +697,15 @@ struct DeenWidgetEntryView: View {
                 LockScreenRectangularView(entry: entry)
             case .systemSmall:
                 SmallWidgetView(entry: entry)
+                    .environment(\.colorScheme, .dark)
             case .systemLarge, .systemExtraLarge:
                 // Both large sizes use the same full-list layout which naturally
                 // includes Shuruuq via ForEach(entry.prayers).
                 LargeWidgetView(entry: entry)
+                    .environment(\.colorScheme, .dark)
             default:
                 MediumWidgetView(entry: entry)
+                    .environment(\.colorScheme, .dark)
             }
         }
         .containerBackground(for: .widget) {
@@ -725,8 +718,7 @@ struct DeenWidgetEntryView: View {
     }
 
     private var widgetBgColor: Color {
-        let uiAccent = UIColor(entry.accentColor)
-        return computeWidgetBgColor(accentUIColor: uiAccent, colorScheme: colorScheme)
+        computeWidgetBgColor(accentUIColor: UIColor(entry.accentColor))
     }
 }
 

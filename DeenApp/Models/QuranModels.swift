@@ -5,17 +5,6 @@
 
 import Foundation
 
-struct QuranBook: Decodable {
-    let suras: [QuranSura]
-}
-
-struct QuranSura: Identifiable, Decodable {
-    let id: Int
-    let nameArabic: String
-    let nameTransliteration: String
-    let verses: [QuranVerse]
-}
-
 struct QuranVerse: Identifiable, Decodable {
     let id: Int
     let suraNumber: Int

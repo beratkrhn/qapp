@@ -53,7 +53,6 @@ private enum UserDefaultsKeys {
     static let prayerCalculation = "dailydee.prayerCalculation_v1"
     static let prayerTimeProvider = "dailydee.prayerTimeProvider"
     static let selectedDitibCity = "dailydee.selectedDitibCity"
-    static let appearanceMode = "dailydee.appearanceMode"
     static let dailyReadPages = "dailydee.dailyReadPages"
     static let dailyGoalPages = "dailydee.dailyGoalPages"
     static let lastReadDate = "dailydee.lastReadDate"
@@ -85,11 +84,6 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(data, forKey: UserDefaultsKeys.selectedDitibCity)
             SharedPrayerData.saveCity(city.name)
         }
-    }
-
-    /// Light / Dark / System — steuert `preferredColorScheme` in der App.
-    @Published var appearanceMode: AppearanceMode {
-        didSet { UserDefaults.standard.set(appearanceMode.rawValue, forKey: UserDefaultsKeys.appearanceMode) }
     }
 
     // MARK: - Tajweed
@@ -201,9 +195,6 @@ final class AppState: ObservableObject {
         // Sync initial theme to App Group for widget
         UserDefaults(suiteName: "group.d.DailyDee")?.set(resolvedTheme.rawValue, forKey: UserDefaultsKeys.accentTheme)
 
-        let rawAppearance = UserDefaults.standard.string(forKey: UserDefaultsKeys.appearanceMode)
-        self.appearanceMode = rawAppearance.flatMap(AppearanceMode.init(rawValue:)) ?? .system
-
         // Daily reading: reset if last read was not today
         let savedGoal = UserDefaults.standard.integer(forKey: UserDefaultsKeys.dailyGoalPages)
         self.dailyGoalPages = savedGoal > 0 ? savedGoal : 5
@@ -229,6 +220,10 @@ final class AppState: ObservableObject {
         // Sync city to App Group so widgets always know the current city
         let cityName = self.selectedDitibCity?.name ?? self.selectedCity.displayName
         SharedPrayerData.saveCity(cityName)
+
+        // Sync initial app language to App Group so the Daily Verse widget can
+        // pick the right translation. Updates flow through updateLanguage(_:).
+        UserDefaults(suiteName: "group.d.DailyDee")?.set(self.appLanguage.rawValue, forKey: UserDefaultsKeys.appLanguage)
     }
 
     // MARK: - Daily Reading Actions
@@ -262,6 +257,9 @@ final class AppState: ObservableObject {
     func updateLanguage(_ language: AppLanguage) {
         appLanguage = language
         UserDefaults.standard.set(language.rawValue, forKey: UserDefaultsKeys.appLanguage)
+        // Mirror to App Group so the Daily Verse widget picks the right translation.
+        UserDefaults(suiteName: "group.d.DailyDee")?.set(language.rawValue, forKey: UserDefaultsKeys.appLanguage)
+        WidgetCenter.shared.reloadAllTimelines()
         // Notify PrayerTimeManager so it can re-sync widget prayer names.
         NotificationCenter.default.post(name: .appLanguageDidChange, object: nil)
     }
@@ -289,14 +287,6 @@ final class AppState: ObservableObject {
 
     func updatePrayerCalculation(_ settings: PrayerCalculationSettings) {
         prayerCalculation = settings
-    }
-
-    func updateAppearanceMode(_ mode: AppearanceMode) {
-        appearanceMode = mode
-    }
-
-    var preferredSwiftUIColorScheme: ColorScheme? {
-        appearanceMode.preferredColorScheme
     }
 
     private static func persistPrayerCalculation(_ settings: PrayerCalculationSettings) {
@@ -330,30 +320,6 @@ final class AppState: ObservableObject {
 
     func updateAccentTheme(_ theme: ThemeColor) {
         accentTheme = theme
-    }
-}
-
-enum AppearanceMode: String, CaseIterable, Identifiable {
-    case system
-    case light
-    case dark
-
-    var id: String { rawValue }
-
-    var displayName: String {
-        switch self {
-        case .system: return "System"
-        case .light: return "Hell"
-        case .dark: return "Dunkel"
-        }
-    }
-
-    var preferredColorScheme: ColorScheme? {
-        switch self {
-        case .system: return nil
-        case .light: return .light
-        case .dark: return .dark
-        }
     }
 }
 

@@ -11,6 +11,15 @@
 		0E1DFFDA2F88122100549A07 /* SurahRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFD92F88122100549A07 /* SurahRevealView.swift */; };
 		0E1DFFDC2F88188600549A07 /* JustifiedArabicText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFDB2F88188600549A07 /* JustifiedArabicText.swift */; };
 		0E21D9A42F73444D00EA990C /* SharedPrayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */; };
+		0E23E6F22FB1478300242E06 /* AkhWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 0E23E6E82FB1478100242E06 /* AkhWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0E23E7062FB1498B00242E06 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9832F7343A000EA990C /* WidgetKit.framework */; };
+		0E23E7072FB1498B00242E06 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9852F7343A000EA990C /* SwiftUI.framework */; };
+		0E23E7142FB1498C00242E06 /* AkhWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0E23E7052FB1498B00242E06 /* AkhWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0E23E71E2FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E23E71D2FB14AF400242E06 /* WatchPrayerPayload.swift */; };
+		0E23E71F2FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E23E71D2FB14AF400242E06 /* WatchPrayerPayload.swift */; };
+		0E23E7202FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E23E71D2FB14AF400242E06 /* WatchPrayerPayload.swift */; };
+		0E23E7212FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E23E71D2FB14AF400242E06 /* WatchPrayerPayload.swift */; };
+		0E23E7252FB14C4D00242E06 /* PhoneWatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E23E7242FB14C4D00242E06 /* PhoneWatchSession.swift */; };
 		0E2A0DF62F8BFE7900E8F787 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A0DF52F8BFE7900E8F787 /* NotificationScheduler.swift */; };
 		0E387EB92F7D2493005C7A70 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9832F7343A000EA990C /* WidgetKit.framework */; };
 		0E387EBA2F7D2493005C7A70 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E21D9852F7343A000EA990C /* SwiftUI.framework */; };
@@ -26,6 +35,7 @@
 		0EAA02142F90BBBB0000A004 /* HomeCityPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAA02132F90BBBB0000A003 /* HomeCityPickerView.swift */; };
 		0EAA02162F90BBBB0000A006 /* QiblaCompassViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAA02152F90BBBB0000A005 /* QiblaCompassViewModel.swift */; };
 		0EAA02182F90BBBB0000A008 /* QiblaCompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAA02172F90BBBB0000A007 /* QiblaCompassView.swift */; };
+		0EAA02202F90BBBB0000A010 /* NotificationReframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAA02212F90BBBB0000A011 /* NotificationReframe.swift */; };
 		0ECEF9662F6CCACA00299C6E /* QWords.json in Resources */ = {isa = PBXBuildFile; fileRef = 0ECEF9652F6CCAC700299C6E /* QWords.json */; };
 		0EE117D82F9E788200C5529C /* 136.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0EE116012F9E788200C5529C /* 136.jpg */; };
 		0EE117D92F9E788200C5529C /* 163.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0EE1161C2F9E788200C5529C /* 163.jpg */; };
@@ -671,9 +681,17 @@
 		0EF57E782F775E0E00936A5F /* StateSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF57E772F775E0E00936A5F /* StateSelectionView.swift */; };
 		0EF57E7A2F775E2400936A5F /* CitySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF57E792F775E2400936A5F /* CitySelectionView.swift */; };
 		0EFE5C5F2F9004CF0090D2E2 /* QadaTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFE5C5E2F9004CF0090D2E2 /* QadaTrackerView.swift */; };
+		18B64C358BF622C24BFEC57F /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF4493AA0650E69BAB239F7 /* AuthService.swift */; };
+		28644E098CF1A5D75C68AA6D /* AccountHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE4C149A1F2CB83832881C /* AccountHomeView.swift */; };
+		535C49EF86720D5ABFCDDDE2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7F454A6D80FB6A371CACCB16 /* GoogleService-Info.plist */; };
+		7FE447AFAFACE9CD7465F8B1 /* FriendsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E14FECA5AB3CD701945757 /* FriendsService.swift */; };
+		83C8410998D70DEEC70967F1 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3A4970A03D75754DEBB7AF /* AccountViewModel.swift */; };
+		917548A69291470F84015AA3 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79D477EA678EBBC9FA6154B /* AuthView.swift */; };
+		9A794FADB5B9263675780FB9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FD4E418799A0FBB4C81E5140 /* FirebaseAuth */; };
 		A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */; };
 		A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */; };
 		A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */; };
+		B17843DB9FC06967BC479060 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D55422B805CF6A5CF2D806E /* FriendsView.swift */; };
 		C9349FD74648497C8C2723D4 /* TajweedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */; };
 		DD00012F510DEB006DB81901 /* FlashcardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00012F510DEB006DB81900 /* FlashcardCard.swift */; };
 		DD00032F510DEB006DB81901 /* SRSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00032F510DEB006DB81900 /* SRSViewModel.swift */; };
@@ -685,10 +703,26 @@
 		DD000F2F510DEB006DB81901 /* PrayerTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */; };
 		EE00012F510DEB006DB81901 /* LearnTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE00012F510DEB006DB81900 /* LearnTabView.swift */; };
 		EE00022F510DEB006DB81901 /* ContinueAyahView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE00022F510DEB006DB81900 /* ContinueAyahView.swift */; };
+		F7654E38BA4D07569EF68EA7 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = EEA7492699C1C8790B7D925B /* FirebaseFirestore */; };
 		FA00000000000000000000A2 /* kuranpdfdiyanet.pdf in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A1 /* kuranpdfdiyanet.pdf */; };
+		FD7746AFAFD2298737D838EA /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDE42F58BF4DEB0AC588CB1 /* UserAccount.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0E23E6F02FB1478300242E06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0EEA120A2F510DB8006DB819 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0E23E6E72FB1478100242E06;
+			remoteInfo = "AkhWatch Watch App";
+		};
+		0E23E7122FB1498C00242E06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0EEA120A2F510DB8006DB819 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0E23E7042FB1498B00242E06;
+			remoteInfo = AkhWatchWidgetExtension;
+		};
 		0E387EC52F7D2493005C7A70 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0EEA120A2F510DB8006DB819 /* Project object */;
@@ -710,6 +744,28 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0E23E6F32FB1478300242E06 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				0E23E6F22FB1478300242E06 /* AkhWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E23E7192FB1498C00242E06 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0E23E7142FB1498C00242E06 /* AkhWatchWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -719,6 +775,11 @@
 		0E21D9832F7343A000EA990C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0E21D9852F7343A000EA990C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPrayerData.swift; sourceTree = "<group>"; };
+		0E23E6E82FB1478100242E06 /* AkhWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AkhWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E23E7052FB1498B00242E06 /* AkhWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkhWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E23E71D2FB14AF400242E06 /* WatchPrayerPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPrayerPayload.swift; sourceTree = "<group>"; };
+		0E23E7242FB14C4D00242E06 /* PhoneWatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSession.swift; sourceTree = "<group>"; };
+		0E23E7272FB1500100242E06 /* AkhWatchWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AkhWatchWidgetExtension.entitlements; sourceTree = "<group>"; };
 		0E2A0DF52F8BFE7900E8F787 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
 		0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AkhWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E387ECC2F7D24C7005C7A70 /* AkhWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AkhWidgetExtension.entitlements; sourceTree = "<group>"; };
@@ -733,6 +794,7 @@
 		0EAA02132F90BBBB0000A003 /* HomeCityPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCityPickerView.swift; sourceTree = "<group>"; };
 		0EAA02152F90BBBB0000A005 /* QiblaCompassViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiblaCompassViewModel.swift; sourceTree = "<group>"; };
 		0EAA02172F90BBBB0000A007 /* QiblaCompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiblaCompassView.swift; sourceTree = "<group>"; };
+		0EAA02212F90BBBB0000A011 /* NotificationReframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationReframe.swift; sourceTree = "<group>"; };
 		0ECEF9652F6CCAC700299C6E /* QWords.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = QWords.json; sourceTree = "<group>"; };
 		0EE1157A2F9E788200C5529C /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		0EE1157B2F9E788200C5529C /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
@@ -1380,6 +1442,12 @@
 		0EF57E772F775E0E00936A5F /* StateSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateSelectionView.swift; sourceTree = "<group>"; };
 		0EF57E792F775E2400936A5F /* CitySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySelectionView.swift; sourceTree = "<group>"; };
 		0EFE5C5E2F9004CF0090D2E2 /* QadaTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QadaTrackerView.swift; sourceTree = "<group>"; };
+		3AF4493AA0650E69BAB239F7 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthService.swift; path = DeenApp/Services/AuthService.swift; sourceTree = SOURCE_ROOT; };
+		47CE4C149A1F2CB83832881C /* AccountHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccountHomeView.swift; path = DeenApp/Views/Account/AccountHomeView.swift; sourceTree = SOURCE_ROOT; };
+		58E14FECA5AB3CD701945757 /* FriendsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendsService.swift; path = DeenApp/Services/FriendsService.swift; sourceTree = SOURCE_ROOT; };
+		7D3A4970A03D75754DEBB7AF /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccountViewModel.swift; path = DeenApp/ViewModels/AccountViewModel.swift; sourceTree = SOURCE_ROOT; };
+		7D55422B805CF6A5CF2D806E /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendsView.swift; path = DeenApp/Views/Account/FriendsView.swift; sourceTree = SOURCE_ROOT; };
+		7F454A6D80FB6A371CACCB16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "DeenApp/GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A2B000012F510DEB006DB819 /* PrayerCalculationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCalculationSettings.swift; sourceTree = "<group>"; };
 		A2B000022F510DEB006DB819 /* PrayerWidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerWidgetSnapshot.swift; sourceTree = "<group>"; };
 		A2B000032F510DEB006DB819 /* CustomPrayerCalculationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPrayerCalculationView.swift; sourceTree = "<group>"; };
@@ -1392,14 +1460,16 @@
 		DD000B2F510DEB006DB81900 /* PrayerTutorialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialViewModel.swift; sourceTree = "<group>"; };
 		DD000D2F510DEB006DB81900 /* PrayerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerSelectionView.swift; sourceTree = "<group>"; };
 		DD000F2F510DEB006DB81900 /* PrayerTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTutorialView.swift; sourceTree = "<group>"; };
+		E79D477EA678EBBC9FA6154B /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthView.swift; path = DeenApp/Views/Account/AuthView.swift; sourceTree = SOURCE_ROOT; };
 		EA4B5F127DAA4984BC62F3ED /* TajweedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TajweedParser.swift; sourceTree = "<group>"; };
 		EE00012F510DEB006DB81900 /* LearnTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnTabView.swift; sourceTree = "<group>"; };
 		EE00022F510DEB006DB81900 /* ContinueAyahView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueAyahView.swift; sourceTree = "<group>"; };
 		FA00000000000000000000A1 /* kuranpdfdiyanet.pdf */ = {isa = PBXFileReference; lastKnownFileType = com.adobe.pdf; path = kuranpdfdiyanet.pdf; sourceTree = "<group>"; };
+		FBDE42F58BF4DEB0AC588CB1 /* UserAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserAccount.swift; path = DeenApp/Models/UserAccount.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "Akh-ira" target */ = {
+		0E0DAF262F565ECE006EE775 = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Alkalami,Almarai,Amiri,Beiruti,Handjet,etc 2/Alkalami/Alkalami-Regular.ttf",
@@ -1415,7 +1485,21 @@
 			);
 			target = 0EEA12112F510DB8006DB819 /* Akh-ira */;
 		};
-		0E387ECB2F7D2493005C7A70 /* Exceptions for "AkhWidget" folder in "AkhWidgetExtension" target */ = {
+		0E23E7182FB1498C00242E06 = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 0E23E7042FB1498B00242E06 /* AkhWatchWidgetExtension */;
+		};
+		0E23E7232FB14B2200242E06 = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				WatchAccent.swift,
+			);
+			target = 0E23E7042FB1498B00242E06 /* AkhWatchWidgetExtension */;
+		};
+		0E387ECB2F7D2493005C7A70 = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -1425,25 +1509,29 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		0E387EBB2F7D2493005C7A70 /* AkhWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				0E387ECB2F7D2493005C7A70 /* Exceptions for "AkhWidget" folder in "AkhWidgetExtension" target */,
-			);
-			path = AkhWidget;
-			sourceTree = "<group>";
-		};
-		0EDE0FC32F525DBC001A0974 /* fonts */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				0E0DAF262F565ECE006EE775 /* Exceptions for "fonts" folder in "Akh-ira" target */,
-			);
-			path = fonts;
-			sourceTree = "<group>";
-		};
+		0E23E6E92FB1478100242E06 /* AkhWatch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (0E23E7232FB14B2200242E06, ); path = "AkhWatch Watch App"; sourceTree = "<group>"; };
+		0E23E7082FB1498B00242E06 /* AkhWatchWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (0E23E7182FB1498C00242E06, ); path = AkhWatchWidget; sourceTree = "<group>"; };
+		0E387EBB2F7D2493005C7A70 /* AkhWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (0E387ECB2F7D2493005C7A70, ); path = AkhWidget; sourceTree = "<group>"; };
+		0EDE0FC32F525DBC001A0974 /* fonts */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (0E0DAF262F565ECE006EE775, ); path = fonts; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0E23E6E52FB1478100242E06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E23E7022FB1498B00242E06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E23E7072FB1498B00242E06 /* SwiftUI.framework in Frameworks */,
+				0E23E7062FB1498B00242E06 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0E387EB52F7D2493005C7A70 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1457,6 +1545,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A794FADB5B9263675780FB9 /* FirebaseAuth in Frameworks */,
+				F7654E38BA4D07569EF68EA7 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2087,11 +2177,23 @@
 		0EEA12092F510DB8006DB819 = {
 			isa = PBXGroup;
 			children = (
+				0E23E7272FB1500100242E06 /* AkhWatchWidgetExtension.entitlements */,
+				0E23E71D2FB14AF400242E06 /* WatchPrayerPayload.swift */,
 				0E387ECC2F7D24C7005C7A70 /* AkhWidgetExtension.entitlements */,
 				0EEA12362F510DEB006DB819 /* DeenApp */,
 				0E387EBB2F7D2493005C7A70 /* AkhWidget */,
+				0E23E6E92FB1478100242E06 /* AkhWatch Watch App */,
+				0E23E7082FB1498B00242E06 /* AkhWatchWidget */,
 				0E21D9822F7343A000EA990C /* Frameworks */,
 				0EEA12132F510DB8006DB819 /* Products */,
+				FBDE42F58BF4DEB0AC588CB1 /* UserAccount.swift */,
+				3AF4493AA0650E69BAB239F7 /* AuthService.swift */,
+				58E14FECA5AB3CD701945757 /* FriendsService.swift */,
+				7D3A4970A03D75754DEBB7AF /* AccountViewModel.swift */,
+				47CE4C149A1F2CB83832881C /* AccountHomeView.swift */,
+				E79D477EA678EBBC9FA6154B /* AuthView.swift */,
+				7D55422B805CF6A5CF2D806E /* FriendsView.swift */,
+				7F454A6D80FB6A371CACCB16 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2100,6 +2202,8 @@
 			children = (
 				0EEA12122F510DB8006DB819 /* Akh-ira.app */,
 				0E387EB82F7D2493005C7A70 /* AkhWidgetExtension.appex */,
+				0E23E6E82FB1478100242E06 /* AkhWatch Watch App.app */,
+				0E23E7052FB1498B00242E06 /* AkhWatchWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2109,6 +2213,7 @@
 			children = (
 				0EEA12212F510DEB006DB819 /* AppState.swift */,
 				0EEA125A2F510DEB006DB819 /* AppLanguage.swift */,
+				0EAA02212F90BBBB0000A011 /* NotificationReframe.swift */,
 				0EEA12812F510DEB006DB819 /* AppCity.swift */,
 				0EEA12732F510DEB006DB819 /* AlquranAPI.swift */,
 				0EEA12222F510DEB006DB819 /* PrayerKind.swift */,
@@ -2236,6 +2341,7 @@
 		0EEA12942F510DEB006DB819 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0E23E7242FB14C4D00242E06 /* PhoneWatchSession.swift */,
 				0EEA12912F510DEB006DB819 /* DitibAPIService.swift */,
 				0E1DFFD72F880BE100549A07 /* QuranOfflineCache.swift */,
 				0E2A0DF52F8BFE7900E8F787 /* NotificationScheduler.swift */,
@@ -2261,6 +2367,52 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0E23E6E72FB1478100242E06 /* AkhWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0E23E6F62FB1478300242E06 /* Build configuration list for PBXNativeTarget "AkhWatch Watch App" */;
+			buildPhases = (
+				0E23E6E42FB1478100242E06 /* Sources */,
+				0E23E6E52FB1478100242E06 /* Frameworks */,
+				0E23E6E62FB1478100242E06 /* Resources */,
+				0E23E7192FB1498C00242E06 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0E23E7132FB1498C00242E06 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0E23E6E92FB1478100242E06 /* AkhWatch Watch App */,
+			);
+			name = "AkhWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "AkhWatch Watch App";
+			productReference = 0E23E6E82FB1478100242E06 /* AkhWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0E23E7042FB1498B00242E06 /* AkhWatchWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0E23E7152FB1498C00242E06 /* Build configuration list for PBXNativeTarget "AkhWatchWidgetExtension" */;
+			buildPhases = (
+				0E23E7012FB1498B00242E06 /* Sources */,
+				0E23E7022FB1498B00242E06 /* Frameworks */,
+				0E23E7032FB1498B00242E06 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0E23E7082FB1498B00242E06 /* AkhWatchWidget */,
+			);
+			name = AkhWatchWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = AkhWatchWidgetExtension;
+			productReference = 0E23E7052FB1498B00242E06 /* AkhWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0E387EC82F7D2493005C7A70 /* Build configuration list for PBXNativeTarget "AkhWidgetExtension" */;
@@ -2291,14 +2443,18 @@
 				0EEA120F2F510DB8006DB819 /* Frameworks */,
 				0EEA12102F510DB8006DB819 /* Resources */,
 				0E21D9962F7343A100EA990C /* Embed Foundation Extensions */,
+				0E23E6F32FB1478300242E06 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				0E387EC62F7D2493005C7A70 /* PBXTargetDependency */,
+				0E23E6F12FB1478300242E06 /* PBXTargetDependency */,
 			);
 			name = "Akh-ira";
 			packageProductDependencies = (
+				FD4E418799A0FBB4C81E5140 /* FirebaseAuth */,
+				EEA7492699C1C8790B7D925B /* FirebaseFirestore */,
 			);
 			productName = DailyDee;
 			productReference = 0EEA12122F510DB8006DB819 /* Akh-ira.app */;
@@ -2314,6 +2470,12 @@
 				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
+					0E23E6E72FB1478100242E06 = {
+						CreatedOnToolsVersion = 26.4;
+					};
+					0E23E7042FB1498B00242E06 = {
+						CreatedOnToolsVersion = 26.4;
+					};
 					0E387EB72F7D2493005C7A70 = {
 						CreatedOnToolsVersion = 26.4;
 					};
@@ -2331,6 +2493,9 @@
 			);
 			mainGroup = 0EEA12092F510DB8006DB819;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A6D0422C97DCD82725F1908D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0EEA12132F510DB8006DB819 /* Products */;
 			projectDirPath = "";
@@ -2338,11 +2503,27 @@
 			targets = (
 				0EEA12112F510DB8006DB819 /* Akh-ira */,
 				0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */,
+				0E23E6E72FB1478100242E06 /* AkhWatch Watch App */,
+				0E23E7042FB1498B00242E06 /* AkhWatchWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0E23E6E62FB1478100242E06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E23E7032FB1498B00242E06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0E387EB62F7D2493005C7A70 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2965,16 +3146,34 @@
 				0EE11A322F9E788200C5529C /* 580.jpg in Resources */,
 				0EE11A332F9E788200C5529C /* 165.jpg in Resources */,
 				0EE11A342F9E788200C5529C /* 146.jpg in Resources */,
+				535C49EF86720D5ABFCDDDE2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0E23E6E42FB1478100242E06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E23E71F2FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E23E7012FB1498B00242E06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E23E7212FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0E387EB42F7D2493005C7A70 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E23E7202FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3006,6 +3205,7 @@
 				0EEA12452F510DEB006DB819 /* MainTabView.swift in Sources */,
 				0E1DFFD82F880BE100549A07 /* QuranOfflineCache.swift in Sources */,
 				0EEA125B2F510DEB006DB819 /* AppLanguage.swift in Sources */,
+				0EAA02202F90BBBB0000A010 /* NotificationReframe.swift in Sources */,
 				0EEA125D2F510DEB006DB819 /* L10n.swift in Sources */,
 				0EEA125F2F510DEB006DB819 /* OnboardingView.swift in Sources */,
 				0EEA12612F510DEB006DB819 /* QuranView.swift in Sources */,
@@ -3013,6 +3213,7 @@
 				0EEA12652F510DEB006DB819 /* GreetingFontCycle.swift in Sources */,
 				0EA3F2382F5A7010003E0629 /* PrayerTutorialData.swift in Sources */,
 				0EA1E1BD2F8046C8004C025F /* TenDayForecastView.swift in Sources */,
+				0E23E71E2FB14AF400242E06 /* WatchPrayerPayload.swift in Sources */,
 				0EEA12672F510DEB006DB819 /* QuranModels.swift in Sources */,
 				0EEA12692F510DEB006DB819 /* QuranArabicFont.swift in Sources */,
 				0E2A0DF62F8BFE7900E8F787 /* NotificationScheduler.swift in Sources */,
@@ -3035,6 +3236,7 @@
 				DD00072F510DEB006DB81901 /* FlashcardSessionView.swift in Sources */,
 				0EEA12802F510DEB006DB819 /* AppCity.swift in Sources */,
 				0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */,
+				0E23E7252FB14C4D00242E06 /* PhoneWatchSession.swift in Sources */,
 				0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */,
 				0E1DFFDA2F88122100549A07 /* SurahRevealView.swift in Sources */,
 				EE00022F510DEB006DB81901 /* ContinueAyahView.swift in Sources */,
@@ -3047,12 +3249,29 @@
 				A2B000112F510DEB006DB819 /* PrayerCalculationSettings.swift in Sources */,
 				A2B000122F510DEB006DB819 /* PrayerWidgetSnapshot.swift in Sources */,
 				A2B000132F510DEB006DB819 /* CustomPrayerCalculationView.swift in Sources */,
+				FD7746AFAFD2298737D838EA /* UserAccount.swift in Sources */,
+				18B64C358BF622C24BFEC57F /* AuthService.swift in Sources */,
+				7FE447AFAFACE9CD7465F8B1 /* FriendsService.swift in Sources */,
+				83C8410998D70DEEC70967F1 /* AccountViewModel.swift in Sources */,
+				28644E098CF1A5D75C68AA6D /* AccountHomeView.swift in Sources */,
+				917548A69291470F84015AA3 /* AuthView.swift in Sources */,
+				B17843DB9FC06967BC479060 /* FriendsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0E23E6F12FB1478300242E06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0E23E6E72FB1478100242E06 /* AkhWatch Watch App */;
+			targetProxy = 0E23E6F02FB1478300242E06 /* PBXContainerItemProxy */;
+		};
+		0E23E7132FB1498C00242E06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0E23E7042FB1498B00242E06 /* AkhWatchWidgetExtension */;
+			targetProxy = 0E23E7122FB1498C00242E06 /* PBXContainerItemProxy */;
+		};
 		0E387EC62F7D2493005C7A70 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0E387EB72F7D2493005C7A70 /* AkhWidgetExtension */;
@@ -3061,6 +3280,144 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0E23E6F42FB1478300242E06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "AkhWatch Watch App/AkhWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WAM6U438Y8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = AkhWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = d.DailyDee;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Debug;
+		};
+		0E23E6F52FB1478300242E06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "AkhWatch Watch App/AkhWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WAM6U438Y8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = AkhWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = d.DailyDee;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Release;
+		};
+		0E23E7162FB1498C00242E06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = AkhWatchWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WAM6U438Y8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkhWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkhWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp.AkhWatchWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Debug;
+		};
+		0E23E7172FB1498C00242E06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = AkhWatchWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WAM6U438Y8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AkhWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AkhWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp.AkhWatchWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Release;
+		};
 		0E387EC92F7D2493005C7A70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3349,6 +3706,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0E23E6F62FB1478300242E06 /* Build configuration list for PBXNativeTarget "AkhWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0E23E6F42FB1478300242E06 /* Debug */,
+				0E23E6F52FB1478300242E06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0E23E7152FB1498C00242E06 /* Build configuration list for PBXNativeTarget "AkhWatchWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0E23E7162FB1498C00242E06 /* Debug */,
+				0E23E7172FB1498C00242E06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		0E387EC82F7D2493005C7A70 /* Build configuration list for PBXNativeTarget "AkhWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -3377,6 +3752,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A6D0422C97DCD82725F1908D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EEA7492699C1C8790B7D925B /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6D0422C97DCD82725F1908D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		FD4E418799A0FBB4C81E5140 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6D0422C97DCD82725F1908D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0EEA120A2F510DB8006DB819 /* Project object */;
 }

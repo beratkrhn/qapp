@@ -282,6 +282,30 @@ final class PrayerTimeManager: ObservableObject {
             )
         }
         SharedPrayerData.saveTodayPrayers(entries)
+        pushPayloadToWatch(entries: entries)
+    }
+
+    /// Forwards the same snapshot we hand the iOS widget over to the paired
+    /// Apple Watch. App Groups don't bridge iOS↔watchOS sandboxes, so this
+    /// goes via WCSession.
+    private func pushPayloadToWatch(entries: [WidgetPrayerEntry]) {
+        let cityName = currentDitibCity?.name
+            ?? UserDefaults(suiteName: SharedPrayerData.suiteName)?
+                .string(forKey: SharedPrayerData.cityKey)
+            ?? "—"
+        let accentRaw = UserDefaults.standard.string(forKey: "dailydee.accentTheme")
+            ?? "emerald_green"
+        let watchPrayers = entries.map {
+            WatchPrayer(kindRaw: $0.kindRaw,
+                        name: $0.name,
+                        iconName: $0.iconName,
+                        timeString: $0.timeString,
+                        time: $0.time)
+        }
+        let payload = WatchPrayerPayload(cityName: cityName,
+                                         accentThemeRaw: accentRaw,
+                                         prayers: watchPrayers)
+        PhoneWatchSession.shared.send(payload)
     }
 
     /// Re-syncs widget data when the user changes the app language so the widget

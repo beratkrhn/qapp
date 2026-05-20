@@ -45,9 +45,34 @@ struct FlashcardSessionView: View {
     private var progressHeader: some View {
         let total = max(viewModel.sessionQueue.count, 1)
         let pos = min(viewModel.currentIndex + 1, total)
-        return Text("\(pos) / \(total)")
-            .font(.subheadline)
-            .foregroundColor(Theme.textSecondary)
+        return HStack {
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.goToPreviousCard()
+                    showAnswer = false
+                }
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(viewModel.canGoBack ? Theme.accent : Theme.textSecondary.opacity(0.4))
+                    .frame(width: 32, height: 32)
+                    .background(
+                        Circle().fill(Theme.cardBackground)
+                    )
+            }
+            .buttonStyle(.plain)
+            .disabled(!viewModel.canGoBack)
+
+            Spacer()
+
+            Text("\(pos) / \(total)")
+                .font(.subheadline)
+                .foregroundColor(Theme.textSecondary)
+
+            Spacer()
+
+            Color.clear.frame(width: 32, height: 32)
+        }
     }
 
     private func cardContent(card: FlashcardCard) -> some View {
@@ -112,7 +137,7 @@ struct FlashcardSessionView: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
 
-                        Text(ankiIntervalLabel(for: rating))
+                        Text(intervalLabel(for: rating))
                             .font(.caption2.weight(.semibold))
                             .foregroundColor(Theme.textSecondary)
                     }
@@ -126,13 +151,9 @@ struct FlashcardSessionView: View {
         }
     }
 
-    private func ankiIntervalLabel(for rating: SRSRating) -> String {
-        switch rating {
-        case .again: return "<1min"
-        case .hard:  return "<10min"
-        case .good:  return "1d"
-        case .easy:  return "3d"
-        }
+    private func intervalLabel(for rating: SRSRating) -> String {
+        guard let card = viewModel.currentCard else { return "" }
+        return viewModel.previewLabel(for: card, rating: rating)
     }
 
     private var sessionCompleteView: some View {

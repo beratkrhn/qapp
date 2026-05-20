@@ -11,6 +11,7 @@ import SwiftUI
 enum LearnMode: String, Identifiable, CaseIterable {
     case surahReveal
     case quranWords
+    case continueAyah
 
     var id: String { rawValue }
 }
@@ -32,6 +33,12 @@ struct LearnTabView: View {
                     }
                 case .quranWords:
                     LearningDashboardView {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            selectedMode = nil
+                        }
+                    }
+                case .continueAyah:
+                    ContinueAyahView {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             selectedMode = nil
                         }
@@ -79,6 +86,17 @@ struct LearnTabView: View {
                     ) {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             selectedMode = .quranWords
+                        }
+                    }
+
+                    LearnModeCard(
+                        title: "Continue the Ayah",
+                        subtitle: "Recite the next ayah from memory",
+                        icon: "text.book.closed.fill",
+                        accentColor: Color(hex: "4CAF50")
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            selectedMode = .continueAyah
                         }
                     }
                 }

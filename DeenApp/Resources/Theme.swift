@@ -2,7 +2,7 @@
 //  Theme.swift
 //  DeenApp
 //
-//  Farbpalette & Design-Tokens — Light/Dark über dynamische UIColors, Akzent aus ThemeColor.
+//  Farbpalette & Design-Tokens — Dark-only, Akzent aus ThemeColor.
 //
 
 import SwiftUI
@@ -10,48 +10,18 @@ import UIKit
 
 enum Theme {
 
-    // MARK: - Background (accent-hue aware, Light/Dark)
+    // MARK: - Background (accent-hue aware)
 
     static var background: Color {
-        Color(uiColor: UIColor { trait in
-            let accent = ThemeColor.current
-            switch trait.userInterfaceStyle {
-            case .dark:
-                return accent.uiDarkShade(brightness: 0.11, saturation: 0.28)
-            case .light, .unspecified:
-                return accent.uiLightShade(brightness: 0.97, saturation: 0.06)
-            @unknown default:
-                return accent.uiDarkShade(brightness: 0.11, saturation: 0.28)
-            }
-        })
+        Color(uiColor: ThemeColor.current.uiDarkShade(brightness: 0.11, saturation: 0.28))
     }
 
     static var cardBackground: Color {
-        Color(uiColor: UIColor { trait in
-            let accent = ThemeColor.current
-            switch trait.userInterfaceStyle {
-            case .dark:
-                return accent.uiDarkShade(brightness: 0.16, saturation: 0.32)
-            case .light, .unspecified:
-                return accent.uiLightShade(brightness: 1.0, saturation: 0.08)
-            @unknown default:
-                return accent.uiDarkShade(brightness: 0.16, saturation: 0.32)
-            }
-        })
+        Color(uiColor: ThemeColor.current.uiDarkShade(brightness: 0.16, saturation: 0.32))
     }
 
     static var cardHighlightBackground: Color {
-        Color(uiColor: UIColor { trait in
-            let accent = ThemeColor.current
-            switch trait.userInterfaceStyle {
-            case .dark:
-                return accent.uiDarkShade(brightness: 0.18, saturation: 0.34)
-            case .light, .unspecified:
-                return accent.uiLightShade(brightness: 0.99, saturation: 0.12)
-            @unknown default:
-                return accent.uiDarkShade(brightness: 0.18, saturation: 0.34)
-            }
-        })
+        Color(uiColor: ThemeColor.current.uiDarkShade(brightness: 0.18, saturation: 0.34))
     }
 
     // MARK: - Accent & Primary
@@ -62,25 +32,11 @@ enum Theme {
 
     // MARK: - Text
 
-    static var textPrimary: Color {
-        Color(uiColor: UIColor { trait in
-            switch trait.userInterfaceStyle {
-            case .dark: return .white
-            case .light, .unspecified: return UIColor(white: 0.12, alpha: 1)
-            @unknown default: return .white
-            }
-        })
-    }
+    static let textPrimary: Color = .white
 
-    static var textSecondary: Color {
-        Color(uiColor: UIColor { trait in
-            switch trait.userInterfaceStyle {
-            case .dark: return UIColor(red: 0.65, green: 0.70, blue: 0.68, alpha: 1)
-            case .light, .unspecified: return UIColor(red: 0.38, green: 0.42, blue: 0.40, alpha: 1)
-            @unknown default: return UIColor(red: 0.65, green: 0.70, blue: 0.68, alpha: 1)
-            }
-        })
-    }
+    static let textSecondary: Color = Color(
+        uiColor: UIColor(red: 0.65, green: 0.70, blue: 0.68, alpha: 1)
+    )
 
     static var textSection: Color { textSecondary }
 
@@ -108,13 +64,7 @@ enum Theme {
 
     // MARK: - Shadows
 
-    static var shadowColor: Color {
-        Color(uiColor: UIColor { trait in
-            trait.userInterfaceStyle == .dark
-                ? UIColor.black.withAlphaComponent(0.35)
-                : UIColor.black.withAlphaComponent(0.12)
-        })
-    }
+    static let shadowColor: Color = Color.black.opacity(0.35)
 
     static let shadowRadius: CGFloat = 12
     static let shadowY: CGFloat = 6
@@ -175,12 +125,6 @@ enum ThemeColor: String, CaseIterable, Identifiable {
     fileprivate static var resolvedSwiftUIColor: Color { ThemeColor.current.color }
 
     fileprivate func uiDarkShade(brightness: CGFloat, saturation: CGFloat) -> UIColor {
-        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        UIColor(color).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
-        return UIColor(hue: h, saturation: saturation, brightness: brightness, alpha: 1)
-    }
-
-    fileprivate func uiLightShade(brightness: CGFloat, saturation: CGFloat) -> UIColor {
         var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         UIColor(color).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
         return UIColor(hue: h, saturation: saturation, brightness: brightness, alpha: 1)

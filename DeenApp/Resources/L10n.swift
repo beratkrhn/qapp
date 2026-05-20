@@ -152,6 +152,13 @@ enum L10n {
         case .turkish: return "Liste"
         }
     }
+    static func quranPDF(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "PDF"
+        case .english: return "PDF"
+        case .turkish: return "PDF"
+        }
+    }
     static func quranFontSize(_ lang: AppLanguage) -> String {
         switch lang {
         case .german, .germanArabic, .germanTurkish: return "Schriftgröße"
@@ -381,6 +388,26 @@ enum L10n {
         }
     }
 
+    // MARK: - Reframe Salah picker (notification body style)
+
+    /// Section title above the reframe picker in Settings.
+    static func notificationReframeTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english:                                return "Notification style"
+        case .turkish:                                return "Bildirim metni"
+        default:                                      return "Benachrichtigungstext"
+        }
+    }
+
+    /// One-line explanation shown beneath the reframe section title.
+    static func notificationReframeSubtitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "How should we reframe salah for you?"
+        case .turkish: return "Namazı senin için nasıl çerçeveleyelim?"
+        default:       return "Wie sollen wir das Gebet für dich beschreiben?"
+        }
+    }
+
     // MARK: - Per-prayer notification quotes (at prayer time)
 
     /// Returns the hadith/Quran quote used as the notification body when a prayer begins.
@@ -603,5 +630,184 @@ enum L10n {
         case .turkish: f.locale = Locale(identifier: "tr_TR")
         }
         return f
+    }
+
+    // MARK: - Konto & Freunde
+
+    static func accountSection(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Konto & Freunde"
+        case .english: return "Account & Friends"
+        case .turkish: return "Hesap & Arkadaşlar"
+        }
+    }
+    static func accountSubtitleGuest(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Optional – melde dich an, um Freunde hinzuzufügen."
+        case .english: return "Optional — sign in to add friends."
+        case .turkish: return "İsteğe bağlı — arkadaş eklemek için giriş yap."
+        }
+    }
+    static func accountSubtitleSignedIn(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Angemeldet"
+        case .english: return "Signed in"
+        case .turkish: return "Giriş yapıldı"
+        }
+    }
+    static func accountSignIn(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Anmelden"
+        case .english: return "Sign in"
+        case .turkish: return "Giriş yap"
+        }
+    }
+    static func accountSignUp(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Konto erstellen"
+        case .english: return "Create account"
+        case .turkish: return "Hesap oluştur"
+        }
+    }
+    static func accountSignOut(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Abmelden"
+        case .english: return "Sign out"
+        case .turkish: return "Çıkış yap"
+        }
+    }
+    static func accountEmail(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "E-Mail"
+        case .english: return "Email"
+        case .turkish: return "E-posta"
+        }
+    }
+    static func accountPassword(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Passwort"
+        case .english: return "Password"
+        case .turkish: return "Şifre"
+        }
+    }
+    static func accountUsername(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Benutzername"
+        case .english: return "Username"
+        case .turkish: return "Kullanıcı adı"
+        }
+    }
+    static func accountDisplayName(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Anzeigename (optional)"
+        case .english: return "Display name (optional)"
+        case .turkish: return "Görünen ad (isteğe bağlı)"
+        }
+    }
+    static func accountUsernameHint(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "3–20 Zeichen, a–z, 0–9, _ oder ."
+        case .english: return "3–20 chars, a–z, 0–9, _ or ."
+        case .turkish: return "3–20 karakter, a–z, 0–9, _ veya ."
+        }
+    }
+    static func accountSwitchToSignUp(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Noch kein Konto? Registrieren"
+        case .english: return "No account yet? Sign up"
+        case .turkish: return "Hesabın yok mu? Kayıt ol"
+        }
+    }
+    static func accountSwitchToSignIn(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Bereits ein Konto? Anmelden"
+        case .english: return "Already have an account? Sign in"
+        case .turkish: return "Zaten hesabın var mı? Giriş yap"
+        }
+    }
+
+    static func friendsTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Freunde"
+        case .english: return "Friends"
+        case .turkish: return "Arkadaşlar"
+        }
+    }
+    static func friendsAdd(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Freund hinzufügen"
+        case .english: return "Add friend"
+        case .turkish: return "Arkadaş ekle"
+        }
+    }
+    static func friendsSearchPlaceholder(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Benutzername eingeben…"
+        case .english: return "Enter username…"
+        case .turkish: return "Kullanıcı adı gir…"
+        }
+    }
+    static func friendsNone(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Du hast noch keine Freunde hinzugefügt."
+        case .english: return "You haven't added any friends yet."
+        case .turkish: return "Henüz arkadaş eklemedin."
+        }
+    }
+    static func friendsIncoming(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Eingehende Anfragen"
+        case .english: return "Incoming requests"
+        case .turkish: return "Gelen istekler"
+        }
+    }
+    static func friendsOutgoing(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Gesendete Anfragen"
+        case .english: return "Sent requests"
+        case .turkish: return "Gönderilen istekler"
+        }
+    }
+    static func friendsNoRequests(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Keine offenen Anfragen."
+        case .english: return "No pending requests."
+        case .turkish: return "Bekleyen istek yok."
+        }
+    }
+    static func friendsAccept(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Annehmen"
+        case .english: return "Accept"
+        case .turkish: return "Kabul et"
+        }
+    }
+    static func friendsReject(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ablehnen"
+        case .english: return "Reject"
+        case .turkish: return "Reddet"
+        }
+    }
+    static func friendsCancelRequest(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zurückziehen"
+        case .english: return "Cancel"
+        case .turkish: return "Geri çek"
+        }
+    }
+    static func friendsRemove(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Entfernen"
+        case .english: return "Remove"
+        case .turkish: return "Kaldır"
+        }
+    }
+    static func friendsRequestSent(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Anfrage gesendet."
+        case .english: return "Request sent."
+        case .turkish: return "İstek gönderildi."
+        }
     }
 }
