@@ -491,7 +491,7 @@ struct ContinueAyahView: View {
     /// Renders a contiguous Mushaf-style Arabic block. Body text uses the KFGQPC Hafs
     /// UIFont via `JustifiedArabicText` (UITextView + CoreText) for correct OpenType
     /// shaping; the ayah-number marker `﴿N﴾` is rendered with the system font as a
-    /// separate marker segment, matching the Mushaf and Surah Reveal screens.
+    /// separate marker segment, matching the Mushaf screen.
     private func arabicBlock(verses: [(text: String, number: Int)], bodySize: CGFloat) -> some View {
         let segments: [(text: String, isMarker: Bool, ayahID: Int)] = verses.flatMap { v in
             [(v.text, false, -1),

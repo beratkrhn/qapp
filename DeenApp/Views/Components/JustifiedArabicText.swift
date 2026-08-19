@@ -1,7 +1,7 @@
 // DeenApp/Views/Components/JustifiedArabicText.swift
 //
 // Shared UITextView-based component for justified RTL Arabic text.
-// Used by QuranView (Mushaf mode) and SurahRevealView.
+// Used by QuranView (Mushaf mode).
 
 import SwiftUI
 import UIKit

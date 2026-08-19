@@ -9,9 +9,9 @@
 import SwiftUI
 
 enum LearnMode: String, Identifiable, CaseIterable {
-    case surahReveal
     case quranWords
     case continueAyah
+    case hifzTracker
 
     var id: String { rawValue }
 }
@@ -25,12 +25,6 @@ struct LearnTabView: View {
         Group {
             if let mode = selectedMode {
                 switch mode {
-                case .surahReveal:
-                    SurahRevealView {
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            selectedMode = nil
-                        }
-                    }
                 case .quranWords:
                     LearningDashboardView {
                         withAnimation(.easeInOut(duration: 0.25)) {
@@ -39,6 +33,12 @@ struct LearnTabView: View {
                     }
                 case .continueAyah:
                     ContinueAyahView {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            selectedMode = nil
+                        }
+                    }
+                case .hifzTracker:
+                    HifzTrackerView {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             selectedMode = nil
                         }
@@ -69,20 +69,10 @@ struct LearnTabView: View {
 
                 VStack(spacing: 16) {
                     LearnModeCard(
-                        title: "Surah Reveal",
-                        subtitle: "Reveal Ayat one by one to memorise",
-                        icon: "eye.slash.fill",
-                        accentColor: Theme.accent,
-                        comingSoon: true
-                    ) {
-                        // disabled — coming soon
-                    }
-
-                    LearnModeCard(
                         title: "Quran Words",
                         subtitle: "Spaced-repetition vocabulary flashcards",
                         icon: "character.book.closed.fill",
-                        accentColor: Color(hex: "FF9800")
+                        accentColor: Theme.learnWords
                     ) {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             selectedMode = .quranWords
@@ -93,10 +83,21 @@ struct LearnTabView: View {
                         title: "Continue the Ayah",
                         subtitle: "Recite the next ayah from memory",
                         icon: "text.book.closed.fill",
-                        accentColor: Color(hex: "4CAF50")
+                        accentColor: Theme.learnContinue
                     ) {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             selectedMode = .continueAyah
+                        }
+                    }
+
+                    LearnModeCard(
+                        title: L10n.hifzLearnModeTitle(appState.appLanguage),
+                        subtitle: L10n.hifzLearnModeSubtitle(appState.appLanguage),
+                        icon: "brain.head.profile",
+                        accentColor: Theme.learnHifz
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            selectedMode = .hifzTracker
                         }
                     }
                 }
@@ -115,7 +116,6 @@ private struct LearnModeCard: View {
     let subtitle: String
     let icon: String
     let accentColor: Color
-    var comingSoon: Bool = false
     let action: () -> Void
 
     var body: some View {
@@ -123,31 +123,21 @@ private struct LearnModeCard: View {
             HStack(spacing: 16) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14)
-                        .fill(accentColor.opacity(comingSoon ? 0.07 : 0.15))
+                        .fill(accentColor.opacity(0.15))
                         .frame(width: 56, height: 56)
                     Image(systemName: icon)
                         .font(.title2.weight(.semibold))
-                        .foregroundStyle(accentColor.opacity(comingSoon ? 0.4 : 1.0))
+                        .foregroundStyle(accentColor)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(.headline)
-                        .foregroundStyle(Theme.textPrimary.opacity(comingSoon ? 0.4 : 1.0))
+                        .foregroundStyle(Theme.textPrimary)
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundStyle(Theme.textSecondary.opacity(comingSoon ? 0.4 : 1.0))
+                        .foregroundStyle(Theme.textSecondary)
                         .lineLimit(2)
-                    if comingSoon {
-                        Text("Bald verfügbar")
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Theme.textSecondary)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(
-                                Capsule().fill(Theme.textSecondary.opacity(0.15))
-                            )
-                    }
                 }
 
                 Spacer()
@@ -164,7 +154,6 @@ private struct LearnModeCard: View {
             )
         }
         .buttonStyle(.plain)
-        .disabled(comingSoon)
     }
 }
 
