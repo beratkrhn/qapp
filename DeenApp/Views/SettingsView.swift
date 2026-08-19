@@ -641,6 +641,47 @@ struct SettingsView: View {
                             }
                         }
 
+                        // MARK: - Friend nudges (Anstupser)
+                        settingsCard {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Label {
+                                    Text(L10n.nudgeButton(appState.appLanguage))
+                                        .font(.headline)
+                                        .foregroundColor(Theme.textPrimary)
+                                } icon: {
+                                    Image(systemName: "bell.badge.fill")
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                Text(L10n.nudgesMaxPerDayHint(appState.appLanguage))
+                                    .font(.subheadline)
+                                    .foregroundColor(Theme.textSecondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+
+                                Divider().overlay(Theme.textSecondary.opacity(0.2))
+
+                                Toggle(L10n.nudgesReceiveToggle(appState.appLanguage),
+                                       isOn: $appState.nudgesReceiveEnabled)
+                                    .tint(Theme.accent)
+                                    .foregroundColor(Theme.textPrimary)
+
+                                if appState.nudgesReceiveEnabled {
+                                    Divider().overlay(Theme.textSecondary.opacity(0.2))
+                                    Stepper(value: $appState.maxNudgesPerDay, in: 1...20) {
+                                        HStack {
+                                            Text(L10n.nudgesMaxPerDay(appState.appLanguage))
+                                                .font(.subheadline)
+                                                .foregroundColor(Theme.textPrimary)
+                                            Spacer()
+                                            Text("\(appState.maxNudgesPerDay)")
+                                                .font(.subheadline.weight(.semibold).monospacedDigit())
+                                                .foregroundColor(Theme.accent)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         // MARK: - Feedback & TestFlight
                         settingsCard {
                             VStack(alignment: .leading, spacing: 12) {

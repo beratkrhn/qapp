@@ -1,0 +1,131 @@
+rules_version = '2';
+
+// Firestore-Security-Rules für DailyDee / Akh-ira.
+//
+// Datenmodell (siehe FriendsService.swift / GoalsService.swift):
+//   usernames/{usernameLower}              → { uid }
+//   users/{uid}                            → Profilstammdaten
+//   users/{uid}/friends/{friendUid}        → bestätigte Freundschaft
+//   users/{uid}/incomingRequests/{fromUid} → eingehende Anfrage
+//   users/{uid}/outgoingRequests/{toUid}   → ausgehende Anfrage
+//   users/{uid}/goals/{goalId}             → persönliche Ziele
+//
+// Diese Datei kann via `firebase deploy --only firestore:rules` oder per
+// Copy/Paste in die Firebase-Console (Firestore → Rules) deployt werden.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Sind wir mit dem Owner befreundet? (Eintrag im friends-Subset des Owners.)
+    function isFriendOf(uid) {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(uid)/friends/$(request.auth.uid));
+    }
+
+    // --- Usernames (öffentliches Lookup) ---------------------------------
+    match /usernames/{usernameLower} {
+      allow read: if true;
+      // Reservieren nur, wenn der Name frei ist und auf den eigenen uid zeigt.
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid;
+      // Ändern/Freigeben darf nur der bisherige Besitzer des Eintrags —
+      // sonst wäre ein Username-Takeover durch Überschreiben möglich.
+      allow update: if isSignedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if isSignedIn()
+        && resource.data.uid == request.auth.uid;
+    }
+
+    // --- Profilstammdaten -------------------------------------------------
+    match /users/{uid} {
+      // Eigenes Profil voll, Profile von Freunden lesbar (für Friends-Liste).
+      allow read: if isOwner(uid) || isFriendOf(uid);
+      allow write: if isOwner(uid);
+
+      // --- Freundschaften ------------------------------------------------
+      // Lesen: der Owner. Der Owner verwaltet seine Liste frei; die Gegen-
+      // seite darf sich nur eintragen, wenn der Owner ihr zuvor eine Anfrage
+      // geschickt hat (Accept-Batch in FriendsService: exists() sieht den
+      // Zustand VOR dem Batch, der die Request-Docs löscht). Austragen darf
+      // sich die Gegenseite immer (removeFriend-Batch).
+      match /friends/{friendUid} {
+        allow read:   if isOwner(uid);
+        allow write:  if isOwner(uid);
+        allow create: if isOwner(friendUid)
+          && exists(/databases/$(database)/documents/users/$(uid)/outgoingRequests/$(friendUid));
+        allow delete: if isOwner(friendUid);
+      }
+
+      // --- Eingehende Anfragen ------------------------------------------
+      // Lesen darf nur der Empfänger; schreiben darf entweder der Empfänger
+      // (z. B. löschen / akzeptieren) oder der Absender (Anfrage anlegen).
+      match /incomingRequests/{fromUid} {
+        allow read:   if isOwner(uid);
+        allow write:  if isOwner(uid) || isOwner(fromUid);
+      }
+
+      // --- Ausgehende Anfragen ------------------------------------------
+      // Lesen / schreiben darf der Owner; Empfänger darf löschen
+      // (z. B. wenn er die Anfrage ablehnt).
+      match /outgoingRequests/{toUid} {
+        allow read, write: if isOwner(uid);
+        allow delete:      if isOwner(toUid);
+      }
+
+      // --- Ziele ---------------------------------------------------------
+      // Owner darf alles. Freunde dürfen nur Ziele lesen, die explizit als
+      // sichtbar markiert UND aktiv sind. Die Filter werden zusätzlich
+      // client-seitig in der Query angewendet (Voraussetzung für Listen-
+      // Lesungen unter strikten Rules).
+      match /goals/{goalId} {
+        allow read, write: if isOwner(uid);
+        allow read: if isFriendOf(uid)
+          && resource.data.visibleToFriends == true
+          && resource.data.isActive == true;
+      }
+
+      // --- FCM-Tokens (für Push-Nachrichten zwischen Freunden) -----------
+      // Nur der Owner sieht / verwaltet seine eigenen Tokens. Die Cloud
+      // Function liest sie via Admin-SDK (Rules werden umgangen).
+      match /fcmTokens/{tokenId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // --- Notification-Preferences -------------------------------------
+      // Eigene Empfangs-Einstellungen (Anstupser pro Tag, Toggle).
+      match /notificationPreferences/{prefId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // --- Tägliche Nudge-Zähler ----------------------------------------
+      // Owner darf nur lesen (Anzeige im UI). Die Cloud Function erhöht
+      // den Zähler via Admin-SDK.
+      // Hinweis: In der Firebase-Console je eine TTL-Policy anlegen, damit
+      // alte Docs nicht ewig wachsen — dailyNudgeCounts auf `updatedAt`,
+      // nudges auf `processedAt`.
+      match /dailyNudgeCounts/{dayKey} {
+        allow read: if isOwner(uid);
+      }
+
+      // --- Nudges ("Anstupser") -----------------------------------------
+      // Empfänger liest / löscht eigene Nachrichten. Anlegen dürfen nur
+      // bestätigte Freunde des Empfängers, und `senderUid` muss mit der
+      // Auth-Identität übereinstimmen — kein Spoofing, kein Doc-Spam durch
+      // Fremde. Die Cloud Function validiert zusätzlich das Tageslimit.
+      match /nudges/{nudgeId} {
+        allow read, delete: if isOwner(uid);
+        allow create: if isFriendOf(uid)
+          && request.resource.data.senderUid == request.auth.uid;
+      }
+    }
+  }
+}

@@ -68,8 +68,13 @@ final class AccountViewModel: ObservableObject {
     }
 
     func signOut() {
-        do { try AuthService.shared.signOut() }
-        catch { errorMessage = error.localizedDescription }
+        Task { @MainActor in
+            // Geräte-Token vom Account lösen, solange die Rules den Zugriff
+            // noch erlauben — sonst kämen Pushes des alten Accounts weiter an.
+            await PushTokenService.shared.removeTokenForCurrentUser()
+            do { try AuthService.shared.signOut() }
+            catch { errorMessage = error.localizedDescription }
+        }
     }
 
     // MARK: - Friend actions

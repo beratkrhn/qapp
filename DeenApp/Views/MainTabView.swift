@@ -32,6 +32,8 @@ struct MainTabView: View {
                 case .gebet:
                     PrayerSelectionView()
                         .environment(prayerTutorialViewModel)
+                case .friends:
+                    FriendsTabView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
