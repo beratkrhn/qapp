@@ -41,6 +41,13 @@ enum L10n {
         case .turkish: return "Namaz"
         }
     }
+    static func tabFriends(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Freunde"
+        case .english: return "Friends"
+        case .turkish: return "Arkadaşlar"
+        }
+    }
 
     // MARK: - Dashboard
     static func nextPrayer(_ lang: AppLanguage) -> String {
@@ -808,6 +815,895 @@ enum L10n {
         case .german, .germanArabic, .germanTurkish: return "Anfrage gesendet."
         case .english: return "Request sent."
         case .turkish: return "İstek gönderildi."
+        }
+    }
+
+    // MARK: - Goals (Dashboard)
+
+    static func goalsSectionTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Meine Ziele"
+        case .english: return "My Goals"
+        case .turkish: return "Hedeflerim"
+        }
+    }
+    static func goalsSetFirst(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Setze dein erstes Ziel"
+        case .english: return "Set your first goal"
+        case .turkish: return "İlk hedefini belirle"
+        }
+    }
+    static func goalsActiveCount(_ lang: AppLanguage, _ n: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish:
+            return n == 1 ? "1 aktives Ziel" : "\(n) aktive Ziele"
+        case .english:
+            return n == 1 ? "1 active goal" : "\(n) active goals"
+        case .turkish:
+            return "\(n) aktif hedef"
+        }
+    }
+    static func goalsMoreCount(_ lang: AppLanguage, _ n: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "+ \(n) weitere"
+        case .english: return "+ \(n) more"
+        case .turkish: return "+ \(n) daha"
+        }
+    }
+    static func goalsAddTapHint(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Tippe, um ein Ziel anzulegen"
+        case .english: return "Tap to add a goal"
+        case .turkish: return "Hedef eklemek için dokun"
+        }
+    }
+    static func goalsAddNew(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Neues Ziel"
+        case .english: return "New Goal"
+        case .turkish: return "Yeni Hedef"
+        }
+    }
+    static func goalsEmptyTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Noch keine Ziele"
+        case .english: return "No goals yet"
+        case .turkish: return "Henüz hedef yok"
+        }
+    }
+    static func goalsEmptyBody(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Lege ein Ziel an, um deinen Fortschritt zu verfolgen — und teile es mit deinen Freunden, wenn du magst."
+        case .english: return "Add a goal to track your progress — and share it with your friends if you like."
+        case .turkish: return "İlerlemeni takip etmek için bir hedef ekle — istersen arkadaşlarınla paylaş."
+        }
+    }
+    static func goalsPickType(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zielart"
+        case .english: return "Goal type"
+        case .turkish: return "Hedef türü"
+        }
+    }
+    static func goalsConfigureTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Details"
+        case .english: return "Details"
+        case .turkish: return "Detaylar"
+        }
+    }
+    static func goalsCreate(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ziel anlegen"
+        case .english: return "Create Goal"
+        case .turkish: return "Hedef oluştur"
+        }
+    }
+    static func goalsDetailTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ziel"
+        case .english: return "Goal"
+        case .turkish: return "Hedef"
+        }
+    }
+    static func goalsDelete(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ziel löschen"
+        case .english: return "Delete goal"
+        case .turkish: return "Hedefi sil"
+        }
+    }
+    static func goalsProgress(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Fortschritt"
+        case .english: return "Progress"
+        case .turkish: return "İlerleme"
+        }
+    }
+    static func goalsShareWithFriends(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Mit Freunden teilen"
+        case .english: return "Share with friends"
+        case .turkish: return "Arkadaşlarla paylaş"
+        }
+    }
+    static func goalsShareBlurb(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Deine Freunde sehen dann Titel und Fortschritt dieses Ziels."
+        case .english: return "Friends will see the title and progress of this goal."
+        case .turkish: return "Arkadaşların bu hedefin başlığını ve ilerlemesini görür."
+        }
+    }
+
+    // MARK: - Goal type labels
+
+    static func goalTypeKhatm(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Khatm bis Datum"
+        case .english: return "Khatm by date"
+        case .turkish: return "Hatim bitir"
+        }
+    }
+    static func goalTypeKhatmBlurb(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Quran komplett bis zu einem bestimmten Tag lesen."
+        case .english: return "Finish reading the whole Quran by a target date."
+        case .turkish: return "Belirli bir tarihe kadar Kur'an'ı bitir."
+        }
+    }
+    static func goalTypeDailyPages(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Tagesseiten"
+        case .english: return "Daily pages"
+        case .turkish: return "Günlük sayfa"
+        }
+    }
+    static func goalTypeDailyPagesBlurb(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Jeden Tag eine feste Anzahl Seiten lesen."
+        case .english: return "Read a set number of pages every day."
+        case .turkish: return "Her gün belirli sayıda sayfa oku."
+        }
+    }
+    static func goalTypeFivePrayers(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Fünf Pflichtgebete"
+        case .english: return "Five daily prayers"
+        case .turkish: return "Beş vakit namaz"
+        }
+    }
+    static func goalTypeFivePrayersBlurb(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Jeden Tag alle fünf Pflichtgebete verrichten."
+        case .english: return "Pray all five fard prayers every day."
+        case .turkish: return "Her gün beş vakit namazı kıl."
+        }
+    }
+    static func goalTypeSunnah(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Sunnah-Gebet"
+        case .english: return "Sunnah prayer"
+        case .turkish: return "Sünnet namazı"
+        }
+    }
+    static func goalTypeSunnahBlurb(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Tahajjud, Witr oder Duha mit Wochenziel."
+        case .english: return "Tahajjud, Witr or Duha with a weekly target."
+        case .turkish: return "Teheccüd, Vitir veya Duha — haftalık hedef."
+        }
+    }
+
+    // MARK: - Sunnah names
+
+    static func goalSunnahTahajjud(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Tahajjud"
+        case .english: return "Tahajjud"
+        case .turkish: return "Teheccüd"
+        }
+    }
+    static func goalSunnahWitr(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Witr"
+        case .english: return "Witr"
+        case .turkish: return "Vitir"
+        }
+    }
+    static func goalSunnahDuha(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Duha"
+        case .english: return "Duha"
+        case .turkish: return "Duha"
+        }
+    }
+
+    // MARK: - Goal units & detail rows
+
+    static func goalsPagesUnit(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Seiten"
+        case .english: return "pages"
+        case .turkish: return "sayfa"
+        }
+    }
+    static func goalsPrayersUnit(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Gebete"
+        case .english: return "prayers"
+        case .turkish: return "namaz"
+        }
+    }
+    static func goalsThisWeekUnit(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "diese Woche"
+        case .english: return "this week"
+        case .turkish: return "bu hafta"
+        }
+    }
+    static func goalsPerWeek(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "pro Woche"
+        case .english: return "per week"
+        case .turkish: return "haftada"
+        }
+    }
+    static func goalsKhatmTargetDate(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Bis wann möchtest du das Khatm abschließen?"
+        case .english: return "When do you want to finish the khatm?"
+        case .turkish: return "Hatmi ne zamana bitirmek istiyorsun?"
+        }
+    }
+    static func goalsKhatmReadSoFar(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Bisher gelesen"
+        case .english: return "Read so far"
+        case .turkish: return "Şimdiye kadar okunan"
+        }
+    }
+    static func goalsKhatmDaysLeft(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Verbleibende Tage"
+        case .english: return "Days remaining"
+        case .turkish: return "Kalan gün"
+        }
+    }
+    static func goalsKhatmPerDay(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Pro Tag benötigt"
+        case .english: return "Pages per day needed"
+        case .turkish: return "Günde gereken"
+        }
+    }
+    static func goalsDailyPagesTarget(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Wie viele Seiten pro Tag?"
+        case .english: return "How many pages per day?"
+        case .turkish: return "Günde kaç sayfa?"
+        }
+    }
+    static func goalsDailyReadToday(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Heute gelesen"
+        case .english: return "Read today"
+        case .turkish: return "Bugün okunan"
+        }
+    }
+    static func goalsDailyTarget(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Tagesziel"
+        case .english: return "Daily target"
+        case .turkish: return "Günlük hedef"
+        }
+    }
+    static func goalsFivePrayersBlurb(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hake jedes Pflichtgebet ab, sobald du es verrichtet hast."
+        case .english: return "Check off each fard prayer once you've completed it."
+        case .turkish: return "Her farz namazı kıldıkça işaretle."
+        }
+    }
+    static func goalsTickPrayersToday(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Heutige Gebete"
+        case .english: return "Today's prayers"
+        case .turkish: return "Bugünün namazları"
+        }
+    }
+    static func goalsSunnahPick(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Welches Sunnah-Gebet?"
+        case .english: return "Which sunnah prayer?"
+        case .turkish: return "Hangi sünnet namazı?"
+        }
+    }
+    static func goalsSunnahThisWeek(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Diese Woche"
+        case .english: return "This week"
+        case .turkish: return "Bu hafta"
+        }
+    }
+    static func goalsSunnahLogToday(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Heute eintragen"
+        case .english: return "Log for today"
+        case .turkish: return "Bugüne kaydet"
+        }
+    }
+    static func goalsSunnahLoggedToday(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Heute schon eingetragen"
+        case .english: return "Logged for today"
+        case .turkish: return "Bugün kaydedildi"
+        }
+    }
+
+    // MARK: - Friends tab
+
+    static func friendsTabTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Freunde"
+        case .english: return "Friends"
+        case .turkish: return "Arkadaşlar"
+        }
+    }
+    static func friendsTabSubtitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Geteilte Ziele auf einen Blick"
+        case .english: return "Shared goals at a glance"
+        case .turkish: return "Paylaşılan hedeflere göz at"
+        }
+    }
+    static func friendsTabEmpty(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Noch keine Freunde — füge welche hinzu, um ihre Ziele zu sehen."
+        case .english: return "No friends yet — add some to see their goals."
+        case .turkish: return "Henüz arkadaşın yok — hedeflerini görmek için ekleyin."
+        }
+    }
+    static func friendsTabNoSharedGoals(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Keine geteilten Ziele"
+        case .english: return "No shared goals"
+        case .turkish: return "Paylaşılan hedef yok"
+        }
+    }
+    static func friendsTabSignInTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Melde dich an"
+        case .english: return "Sign in"
+        case .turkish: return "Oturum aç"
+        }
+    }
+    static func friendsTabSignInBody(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Erstelle ein Konto oder melde dich an, um Freunde hinzuzufügen und Ziele zu teilen."
+        case .english: return "Create an account or sign in to add friends and share goals."
+        case .turkish: return "Arkadaş eklemek ve hedef paylaşmak için bir hesap oluştur veya giriş yap."
+        }
+    }
+    static func friendsTabSignInButton(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zum Konto"
+        case .english: return "Go to account"
+        case .turkish: return "Hesaba git"
+        }
+    }
+
+    // MARK: - Common buttons (reused)
+
+    static func commonDone(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Fertig"
+        case .english: return "Done"
+        case .turkish: return "Tamam"
+        }
+    }
+    static func commonEdit(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Bearbeiten"
+        case .english: return "Edit"
+        case .turkish: return "Düzenle"
+        }
+    }
+    static func commonRemove(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Entfernen"
+        case .english: return "Remove"
+        case .turkish: return "Kaldır"
+        }
+    }
+    static func citySearchHint(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish:
+            return "Stadt nicht dabei? Tippe oben in die Suchleiste — alle DITIB-Städte sind durchsuchbar."
+        case .english:
+            return "City not listed? Tap the search bar above — every DITIB city is searchable."
+        case .turkish:
+            return "Şehrin listede yok mu? Yukarıdaki arama çubuğuna dokun — tüm DİTİB şehirleri aranabilir."
+        }
+    }
+    static func commonCancel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Abbrechen"
+        case .english: return "Cancel"
+        case .turkish: return "İptal"
+        }
+    }
+    static func commonSend(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Senden"
+        case .english: return "Send"
+        case .turkish: return "Gönder"
+        }
+    }
+
+    // MARK: - Manual page adjustment & khatma mode
+
+    static func goalsAdjustToday(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Heute manuell anpassen"
+        case .english: return "Adjust today manually"
+        case .turkish: return "Bugünü elle ayarla"
+        }
+    }
+    static func goalsKhatmaModeOn(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Khatma-Modus aktiv"
+        case .english: return "Khatma mode active"
+        case .turkish: return "Hatim modu aktif"
+        }
+    }
+    static func goalsKhatmaModeToggle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Khatma-Modus"
+        case .english: return "Khatma mode"
+        case .turkish: return "Hatim modu"
+        }
+    }
+    static func goalsKhatmaBookmark(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Lesezeichen"
+        case .english: return "Bookmark"
+        case .turkish: return "Yer imi"
+        }
+    }
+    static func goalsKhatmaResume(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Khatma fortsetzen"
+        case .english: return "Resume khatma"
+        case .turkish: return "Hatime devam et"
+        }
+    }
+
+    // MARK: - Friend nudges
+
+    static func nudgeButton(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Anstupsen"
+        case .english: return "Nudge"
+        case .turkish: return "Dürtükle"
+        }
+    }
+    static func nudgePickMessage(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Wähle eine Erinnerung"
+        case .english: return "Choose a reminder"
+        case .turkish: return "Bir hatırlatma seç"
+        }
+    }
+    static func nudgeSent(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Anstupser gesendet"
+        case .english: return "Nudge sent"
+        case .turkish: return "Dürtü gönderildi"
+        }
+    }
+    static func nudgeFailed(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Senden fehlgeschlagen"
+        case .english: return "Sending failed"
+        case .turkish: return "Gönderme başarısız"
+        }
+    }
+    static func nudgeMsgPrayer(_ lang: AppLanguage, prayerName: String) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hast du schon \(prayerName) gebetet?"
+        case .english: return "Have you prayed \(prayerName) yet?"
+        case .turkish: return "\(prayerName) namazını kıldın mı?"
+        }
+    }
+    static func nudgeMsgPages(_ lang: AppLanguage, pages: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hast du heute deine \(pages) Seiten schon gelesen?"
+        case .english: return "Have you read your \(pages) pages today?"
+        case .turkish: return "Bugün \(pages) sayfanı okudun mu?"
+        }
+    }
+    static func nudgeMsgKhatma(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Vergiss heute deine Khatma nicht!"
+        case .english: return "Don't forget your khatma today!"
+        case .turkish: return "Bugün hatimini unutma!"
+        }
+    }
+    static func nudgeMsgSunnah(_ lang: AppLanguage, prayerName: String) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hast du heute \(prayerName) gebetet?"
+        case .english: return "Have you prayed \(prayerName) today?"
+        case .turkish: return "Bugün \(prayerName) namazını kıldın mı?"
+        }
+    }
+
+    // MARK: - Notification preferences
+
+    static func notificationsSectionTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Benachrichtigungen"
+        case .english: return "Notifications"
+        case .turkish: return "Bildirimler"
+        }
+    }
+    static func nudgesReceiveToggle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Anstupser von Freunden empfangen"
+        case .english: return "Receive nudges from friends"
+        case .turkish: return "Arkadaş dürtülerini al"
+        }
+    }
+    static func nudgesMaxPerDay(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Max. Anstupser pro Tag"
+        case .english: return "Max nudges per day"
+        case .turkish: return "Günlük maks. dürtü"
+        }
+    }
+    static func nudgesMaxPerDayHint(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Begrenzt, wie viele Erinnerungen dich pro Tag erreichen."
+        case .english: return "Caps how many reminders reach you each day."
+        case .turkish: return "Günde sana ulaşacak hatırlatma sayısını sınırlar."
+        }
+    }
+
+    // MARK: - Hifz Tracker
+
+    static func hifzTrackerTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hifz-Tracker"
+        case .english: return "Hifz Tracker"
+        case .turkish: return "Hıfz Takibi"
+        }
+    }
+    static func hifzTrackerSubtitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Verfolge auswendig gelernte Suren und Wiederholungen"
+        case .english: return "Track memorised surahs and revisions"
+        case .turkish: return "Ezberlediğin sureleri ve tekrarları takip et"
+        }
+    }
+    static func hifzAdd(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hinzufügen"
+        case .english: return "Add"
+        case .turkish: return "Ekle"
+        }
+    }
+    static func hifzAddTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Auswendig gelernt"
+        case .english: return "Mark as memorised"
+        case .turkish: return "Ezberlendi olarak işaretle"
+        }
+    }
+    static func hifzSelectSurah(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Sure auswählen"
+        case .english: return "Select Surah"
+        case .turkish: return "Sure seç"
+        }
+    }
+    static func hifzScope(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Umfang"
+        case .english: return "Scope"
+        case .turkish: return "Kapsam"
+        }
+    }
+    static func hifzScopeFullSurah(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ganze Sure"
+        case .english: return "Full Surah"
+        case .turkish: return "Tüm Sure"
+        }
+    }
+    static func hifzScopeAyatRange(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ayah-Bereich"
+        case .english: return "Ayah range"
+        case .turkish: return "Ayet aralığı"
+        }
+    }
+    static func hifzScopePages(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Seiten"
+        case .english: return "Pages"
+        case .turkish: return "Sayfalar"
+        }
+    }
+    static func hifzAyahFrom(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Von Ayah"
+        case .english: return "From ayah"
+        case .turkish: return "Başlangıç ayet"
+        }
+    }
+    static func hifzAyahTo(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Bis Ayah"
+        case .english: return "To ayah"
+        case .turkish: return "Bitiş ayet"
+        }
+    }
+    static func hifzPagesCount(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Anzahl Seiten"
+        case .english: return "Number of pages"
+        case .turkish: return "Sayfa sayısı"
+        }
+    }
+    static func hifzSave(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Speichern"
+        case .english: return "Save"
+        case .turkish: return "Kaydet"
+        }
+    }
+    static func hifzCancel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Abbrechen"
+        case .english: return "Cancel"
+        case .turkish: return "İptal"
+        }
+    }
+    static func hifzDelete(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Löschen"
+        case .english: return "Delete"
+        case .turkish: return "Sil"
+        }
+    }
+    static func hifzMarkRevised(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Wiederholt"
+        case .english: return "Revised"
+        case .turkish: return "Tekrar edildi"
+        }
+    }
+    static func hifzEmptyTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Noch keine Einträge"
+        case .english: return "Nothing tracked yet"
+        case .turkish: return "Henüz kayıt yok"
+        }
+    }
+    static func hifzEmptyHint(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Tippe auf \"Hinzufügen\", um eine auswendig gelernte Sure zu erfassen."
+        case .english: return "Tap \"Add\" to record a memorised surah."
+        case .turkish: return "Ezberlediğin bir sureyi eklemek için \"Ekle\" düğmesine dokun."
+        }
+    }
+    static func hifzLastRevised(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zuletzt wiederholt"
+        case .english: return "Last revised"
+        case .turkish: return "Son tekrar"
+        }
+    }
+    static func hifzJustNow(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "gerade eben"
+        case .english: return "just now"
+        case .turkish: return "az önce"
+        }
+    }
+    static func hifzAgoMinutes(_ lang: AppLanguage, minutes: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "vor \(minutes) Min."
+        case .english: return "\(minutes) min ago"
+        case .turkish: return "\(minutes) dk önce"
+        }
+    }
+    static func hifzAgoHours(_ lang: AppLanguage, hours: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "vor \(hours) Std."
+        case .english: return hours == 1 ? "1 hour ago" : "\(hours) hours ago"
+        case .turkish: return "\(hours) saat önce"
+        }
+    }
+    static func hifzAgoDays(_ lang: AppLanguage, days: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return days == 1 ? "vor 1 Tag" : "vor \(days) Tagen"
+        case .english: return days == 1 ? "1 day ago" : "\(days) days ago"
+        case .turkish: return "\(days) gün önce"
+        }
+    }
+    static func hifzOverdueBadge(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Wiederholung fällig"
+        case .english: return "Revision due"
+        case .turkish: return "Tekrar zamanı"
+        }
+    }
+    static func hifzPortionFullSurah(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ganze Sure"
+        case .english: return "Full surah"
+        case .turkish: return "Tüm sure"
+        }
+    }
+    static func hifzPortionAyah(_ lang: AppLanguage, ayah: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ayah \(ayah)"
+        case .english: return "Ayah \(ayah)"
+        case .turkish: return "Ayet \(ayah)"
+        }
+    }
+    static func hifzPortionAyahRange(_ lang: AppLanguage, from: Int, to: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ayah \(from)–\(to)"
+        case .english: return "Ayah \(from)–\(to)"
+        case .turkish: return "Ayet \(from)–\(to)"
+        }
+    }
+    static func hifzPortionPages(_ lang: AppLanguage, count: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return count == 1 ? "1 Seite" : "\(count) Seiten"
+        case .english: return count == 1 ? "1 page" : "\(count) pages"
+        case .turkish: return "\(count) sayfa"
+        }
+    }
+    static func hifzNotificationTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zeit zu wiederholen"
+        case .english: return "Time to revise"
+        case .turkish: return "Tekrar zamanı"
+        }
+    }
+    static func hifzNotificationBody(_ lang: AppLanguage, surahName: String) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish:
+            return "Sure \(surahName) ist heute zur Wiederholung fällig."
+        case .english:
+            return "Surah \(surahName) is due for revision today."
+        case .turkish:
+            return "\(surahName) suresinin bugün tekrarı var."
+        }
+    }
+    /// Body für Sammel-Notifications, wenn mehrere Suren am selben Tag fällig sind.
+    /// `namesList` ist bereits auf max. N Namen gekürzt; `remainder` zählt die
+    /// nicht aufgezählten weiteren Suren.
+    static func hifzNotificationBodyMulti(_ lang: AppLanguage, count: Int, namesList: String, remainder: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish:
+            if remainder > 0 {
+                return "\(count) Suren stehen heute zur Wiederholung an: \(namesList) und \(remainder) weitere."
+            } else {
+                return "\(count) Suren stehen heute zur Wiederholung an: \(namesList)."
+            }
+        case .english:
+            if remainder > 0 {
+                return "\(count) surahs are due for revision today: \(namesList) and \(remainder) more."
+            } else {
+                return "\(count) surahs are due for revision today: \(namesList)."
+            }
+        case .turkish:
+            if remainder > 0 {
+                return "Bugün \(count) sure tekrar için bekliyor: \(namesList) ve \(remainder) daha."
+            } else {
+                return "Bugün \(count) sure tekrar için bekliyor: \(namesList)."
+            }
+        }
+    }
+    static func hifzLearnModeTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hifz-Tracker"
+        case .english: return "Hifz Tracker"
+        case .turkish: return "Hıfz Takibi"
+        }
+    }
+    static func hifzLearnModeSubtitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Gelernte Suren + 3-Tage-Wiederholung"
+        case .english: return "Memorised surahs + 3-day revision reminders"
+        case .turkish: return "Ezberlenen sureler + 3 günlük tekrar hatırlatması"
+        }
+    }
+    static func hifzBack(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Zurück"
+        case .english: return "Back"
+        case .turkish: return "Geri"
+        }
+    }
+    static func hifzSelectedCount(_ lang: AppLanguage, count: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return count == 1 ? "1 Sure ausgewählt" : "\(count) Suren ausgewählt"
+        case .english: return count == 1 ? "1 surah selected" : "\(count) surahs selected"
+        case .turkish: return "\(count) sure seçildi"
+        }
+    }
+    static func hifzMultiSelectHint(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish:
+            return "Bei mehreren Suren wird jede als \"Ganze Sure\" gespeichert."
+        case .english:
+            return "When multiple surahs are selected, each is saved as a full surah."
+        case .turkish:
+            return "Birden fazla sure seçildiğinde her biri tüm sure olarak kaydedilir."
+        }
+    }
+    static func hifzDone(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Fertig"
+        case .english: return "Done"
+        case .turkish: return "Tamam"
+        }
+    }
+    static func hifzStatsTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Dein Fortschritt"
+        case .english: return "Your Progress"
+        case .turkish: return "İlerlemen"
+        }
+    }
+    static func hifzStatsQuranProgress(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Quran auswendig"
+        case .english: return "Quran memorised"
+        case .turkish: return "Ezberlenen Kur'an"
+        }
+    }
+    static func hifzStatsSurahsLabel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Suren"
+        case .english: return "Surahs"
+        case .turkish: return "Sure"
+        }
+    }
+    static func hifzStatsAyatLabel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ayat"
+        case .english: return "Ayat"
+        case .turkish: return "Ayet"
+        }
+    }
+    static func hifzStatsEntriesLabel(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Einträge"
+        case .english: return "Entries"
+        case .turkish: return "Kayıt"
+        }
+    }
+    static func hifzStatsOverdue(_ lang: AppLanguage, count: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "\(count) überfällig"
+        case .english: return "\(count) overdue"
+        case .turkish: return "\(count) gecikmiş"
+        }
+    }
+    static func hifzStatsLongest(_ lang: AppLanguage, surahName: String, ayat: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish:
+            return "Längste komplette Sure: \(surahName) (\(ayat) Ayat)"
+        case .english:
+            return "Longest complete surah: \(surahName) (\(ayat) ayat)"
+        case .turkish:
+            return "En uzun tam sure: \(surahName) (\(ayat) ayet)"
         }
     }
 }

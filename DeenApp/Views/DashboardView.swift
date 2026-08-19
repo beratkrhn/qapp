@@ -13,6 +13,7 @@ struct DashboardView: View {
     @Binding var showSettings: Bool
     @State private var showQadaTracker = false
     @State private var showQiblaCompass = false
+    @State private var showGoals = false
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -56,7 +57,7 @@ struct DashboardView: View {
 
                 QadaTrackerCard(onTap: { showQadaTracker = true })
 
-                DailyReadingGoalCard(appState: appState, language: appState.appLanguage)
+                HomeGoalsCard(onTap: { showGoals = true })
 
                 BottomInfoCardsView(language: appState.appLanguage)
             }
@@ -71,6 +72,9 @@ struct DashboardView: View {
         .sheet(isPresented: $showQiblaCompass) {
             QiblaCompassView()
                 .environmentObject(appState)
+        }
+        .sheet(isPresented: $showGoals) {
+            GoalsListView()
         }
     }
 

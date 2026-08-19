@@ -53,18 +53,20 @@ private enum UserDefaultsKeys {
     static let prayerCalculation = "dailydee.prayerCalculation_v1"
     static let prayerTimeProvider = "dailydee.prayerTimeProvider"
     static let selectedDitibCity = "dailydee.selectedDitibCity"
-    static let dailyReadPages = "dailydee.dailyReadPages"
-    static let dailyGoalPages = "dailydee.dailyGoalPages"
-    static let lastReadDate = "dailydee.lastReadDate"
     static let isTajweedEnabled = "dailydee.isTajweedEnabled"
     static let isReadingModeEnabled = "dailydee.isReadingModeEnabled"
     static let accentTheme = "dailydee.accentTheme"
     static let quranPDFSource = "dailydee.quranPDFSource"
     static let autoLocationEnabled = "dailydee.autoLocationEnabled"
     static let homeCity = "dailydee.homeCity_v1"
+    static let khatmaModeEnabled = "dailydee.khatmaModeEnabled"
+    static let nudgesReceiveEnabled = "dailydee.nudgesReceiveEnabled"
+    static let maxNudgesPerDay = "dailydee.maxNudgesPerDay"
 }
 
 final class AppState: ObservableObject {
+    private var accountSub: AnyCancellable?
+
     @Published var selectedTab: MainTab = .start
     @Published var userName: String
     @Published var appLanguage: AppLanguage
@@ -116,6 +118,39 @@ final class AppState: ObservableObject {
         didSet { UserDefaults.standard.set(autoLocationEnabled, forKey: UserDefaultsKeys.autoLocationEnabled) }
     }
 
+    // MARK: - Khatma mode (focus mode in the Quran view that tracks the active
+    //         khatm goal and bookmarks the last viewed page).
+    @Published var khatmaModeEnabled: Bool {
+        didSet { UserDefaults.standard.set(khatmaModeEnabled, forKey: UserDefaultsKeys.khatmaModeEnabled) }
+    }
+
+    // MARK: - Notification preferences (friend nudges)
+    @Published var nudgesReceiveEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(nudgesReceiveEnabled, forKey: UserDefaultsKeys.nudgesReceiveEnabled)
+            mirrorNudgePreferences()
+        }
+    }
+    @Published var maxNudgesPerDay: Int {
+        didSet {
+            UserDefaults.standard.set(maxNudgesPerDay, forKey: UserDefaultsKeys.maxNudgesPerDay)
+            mirrorNudgePreferences()
+        }
+    }
+
+    /// Spiegelt die aktuelle Nudge-Empfangs-Einstellung nach Firestore, wenn
+    /// der Nutzer eingeloggt ist (damit die Cloud Function sie auswerten kann).
+    private func mirrorNudgePreferences() {
+        guard let uid = AuthService.shared.currentUid else { return }
+        Task { @MainActor in
+            NotificationPreferencesService.shared.publish(
+                receive: nudgesReceiveEnabled,
+                maxPerDay: maxNudgesPerDay,
+                uid: uid
+            )
+        }
+    }
+
     // MARK: - Heimatstadt (used by the Seferi-distance calculation)
     @Published var homeCity: HomeCity? {
         didSet {
@@ -125,14 +160,6 @@ final class AppState: ObservableObject {
                 UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.homeCity)
             }
         }
-    }
-
-    // MARK: - Daily Reading Tracker
-    @Published var dailyReadPages: Int {
-        didSet { UserDefaults.standard.set(dailyReadPages, forKey: UserDefaultsKeys.dailyReadPages) }
-    }
-    @Published var dailyGoalPages: Int {
-        didSet { UserDefaults.standard.set(dailyGoalPages, forKey: UserDefaultsKeys.dailyGoalPages) }
     }
 
     init(
@@ -166,6 +193,18 @@ final class AppState: ObservableObject {
         // Auto-location: defaults to false; user opts in from Settings.
         self.autoLocationEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.autoLocationEnabled)
 
+        // Khatma mode: defaults to false; user opts in from QuranView toolbar.
+        self.khatmaModeEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.khatmaModeEnabled)
+
+        // Nudges: receiving defaults to on, cap defaults to 3 per day.
+        if UserDefaults.standard.object(forKey: UserDefaultsKeys.nudgesReceiveEnabled) != nil {
+            self.nudgesReceiveEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.nudgesReceiveEnabled)
+        } else {
+            self.nudgesReceiveEnabled = true
+        }
+        let storedCap = UserDefaults.standard.integer(forKey: UserDefaultsKeys.maxNudgesPerDay)
+        self.maxNudgesPerDay = storedCap > 0 ? storedCap : 3
+
         // Heimatstadt: optional, only set once the user picks one.
         if let data = UserDefaults.standard.data(forKey: UserDefaultsKeys.homeCity),
            let decoded = try? JSONDecoder().decode(HomeCity.self, from: data) {
@@ -195,19 +234,11 @@ final class AppState: ObservableObject {
         // Sync initial theme to App Group for widget
         UserDefaults(suiteName: "group.d.DailyDee")?.set(resolvedTheme.rawValue, forKey: UserDefaultsKeys.accentTheme)
 
-        // Daily reading: reset if last read was not today
-        let savedGoal = UserDefaults.standard.integer(forKey: UserDefaultsKeys.dailyGoalPages)
-        self.dailyGoalPages = savedGoal > 0 ? savedGoal : 5
-
-        let savedPages = UserDefaults.standard.integer(forKey: UserDefaultsKeys.dailyReadPages)
-        let savedDateTS = UserDefaults.standard.double(forKey: UserDefaultsKeys.lastReadDate)
-        let savedDate = savedDateTS > 0 ? Date(timeIntervalSince1970: savedDateTS) : nil
-        if let date = savedDate, Calendar.current.isDateInToday(date) {
-            self.dailyReadPages = savedPages
-        } else {
-            self.dailyReadPages = 0
-            UserDefaults.standard.set(0, forKey: UserDefaultsKeys.dailyReadPages)
-        }
+        // Legacy "Tagesziel" keys (dailyGoalPages / dailyReadPages) have been
+        // superseded by the goals system in GoalsViewModel. We drop them on
+        // first launch of the new build so old values don't linger.
+        UserDefaults.standard.removeObject(forKey: "dailydee.dailyGoalPages")
+        UserDefaults.standard.removeObject(forKey: "dailydee.dailyReadPages")
 
         // Load dynamically persisted DITIB city
         if let data = UserDefaults.standard.data(forKey: UserDefaultsKeys.selectedDitibCity),
@@ -224,18 +255,15 @@ final class AppState: ObservableObject {
         // Sync initial app language to App Group so the Daily Verse widget can
         // pick the right translation. Updates flow through updateLanguage(_:).
         UserDefaults(suiteName: "group.d.DailyDee")?.set(self.appLanguage.rawValue, forKey: UserDefaultsKeys.appLanguage)
-    }
 
-    // MARK: - Daily Reading Actions
-
-    func incrementDailyPages() {
-        let savedDateTS = UserDefaults.standard.double(forKey: UserDefaultsKeys.lastReadDate)
-        let savedDate = savedDateTS > 0 ? Date(timeIntervalSince1970: savedDateTS) : nil
-        if let date = savedDate, !Calendar.current.isDateInToday(date) {
-            dailyReadPages = 0
-        }
-        dailyReadPages += 1
-        UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: UserDefaultsKeys.lastReadDate)
+        // Nudge-Empfangs-Einstellungen einmal pushen, wenn der Nutzer
+        // (de-)authentifiziert. Vorher steht der uid noch nicht zur Verfügung.
+        accountSub = AuthService.shared.currentAccountSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] account in
+                guard let self, account != nil else { return }
+                self.mirrorNudgePreferences()
+            }
     }
 
     func completeOnboarding(name: String, language: AppLanguage) {
@@ -334,22 +362,25 @@ enum MainTab: Int, CaseIterable {
     case quran
     case lernen
     case gebet
+    case friends
 
     func title(lang: AppLanguage) -> String {
         switch self {
-        case .start: return L10n.tabStart(lang)
-        case .quran: return L10n.tabQuran(lang)
-        case .lernen: return L10n.tabLernen(lang)
-        case .gebet: return L10n.tabGebet(lang)
+        case .start:   return L10n.tabStart(lang)
+        case .quran:   return L10n.tabQuran(lang)
+        case .lernen:  return L10n.tabLernen(lang)
+        case .gebet:   return L10n.tabGebet(lang)
+        case .friends: return L10n.tabFriends(lang)
         }
     }
 
     var iconName: String {
         switch self {
-        case .start:  return "house.fill"
-        case .quran:  return "book.fill"
-        case .lernen: return "graduationcap.fill"
-        case .gebet:  return "heart.fill"
+        case .start:   return "house.fill"
+        case .quran:   return "book.fill"
+        case .lernen:  return "graduationcap.fill"
+        case .gebet:   return "heart.fill"
+        case .friends: return "person.2.fill"
         }
     }
 }

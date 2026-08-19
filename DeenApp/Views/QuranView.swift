@@ -418,6 +418,7 @@ struct QuranIndexView: View {
 struct QuranReaderView: View {
     @ObservedObject var store: QuranStore
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var goalsVM: GoalsViewModel
     let initialTarget: QuranNavigationTarget
     @Binding var displayMode: QuranDisplayMode
     @Binding var arabicFontSize: CGFloat
@@ -428,12 +429,18 @@ struct QuranReaderView: View {
 
     private var readingMode: Bool { appState.isReadingModeEnabled }
     private var readerBg: Color { readingMode ? .white : Theme.background }
+    private var activeKhatm: Goal? {
+        goalsVM.goals.first { $0.isActive && $0.type == .khatmByDate }
+    }
 
     var body: some View {
         ZStack {
             readerBg.ignoresSafeArea()
             VStack(spacing: 0) {
                 modePicker
+                if appState.khatmaModeEnabled, let goal = activeKhatm {
+                    khatmaBanner(goal: goal)
+                }
                 switch displayMode {
                 case .mushaf:
                     QuranMushafPageView(
@@ -475,6 +482,17 @@ struct QuranReaderView: View {
         .toolbarBackground(Theme.cardBackground, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar {
+            if activeKhatm != nil {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        appState.khatmaModeEnabled.toggle()
+                    } label: {
+                        Image(systemName: appState.khatmaModeEnabled ? "bookmark.fill" : "bookmark")
+                    }
+                    .foregroundColor(appState.khatmaModeEnabled ? Theme.accent : Theme.textPrimary)
+                    .accessibilityLabel(L10n.goalsKhatmaModeToggle(language))
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { showSettings = true }) {
                     Image(systemName: "textformat.size")
@@ -483,6 +501,14 @@ struct QuranReaderView: View {
             }
         }
         .onAppear {
+            // Khatma-Modus: beim Öffnen direkt zum Lesezeichen springen, wenn
+            // kein expliziter Sprungziel-Target gewählt wurde.
+            if appState.khatmaModeEnabled,
+               let bookmark = activeKhatm?.khatmBookmarkPage,
+               case .mushafPage = initialTarget {
+                store.goToMushafPage(bookmark)
+                return
+            }
             switch initialTarget {
             case .mushafPage(let page):
                 store.goToMushafPage(page)
@@ -490,6 +516,9 @@ struct QuranReaderView: View {
                 store.selectSura(surah)
             case .lastRead:
                 displayMode = .mushaf
+                if appState.khatmaModeEnabled, let bookmark = activeKhatm?.khatmBookmarkPage {
+                    store.goToMushafPage(bookmark)
+                }
             case .pdfMushafPage(let page):
                 displayMode = .pdf
                 pdfCurrentPage = page
@@ -548,6 +577,31 @@ struct QuranReaderView: View {
             return "\(L10n.quranPage(language)) \(pdfCurrentPage) · PDF"
         }
     }
+
+    @ViewBuilder
+    private func khatmaBanner(goal: Goal) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "bookmark.fill")
+                .foregroundColor(Theme.accent)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(L10n.goalsKhatmaModeOn(language))
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Theme.textPrimary)
+                Text(goal.progressLabel(language: language))
+                    .font(.caption2)
+                    .foregroundColor(Theme.textSecondary)
+            }
+            Spacer()
+            if let page = goal.khatmBookmarkPage {
+                Text("\(L10n.goalsKhatmaBookmark(language)): \(page)")
+                    .font(.caption2.weight(.medium).monospacedDigit())
+                    .foregroundColor(Theme.accent)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Theme.accent.opacity(0.10))
+    }
 }
 
 // MARK: - Mushaf Premium Layout (ScrollView paging) + Page Slider
@@ -555,6 +609,7 @@ struct QuranReaderView: View {
 struct QuranMushafPageView: View {
     @ObservedObject var store: QuranStore
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var goalsVM: GoalsViewModel
     let arabicFontSize: CGFloat
     let translationOption: QuranTranslationOption
     let language: AppLanguage
@@ -594,9 +649,17 @@ struct QuranMushafPageView: View {
                 }
                 .onChange(of: pageScrollID) { _, newID in
                     guard let page = newID, page != store.currentMushafPageNumber else { return }
+                    let previousPage = store.currentMushafPageNumber
                     store.currentMushafPageNumber = page
                     sliderPage = Double(page)
-                    appState.incrementDailyPages()
+                    // Nur echtes Weiterblättern zählt als gelesene Seite —
+                    // Zurückblättern und Slider-Sprünge verfälschen das Ziel-Log.
+                    if page == previousPage + 1 {
+                        goalsVM.recordPageRead()
+                    }
+                    if appState.khatmaModeEnabled {
+                        goalsVM.updateKhatmaBookmark(page: page)
+                    }
                     Task { await store.preloadMushafPages(around: page) }
                 }
                 .onChange(of: store.currentMushafPageNumber) { _, newPage in

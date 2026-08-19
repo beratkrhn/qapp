@@ -46,6 +46,20 @@ enum Theme {
 
     static let iconBrain = Color(hex: "E91E63")
 
+    // MARK: - Semantic
+
+    /// Destruktive Aktionen (Löschen, Entfernen).
+    static let destructive = Color(hex: "FF453A")
+
+    /// Warn-/Überfällig-Zustände (z. B. Hifz-Wiederholung fällig).
+    static let warning = Color(hex: "FF9F0A")
+
+    // MARK: - Learn mode card accents
+
+    static let learnWords    = Color(hex: "FF9800")
+    static let learnContinue = Color(hex: "4CAF50")
+    static let learnHifz     = Color(hex: "9C27B0")
+
     // MARK: - Tajweed Colors
 
     static let tajweedIdghamGhunna  = Color(hex: "c84782")

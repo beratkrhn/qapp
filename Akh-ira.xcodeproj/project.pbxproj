@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0E1DFFD82F880BE100549A07 /* QuranOfflineCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFD72F880BE100549A07 /* QuranOfflineCache.swift */; };
-		0E1DFFDA2F88122100549A07 /* SurahRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFD92F88122100549A07 /* SurahRevealView.swift */; };
 		0E1DFFDC2F88188600549A07 /* JustifiedArabicText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1DFFDB2F88188600549A07 /* JustifiedArabicText.swift */; };
 		0E21D9A42F73444D00EA990C /* SharedPrayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21D9A22F73444D00EA990C /* SharedPrayerData.swift */; };
 		0E23E6F22FB1478300242E06 /* AkhWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 0E23E6E82FB1478100242E06 /* AkhWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -704,8 +703,26 @@
 		EE00012F510DEB006DB81901 /* LearnTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE00012F510DEB006DB81900 /* LearnTabView.swift */; };
 		EE00022F510DEB006DB81901 /* ContinueAyahView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE00022F510DEB006DB81900 /* ContinueAyahView.swift */; };
 		F7654E38BA4D07569EF68EA7 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = EEA7492699C1C8790B7D925B /* FirebaseFirestore */; };
+		EA00000400000000000A0001 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EA00000300000000000A0001 /* FirebaseMessaging */; };
 		FA00000000000000000000A2 /* kuranpdfdiyanet.pdf in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000000A1 /* kuranpdfdiyanet.pdf */; };
 		FD7746AFAFD2298737D838EA /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDE42F58BF4DEB0AC588CB1 /* UserAccount.swift */; };
+		EA00000100000000000A0001 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0001 /* Goal.swift */; };
+		EA00000100000000000A0002 /* GoalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0002 /* GoalsViewModel.swift */; };
+		EA00000100000000000A0003 /* GoalsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0003 /* GoalsService.swift */; };
+		EA00000100000000000A0004 /* HomeGoalsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0004 /* HomeGoalsCard.swift */; };
+		EA00000100000000000A0005 /* GoalsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0005 /* GoalsListView.swift */; };
+		EA00000100000000000A0006 /* GoalEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0006 /* GoalEditorView.swift */; };
+		EA00000100000000000A0007 /* GoalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0007 /* GoalDetailView.swift */; };
+		EA00000100000000000A0008 /* FriendsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0008 /* FriendsTabView.swift */; };
+		EA00000100000000000A0009 /* PushTokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0009 /* PushTokenService.swift */; };
+		EA00000100000000000A000A /* NudgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A000A /* NudgeService.swift */; };
+		EA00000100000000000A000B /* NudgePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A000B /* NudgePickerView.swift */; };
+		EA00000100000000000A000C /* NotificationPreferencesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A000C /* NotificationPreferencesService.swift */; };
+		EA00000100000000000B0001 /* HifzEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000B0001 /* HifzEntry.swift */; };
+		EA00000100000000000B0002 /* HifzSurahFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000B0002 /* HifzSurahFallback.swift */; };
+		EA00000100000000000B0003 /* HifzNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000B0003 /* HifzNotificationScheduler.swift */; };
+		EA00000100000000000B0004 /* HifzTrackerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000B0004 /* HifzTrackerViewModel.swift */; };
+		EA00000100000000000B0005 /* HifzTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000B0005 /* HifzTrackerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -770,7 +787,6 @@
 
 /* Begin PBXFileReference section */
 		0E1DFFD72F880BE100549A07 /* QuranOfflineCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranOfflineCache.swift; sourceTree = "<group>"; };
-		0E1DFFD92F88122100549A07 /* SurahRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurahRevealView.swift; sourceTree = "<group>"; };
 		0E1DFFDB2F88188600549A07 /* JustifiedArabicText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JustifiedArabicText.swift; sourceTree = "<group>"; };
 		0E21D9832F7343A000EA990C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0E21D9852F7343A000EA990C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -1466,6 +1482,23 @@
 		EE00022F510DEB006DB81900 /* ContinueAyahView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueAyahView.swift; sourceTree = "<group>"; };
 		FA00000000000000000000A1 /* kuranpdfdiyanet.pdf */ = {isa = PBXFileReference; lastKnownFileType = com.adobe.pdf; path = kuranpdfdiyanet.pdf; sourceTree = "<group>"; };
 		FBDE42F58BF4DEB0AC588CB1 /* UserAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserAccount.swift; path = DeenApp/Models/UserAccount.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0001 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Goal.swift; path = DeenApp/Models/Goal.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0002 /* GoalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GoalsViewModel.swift; path = DeenApp/ViewModels/GoalsViewModel.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0003 /* GoalsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GoalsService.swift; path = DeenApp/Services/GoalsService.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0004 /* HomeGoalsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeGoalsCard.swift; path = DeenApp/Views/Goals/HomeGoalsCard.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0005 /* GoalsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GoalsListView.swift; path = DeenApp/Views/Goals/GoalsListView.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0006 /* GoalEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GoalEditorView.swift; path = DeenApp/Views/Goals/GoalEditorView.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0007 /* GoalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GoalDetailView.swift; path = DeenApp/Views/Goals/GoalDetailView.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0008 /* FriendsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendsTabView.swift; path = DeenApp/Views/Friends/FriendsTabView.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A0009 /* PushTokenService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PushTokenService.swift; path = DeenApp/Services/PushTokenService.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A000A /* NudgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NudgeService.swift; path = DeenApp/Services/NudgeService.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A000B /* NudgePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NudgePickerView.swift; path = DeenApp/Views/Friends/NudgePickerView.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000A000C /* NotificationPreferencesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationPreferencesService.swift; path = DeenApp/Services/NotificationPreferencesService.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000B0001 /* HifzEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HifzEntry.swift; path = DeenApp/Models/Hifz/HifzEntry.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000B0002 /* HifzSurahFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HifzSurahFallback.swift; path = DeenApp/Models/Hifz/HifzSurahFallback.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000B0003 /* HifzNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HifzNotificationScheduler.swift; path = DeenApp/Services/HifzNotificationScheduler.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000B0004 /* HifzTrackerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HifzTrackerViewModel.swift; path = DeenApp/ViewModels/HifzTrackerViewModel.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000B0005 /* HifzTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HifzTrackerView.swift; path = DeenApp/Views/Hifz/HifzTrackerView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -1547,6 +1580,7 @@
 			files = (
 				9A794FADB5B9263675780FB9 /* FirebaseAuth in Frameworks */,
 				F7654E38BA4D07569EF68EA7 /* FirebaseFirestore in Frameworks */,
+				EA00000400000000000A0001 /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2193,6 +2227,23 @@
 				47CE4C149A1F2CB83832881C /* AccountHomeView.swift */,
 				E79D477EA678EBBC9FA6154B /* AuthView.swift */,
 				7D55422B805CF6A5CF2D806E /* FriendsView.swift */,
+				EA00000200000000000A0001 /* Goal.swift */,
+				EA00000200000000000A0002 /* GoalsViewModel.swift */,
+				EA00000200000000000A0003 /* GoalsService.swift */,
+				EA00000200000000000A0004 /* HomeGoalsCard.swift */,
+				EA00000200000000000A0005 /* GoalsListView.swift */,
+				EA00000200000000000A0006 /* GoalEditorView.swift */,
+				EA00000200000000000A0007 /* GoalDetailView.swift */,
+				EA00000200000000000A0008 /* FriendsTabView.swift */,
+				EA00000200000000000A0009 /* PushTokenService.swift */,
+				EA00000200000000000A000A /* NudgeService.swift */,
+				EA00000200000000000A000B /* NudgePickerView.swift */,
+				EA00000200000000000A000C /* NotificationPreferencesService.swift */,
+				EA00000200000000000B0001 /* HifzEntry.swift */,
+				EA00000200000000000B0002 /* HifzSurahFallback.swift */,
+				EA00000200000000000B0003 /* HifzNotificationScheduler.swift */,
+				EA00000200000000000B0004 /* HifzTrackerViewModel.swift */,
+				EA00000200000000000B0005 /* HifzTrackerView.swift */,
 				7F454A6D80FB6A371CACCB16 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
@@ -2306,7 +2357,6 @@
 				0EF57E772F775E0E00936A5F /* StateSelectionView.swift */,
 				0EF57E792F775E2400936A5F /* CitySelectionView.swift */,
 				0EA1E1BC2F8046C8004C025F /* TenDayForecastView.swift */,
-				0E1DFFD92F88122100549A07 /* SurahRevealView.swift */,
 				EE00022F510DEB006DB81900 /* ContinueAyahView.swift */,
 				0E9E8E4B2F9ADC22002B6816 /* MushafPDFViewer.swift */,
 			);
@@ -2455,6 +2505,7 @@
 			packageProductDependencies = (
 				FD4E418799A0FBB4C81E5140 /* FirebaseAuth */,
 				EEA7492699C1C8790B7D925B /* FirebaseFirestore */,
+				EA00000300000000000A0001 /* FirebaseMessaging */,
 			);
 			productName = DailyDee;
 			productReference = 0EEA12122F510DB8006DB819 /* Akh-ira.app */;
@@ -3238,7 +3289,6 @@
 				0EEA12822F510DEB006DB819 /* SettingsView.swift in Sources */,
 				0E23E7252FB14C4D00242E06 /* PhoneWatchSession.swift in Sources */,
 				0EEA12842F510DEB006DB819 /* PDFGenerator.swift in Sources */,
-				0E1DFFDA2F88122100549A07 /* SurahRevealView.swift in Sources */,
 				EE00022F510DEB006DB81901 /* ContinueAyahView.swift in Sources */,
 				0EEA12872F510DEB006DB819 /* WordStatusListView.swift in Sources */,
 				DD00092F510DEB006DB81901 /* PrayerTutorialModels.swift in Sources */,
@@ -3256,6 +3306,23 @@
 				28644E098CF1A5D75C68AA6D /* AccountHomeView.swift in Sources */,
 				917548A69291470F84015AA3 /* AuthView.swift in Sources */,
 				B17843DB9FC06967BC479060 /* FriendsView.swift in Sources */,
+				EA00000100000000000A0001 /* Goal.swift in Sources */,
+				EA00000100000000000A0002 /* GoalsViewModel.swift in Sources */,
+				EA00000100000000000A0003 /* GoalsService.swift in Sources */,
+				EA00000100000000000A0004 /* HomeGoalsCard.swift in Sources */,
+				EA00000100000000000A0005 /* GoalsListView.swift in Sources */,
+				EA00000100000000000A0006 /* GoalEditorView.swift in Sources */,
+				EA00000100000000000A0007 /* GoalDetailView.swift in Sources */,
+				EA00000100000000000A0008 /* FriendsTabView.swift in Sources */,
+				EA00000100000000000A0009 /* PushTokenService.swift in Sources */,
+				EA00000100000000000A000A /* NudgeService.swift in Sources */,
+				EA00000100000000000A000B /* NudgePickerView.swift in Sources */,
+				EA00000100000000000A000C /* NotificationPreferencesService.swift in Sources */,
+				EA00000100000000000B0001 /* HifzEntry.swift in Sources */,
+				EA00000100000000000B0002 /* HifzSurahFallback.swift in Sources */,
+				EA00000100000000000B0003 /* HifzNotificationScheduler.swift in Sources */,
+				EA00000100000000000B0004 /* HifzTrackerViewModel.swift in Sources */,
+				EA00000100000000000B0005 /* HifzTrackerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3287,7 +3354,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "AkhWatch Watch App/AkhWatch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3298,7 +3365,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -3321,7 +3388,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "AkhWatch Watch App/AkhWatch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3332,7 +3399,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -3356,7 +3423,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = AkhWatchWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AkhWatchWidget/Info.plist;
@@ -3368,7 +3435,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp.AkhWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -3390,7 +3457,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = AkhWatchWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AkhWatchWidget/Info.plist;
@@ -3402,7 +3469,7 @@
 					"@executable_path/../../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.watchkitapp.AkhWatchWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -3425,7 +3492,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = AkhWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AkhWidget/Info.plist;
@@ -3437,7 +3504,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.AkhWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3458,7 +3525,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = AkhWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WAM6U438Y8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AkhWidget/Info.plist;
@@ -3470,7 +3537,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = d.DailyDee.AkhWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3774,6 +3841,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A6D0422C97DCD82725F1908D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		EA00000300000000000A0001 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6D0422C97DCD82725F1908D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
