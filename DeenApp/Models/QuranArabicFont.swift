@@ -15,6 +15,9 @@
 
 import SwiftUI
 import UIKit
+import os
+
+private let logger = Logger(subsystem: "d.DailyDee", category: "QuranArabicFont")
 
 enum QuranArabicFont: String, CaseIterable, Identifiable {
     /// KFGQPC Uthmanic Script HAFS Regular.otf
@@ -48,13 +51,7 @@ enum QuranArabicFont: String, CaseIterable, Identifiable {
                 return .custom(name, size: size)
             }
         }
-        print(
-            "⛔️ [HAFS FONT NOT FOUND IN BUNDLE] " +
-            "None of \(hafsFontCandidates) could be resolved by UIKit. " +
-            "Verify that 'KFGQPC Uthmanic Script HAFS Regular.otf' is present in the " +
-            "Xcode target's Copy Bundle Resources phase and listed under " +
-            "UIAppFonts in Info.plist."
-        )
+        logger.error("HAFS font not found in bundle: none of \(hafsFontCandidates) could be resolved. Verify Copy Bundle Resources + UIAppFonts in Info.plist.")
         return .system(size: size)
     }
 
@@ -66,13 +63,7 @@ enum QuranArabicFont: String, CaseIterable, Identifiable {
         for name in hafsFontCandidates {
             if let f = UIFont(name: name, size: size) { return f }
         }
-        print(
-            "⛔️ [HAFS FONT NOT FOUND IN BUNDLE] " +
-            "None of \(hafsFontCandidates) could be resolved by UIKit. " +
-            "Verify that 'KFGQPC Uthmanic Script HAFS Regular.otf' is present in the " +
-            "Xcode target's Copy Bundle Resources phase and listed under " +
-            "UIAppFonts in Info.plist."
-        )
+        logger.error("HAFS font not found in bundle: none of \(hafsFontCandidates) could be resolved. Verify Copy Bundle Resources + UIAppFonts in Info.plist.")
         return UIFont(name: "Geeza Pro", size: size) ?? .systemFont(ofSize: size)
     }
 }

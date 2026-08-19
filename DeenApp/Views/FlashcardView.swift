@@ -7,6 +7,9 @@
 
 import SwiftUI
 import Combine
+import os
+
+private let logger = Logger(subsystem: "d.DailyDee", category: "Flashcards")
 
 struct FlashcardView: View {
     @EnvironmentObject var appState: AppState
@@ -156,7 +159,7 @@ final class QuranWordsStore: ObservableObject {
         Task {
             // Wir nutzen deine echte generierte JSON Datei
             guard let url = Bundle.main.qwordsJSONURL() else {
-                print("❌ QWords.json nicht im Bundle")
+                logger.error("QWords.json nicht im Bundle")
                 self.isLoading = false
                 return
             }
@@ -167,7 +170,7 @@ final class QuranWordsStore: ObservableObject {
                 let deck = try JSONDecoder().decode([QuranWord].self, from: data)
                 self.words = deck
             } catch {
-                print("❌ Fehler beim Decodieren: \(error)")
+                logger.error("Fehler beim Decodieren von QWords.json: \(String(describing: error))")
             }
             
             self.isLoading = false

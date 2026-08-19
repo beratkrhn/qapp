@@ -11,6 +11,9 @@
 
 import SwiftUI
 import UIKit
+import os
+
+private let logger = Logger(subsystem: "d.DailyDee", category: "GreetingFontCycle")
 
 enum GreetingFontCycle {
 
@@ -43,10 +46,7 @@ enum GreetingFontCycle {
     static let validFontNames: [String] = {
         let verified = candidateFontNames.filter { UIFont(name: $0, size: 10) != nil }
         if verified.isEmpty {
-            print(
-                "⚠️ GreetingFontCycle: None of the candidate fonts could be resolved. " +
-                "Check that font files are in the Xcode target and listed in UIAppFonts."
-            )
+            logger.warning("None of the candidate fonts could be resolved. Check that font files are in the Xcode target and listed in UIAppFonts.")
             return [systemFallback]
         }
         return verified
@@ -70,23 +70,18 @@ enum GreetingFontCycle {
 
     // MARK: - Debug
 
-    /// Dumps all installed font families and the status of every candidate name.
-    /// Call once from `.onAppear` to diagnose font registration issues.
+    /// Loggt alle installierten Font-Familien und den Status jedes Kandidaten.
+    /// Bei Bedarf manuell aufrufen, um Font-Registrierungsprobleme zu debuggen.
     static func dumpAllFontNames() {
-        print("═══════════════════════════════════════")
-        print("   INSTALLED FONT FAMILIES (all)")
-        print("═══════════════════════════════════════")
-        UIFont.familyNames.sorted().forEach { family in
-            print("  \(family): \(UIFont.fontNames(forFamilyName: family))")
-        }
-        print("═══════════════════════════════════════")
-        print("  GreetingFontCycle — candidate status:")
+        let families = UIFont.familyNames.sorted()
+            .map { "\($0): \(UIFont.fontNames(forFamilyName: $0))" }
+            .joined(separator: "\n")
+        logger.debug("Installed font families:\n\(families)")
         for name in candidateFontNames {
             let ok = UIFont(name: name, size: 12) != nil
-            print("    \(ok ? "✅" : "❌") \(name)")
+            logger.debug("\(ok ? "OK" : "MISSING") \(name)")
         }
-        print("  Valid fonts in cycle: \(count)/\(candidateFontNames.count)")
-        print("═══════════════════════════════════════")
+        logger.debug("Valid fonts in cycle: \(count)/\(candidateFontNames.count)")
     }
 
     // MARK: - Private

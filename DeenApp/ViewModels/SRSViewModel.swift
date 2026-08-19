@@ -7,6 +7,9 @@
 
 import Foundation
 import Observation
+import os
+
+private let logger = Logger(subsystem: "d.DailyDee", category: "SRS")
 
 private let kSRSCardsKey = "dailydee.srsCards"
 
@@ -61,7 +64,7 @@ final class SRSViewModel {
     
     private static func loadVocabularyFromJSON() -> [FlashcardCard] {
             guard let url = qwordsBundleURL() else {
-                print("QWords: Datei nicht im Bundle (forResource: QWords, json).")
+                logger.error("QWords: Datei nicht im Bundle (forResource: QWords, json).")
                 return []
             }
             do {
@@ -76,7 +79,7 @@ final class SRSViewModel {
                     )
                 }
             } catch {
-                print("QWords: Laden/Dekodieren fehlgeschlagen: \(error)")
+                logger.error("QWords: Laden/Dekodieren fehlgeschlagen: \(String(describing: error))")
                 return []
             }
         }

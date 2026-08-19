@@ -68,9 +68,6 @@ struct HeaderView: View {
         .onAppear {
             fontIndex = 0
             cycleDone = false
-            #if DEBUG
-            GreetingFontCycle.dumpAllFontNames()
-            #endif
         }
         .onReceive(fontCycleTimer) { _ in
             guard !cycleDone else { return }

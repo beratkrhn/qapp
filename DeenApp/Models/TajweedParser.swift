@@ -16,6 +16,7 @@
 //
 
 import SwiftUI
+import os
 
 struct TajweedParser {
 
@@ -99,7 +100,8 @@ struct TajweedParser {
         let hexList = text.unicodeScalars
             .map { String(format: "U+%04X", $0.value) }
             .joined(separator: " ")
-        print("[TajweedParser] rule '\(rule)' scalars: \(hexList)  text: \"\(text)\"")
+        os.Logger(subsystem: "d.DailyDee", category: "TajweedParser")
+            .debug("rule '\(rule)' scalars: \(hexList)  text: \"\(text)\"")
     }
 #endif
 
