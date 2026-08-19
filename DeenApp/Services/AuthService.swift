@@ -19,6 +19,7 @@ enum AuthError: LocalizedError {
     case invalidEmail
     case wrongCredentials
     case notSignedIn
+    case recentLoginRequired
     case underlying(String)
 
     var errorDescription: String? {
@@ -29,6 +30,7 @@ enum AuthError: LocalizedError {
         case .invalidEmail:      return "Diese E-Mail-Adresse ist ungültig."
         case .wrongCredentials:  return "E-Mail oder Passwort ist falsch."
         case .notSignedIn:       return "Du bist nicht angemeldet."
+        case .recentLoginRequired: return "Aus Sicherheitsgründen musst du dich neu anmelden und es danach erneut versuchen."
         case .underlying(let m): return m
         }
     }
@@ -116,6 +118,89 @@ final class AuthService {
         currentAccountSubject.send(nil)
     }
 
+    func sendPasswordReset(email: String) async throws {
+        do {
+            try await Auth.auth().sendPasswordReset(withEmail: email)
+        } catch let err as NSError {
+            throw mapAuthError(err)
+        }
+    }
+
+    /// Spiegelt die App-Sprache ins Profil (`users/{uid}.language`) — die
+    /// Cloud Function lokalisiert damit die System-Pushes (Anfrage/Annahme).
+    func publishLanguage(_ language: AppLanguage) {
+        guard let uid = currentUid else { return }
+        db.collection("users").document(uid).setData(
+            ["language": Self.localeCode(for: language)], merge: true)
+    }
+
+    /// Löscht das Konto vollständig: erst alle Firestore-Spuren (Freund-
+    /// schaften inkl. Gegenseite, Anfragen, eigene Subcollections, Username),
+    /// dann den Auth-Nutzer. Reihenfolge ist wichtig — nach dem Auth-Delete
+    /// verweigern die Security-Rules jeden weiteren Zugriff.
+    func deleteAccount() async throws {
+        guard let user = Auth.auth().currentUser else { throw AuthError.notSignedIn }
+
+        // Firebase verlangt für `user.delete()` einen frischen Login (~5 min).
+        // Vorab prüfen, damit nicht erst die Firestore-Daten gelöscht werden
+        // und der Auth-Delete anschließend scheitert (halb gelöschtes Konto).
+        if let lastSignIn = user.metadata.lastSignInDate,
+           Date().timeIntervalSince(lastSignIn) > 4 * 60 {
+            throw AuthError.recentLoginRequired
+        }
+
+        let uid = user.uid
+        let account = try? await loadAccount(uid: uid)
+        let userRef = db.collection("users").document(uid)
+
+        // Beziehungen zu anderen Nutzern kappen (deren Dokumente zuerst).
+        let friends = try await userRef.collection("friends").getDocuments()
+        for doc in friends.documents {
+            try? await db.collection("users").document(doc.documentID)
+                .collection("friends").document(uid).delete()
+        }
+        let incoming = try await userRef.collection("incomingRequests").getDocuments()
+        for doc in incoming.documents {
+            try? await db.collection("users").document(doc.documentID)
+                .collection("outgoingRequests").document(uid).delete()
+        }
+        let outgoing = try await userRef.collection("outgoingRequests").getDocuments()
+        for doc in outgoing.documents {
+            try? await db.collection("users").document(doc.documentID)
+                .collection("incomingRequests").document(uid).delete()
+        }
+
+        // Eigene Subcollections leeren — Firestore löscht sie nicht mit dem
+        // Elterndokument.
+        let subcollections = [
+            "friends", "incomingRequests", "outgoingRequests",
+            "goals", "nudges", "fcmTokens",
+            "notificationPreferences", "dailyNudgeCounts"
+        ]
+        for name in subcollections {
+            let docs = try await userRef.collection(name).getDocuments()
+            for doc in docs.documents {
+                try? await doc.reference.delete()
+            }
+        }
+
+        if let account {
+            try? await db.collection("usernames").document(account.usernameLower).delete()
+        }
+        try await userRef.delete()
+
+        do {
+            try await user.delete()
+        } catch let err as NSError {
+            if err.domain == AuthErrorDomain,
+               AuthErrorCode(rawValue: err.code) == .requiresRecentLogin {
+                throw AuthError.recentLoginRequired
+            }
+            throw mapAuthError(err)
+        }
+        currentAccountSubject.send(nil)
+    }
+
     // MARK: - Internals
 
     private func ensureUsernameFree(lower: String) async throws {
@@ -155,6 +240,14 @@ final class AuthService {
             displayName: displayName,
             createdAt: createdAt
         )
+    }
+
+    private static func localeCode(for language: AppLanguage) -> String {
+        switch language {
+        case .english:                              return "en"
+        case .turkish:                              return "tr"
+        case .german, .germanArabic, .germanTurkish: return "de"
+        }
     }
 
     private func mapAuthError(_ err: NSError) -> AuthError {

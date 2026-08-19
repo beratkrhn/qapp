@@ -22,6 +22,8 @@ final class AccountViewModel: ObservableObject {
     @Published private(set) var outgoingRequests: [FriendRequest] = []
     @Published var isWorking: Bool = false
     @Published var errorMessage: String?
+    /// Nicht-Fehler-Rückmeldung (z. B. "Reset-Mail verschickt").
+    @Published var infoMessage: String?
 
     var isSignedIn: Bool { account != nil }
 
@@ -77,6 +79,20 @@ final class AccountViewModel: ObservableObject {
         }
     }
 
+    func sendPasswordReset(email: String, confirmation: String) async {
+        await perform {
+            try await AuthService.shared.sendPasswordReset(email: email)
+        }
+        if errorMessage == nil { infoMessage = confirmation }
+    }
+
+    /// Löscht das Konto endgültig (Firestore-Spuren + Auth-Nutzer).
+    func deleteAccount() async {
+        await perform {
+            try await AuthService.shared.deleteAccount()
+        }
+    }
+
     // MARK: - Friend actions
 
     func sendRequest(toUsername raw: String) async {
@@ -123,6 +139,7 @@ final class AccountViewModel: ObservableObject {
 
     private func perform(_ block: @escaping () async throws -> Void) async {
         errorMessage = nil
+        infoMessage = nil
         isWorking = true
         do {
             try await block()

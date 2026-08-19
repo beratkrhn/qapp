@@ -52,6 +52,9 @@ struct DeenAppApp: App {
                     PushTokenService.shared.requestAuthorizationIfNeeded()
                 }
             }
+            .onReceive(NotificationCenter.default.publisher(for: .didTapFriendPush)) { _ in
+                appState.selectedTab = .friends
+            }
         }
     }
 }
@@ -98,4 +101,21 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     {
         [.banner, .sound, .badge]
     }
+
+    // Tippt der Nutzer eine Freundes-Push an (Nudge, Anfrage, Annahme),
+    // springt die App in den Freunde-Tab. Die Cloud Function setzt dafür
+    // `kind` in der Data-Payload.
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse) async {
+        let userInfo = response.notification.request.content.userInfo
+        guard let kind = userInfo["kind"] as? String,
+              ["nudge", "friendRequest", "friendAccepted"].contains(kind) else { return }
+        await MainActor.run {
+            NotificationCenter.default.post(name: .didTapFriendPush, object: nil)
+        }
+    }
+}
+
+extension Notification.Name {
+    static let didTapFriendPush = Notification.Name("dailydee.didTapFriendPush")
 }

@@ -13,6 +13,7 @@ struct FriendsView: View {
 
     @State private var searchInput: String = ""
     @State private var showSentToast: Bool = false
+    @State private var showDeleteConfirm: Bool = false
     @FocusState private var searchFocused: Bool
 
     var body: some View {
@@ -36,11 +37,28 @@ struct FriendsView: View {
                 }
                 friendsListSection
                 signOutButton
+                deleteAccountButton
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
         }
         .scrollDismissesKeyboard(.interactively)
+        .confirmationDialog(
+            L10n.accountDeleteConfirmTitle(appState.appLanguage),
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(L10n.accountDelete(appState.appLanguage), role: .destructive) {
+                Task {
+                    // Geräte-Token zuerst lösen — wie beim Sign-out.
+                    await PushTokenService.shared.removeTokenForCurrentUser()
+                    await accountVM.deleteAccount()
+                }
+            }
+            Button(L10n.commonCancel(appState.appLanguage), role: .cancel) {}
+        } message: {
+            Text(L10n.accountDeleteConfirmMessage(appState.appLanguage))
+        }
         .overlay(alignment: .top) {
             if showSentToast {
                 Text(L10n.friendsRequestSent(appState.appLanguage))
@@ -308,5 +326,16 @@ struct FriendsView: View {
                 )
         }
         .padding(.top, 8)
+    }
+
+    private var deleteAccountButton: some View {
+        Button {
+            showDeleteConfirm = true
+        } label: {
+            Text(L10n.accountDelete(appState.appLanguage))
+                .font(.footnote.weight(.medium))
+                .foregroundColor(.red.opacity(0.8))
+        }
+        .disabled(accountVM.isWorking)
     }
 }

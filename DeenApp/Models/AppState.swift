@@ -256,13 +256,15 @@ final class AppState: ObservableObject {
         // pick the right translation. Updates flow through updateLanguage(_:).
         UserDefaults(suiteName: "group.d.DailyDee")?.set(self.appLanguage.rawValue, forKey: UserDefaultsKeys.appLanguage)
 
-        // Nudge-Empfangs-Einstellungen einmal pushen, wenn der Nutzer
-        // (de-)authentifiziert. Vorher steht der uid noch nicht zur Verfügung.
+        // Nudge-Empfangs-Einstellungen und App-Sprache einmal pushen, wenn
+        // der Nutzer (de-)authentifiziert. Vorher fehlt der uid; die Sprache
+        // braucht die Cloud Function für lokalisierte Freundes-Pushes.
         accountSub = AuthService.shared.currentAccountSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] account in
                 guard let self, account != nil else { return }
                 self.mirrorNudgePreferences()
+                AuthService.shared.publishLanguage(self.appLanguage)
             }
     }
 
@@ -290,6 +292,8 @@ final class AppState: ObservableObject {
         WidgetCenter.shared.reloadAllTimelines()
         // Notify PrayerTimeManager so it can re-sync widget prayer names.
         NotificationCenter.default.post(name: .appLanguageDidChange, object: nil)
+        // Cloud Function lokalisiert Freundes-Pushes über das Profilfeld.
+        AuthService.shared.publishLanguage(language)
     }
 
     func updateCity(_ city: AppCity) {

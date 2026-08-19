@@ -17,6 +17,7 @@ struct FriendsTabView: View {
     @StateObject private var feed = FriendGoalsFeed()
 
     @State private var selectedFriend: FriendInfo?
+    @State private var reminderFriend: FriendInfo?
     @State private var showAccountSheet = false
 
     var body: some View {
@@ -39,6 +40,9 @@ struct FriendsTabView: View {
         }
         .sheet(item: $selectedFriend) { friend in
             FriendDetailSheet(friend: friend, goals: feed.goalsByUid[friend.id] ?? [])
+        }
+        .sheet(item: $reminderFriend) { friend in
+            ReminderComposerView(recipient: friend)
         }
     }
 
@@ -168,6 +172,16 @@ struct FriendsTabView: View {
                             .padding(.horizontal, 8).padding(.vertical, 3)
                             .background(Capsule().fill(Theme.accent))
                     }
+                    Button {
+                        reminderFriend = friend
+                    } label: {
+                        Image(systemName: "bell.badge.fill")
+                            .font(.subheadline)
+                            .foregroundColor(Theme.accent)
+                            .padding(8)
+                            .background(Circle().fill(Theme.background))
+                    }
+                    .buttonStyle(.plain)
                 }
                 if let firstGoal = goals.first {
                     Divider().background(Theme.textSecondary.opacity(0.2))
@@ -193,6 +207,7 @@ private struct FriendDetailSheet: View {
     let goals: [Goal]
 
     @State private var nudgeGoal: Goal?
+    @State private var showReminderComposer = false
 
     var body: some View {
         NavigationStack {
@@ -200,6 +215,7 @@ private struct FriendDetailSheet: View {
                 Theme.background.ignoresSafeArea()
                 ScrollView {
                     VStack(spacing: 14) {
+                        reminderCard
                         ForEach(goals) { goal in
                             CardContainer {
                                 VStack(alignment: .leading, spacing: 12) {
@@ -243,7 +259,34 @@ private struct FriendDetailSheet: View {
             .sheet(item: $nudgeGoal) { goal in
                 NudgePickerView(recipient: friend, goal: goal)
             }
+            .sheet(isPresented: $showReminderComposer) {
+                ReminderComposerView(recipient: friend)
+            }
         }
+    }
+
+    /// Freie Erinnerung (Gebet, Qur'an, eigene Nachricht) — funktioniert
+    /// auch, wenn der Freund keine Ziele teilt.
+    private var reminderCard: some View {
+        Button {
+            showReminderComposer = true
+        } label: {
+            CardContainer {
+                HStack(spacing: 12) {
+                    Image(systemName: "bell.badge.fill")
+                        .font(.title3)
+                        .foregroundColor(Theme.accent)
+                    Text(L10n.reminderComposerTitle(appState.appLanguage))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(Theme.textPrimary)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(Theme.textSecondary)
+                }
+            }
+        }
+        .buttonStyle(.plain)
     }
 }
 

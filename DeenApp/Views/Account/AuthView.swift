@@ -61,8 +61,18 @@ struct AuthView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 8)
                 }
+                if let info = accountVM.infoMessage, !info.isEmpty {
+                    Text(info)
+                        .font(.footnote)
+                        .foregroundColor(Theme.accent)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                }
 
                 actionButton
+                if mode == .signIn {
+                    forgotPasswordButton
+                }
                 switchModeButton
             }
             .padding(.horizontal, 20)
@@ -112,6 +122,28 @@ struct AuthView: View {
         }
         .disabled(accountVM.isWorking || !isFormValid)
         .opacity(isFormValid ? 1 : 0.6)
+    }
+
+    private var forgotPasswordButton: some View {
+        Button {
+            focused = nil
+            let lang = appState.appLanguage
+            let address = email.trimmingCharacters(in: .whitespaces)
+            guard address.contains("@") else {
+                accountVM.errorMessage = L10n.authResetNeedsEmail(lang)
+                return
+            }
+            Task {
+                await accountVM.sendPasswordReset(
+                    email: address,
+                    confirmation: L10n.authResetEmailSent(lang)
+                )
+            }
+        } label: {
+            Text(L10n.authForgotPassword(appState.appLanguage))
+                .font(.footnote.weight(.medium))
+                .foregroundColor(Theme.textSecondary)
+        }
     }
 
     private var switchModeButton: some View {

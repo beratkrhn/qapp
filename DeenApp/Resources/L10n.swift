@@ -1369,6 +1369,110 @@ enum L10n {
         }
     }
 
+    // MARK: - Account: Passwort-Reset & Konto löschen
+
+    static func authForgotPassword(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Passwort vergessen?"
+        case .english: return "Forgot password?"
+        case .turkish: return "Şifreni mi unuttun?"
+        }
+    }
+    static func authResetEmailSent(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Wir haben dir eine E-Mail zum Zurücksetzen des Passworts geschickt."
+        case .english: return "We've sent you a password-reset email."
+        case .turkish: return "Sana şifre sıfırlama e-postası gönderdik."
+        }
+    }
+    static func authResetNeedsEmail(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Gib zuerst deine E-Mail-Adresse ein."
+        case .english: return "Enter your email address first."
+        case .turkish: return "Önce e-posta adresini gir."
+        }
+    }
+    static func accountDelete(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Konto löschen"
+        case .english: return "Delete account"
+        case .turkish: return "Hesabı sil"
+        }
+    }
+    static func accountDeleteConfirmTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Konto wirklich löschen?"
+        case .english: return "Really delete your account?"
+        case .turkish: return "Hesap gerçekten silinsin mi?"
+        }
+    }
+    static func accountDeleteConfirmMessage(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Dein Profil, deine Freundschaften und geteilten Ziele werden dauerhaft entfernt. Das lässt sich nicht rückgängig machen."
+        case .english: return "Your profile, friendships and shared goals will be removed permanently. This cannot be undone."
+        case .turkish: return "Profilin, arkadaşlıkların ve paylaşılan hedeflerin kalıcı olarak silinecek. Bu geri alınamaz."
+        }
+    }
+
+    // MARK: - Friend reminders (freie Erinnerungen ohne geteiltes Ziel)
+
+    static func reminderComposerTitle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Erinnerung senden"
+        case .english: return "Send a reminder"
+        case .turkish: return "Hatırlatma gönder"
+        }
+    }
+    static func reminderSectionPrayer(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Gebet"
+        case .english: return "Prayer"
+        case .turkish: return "Namaz"
+        }
+    }
+    static func reminderSectionQuran(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Qur'an & Dhikr"
+        case .english: return "Qur'an & dhikr"
+        case .turkish: return "Kur'an ve zikir"
+        }
+    }
+    static func reminderSectionCustom(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Eigene Nachricht"
+        case .english: return "Custom message"
+        case .turkish: return "Kendi mesajın"
+        }
+    }
+    static func reminderCustomPlaceholder(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Schreib eine kurze Erinnerung …"
+        case .english: return "Write a short reminder…"
+        case .turkish: return "Kısa bir hatırlatma yaz…"
+        }
+    }
+    static func reminderSend(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Senden"
+        case .english: return "Send"
+        case .turkish: return "Gönder"
+        }
+    }
+    static func nudgeMsgQuranGeneric(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Hast du heute schon Qur'an gelesen?"
+        case .english: return "Have you read Qur'an today?"
+        case .turkish: return "Bugün Kur'an okudun mu?"
+        }
+    }
+    static func nudgeMsgDhikr(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Vergiss dein Dhikr heute nicht 🤲"
+        case .english: return "Don't forget your dhikr today 🤲"
+        case .turkish: return "Bugün zikrini unutma 🤲"
+        }
+    }
+
     // MARK: - Hifz Tracker
 
     static func hifzTrackerTitle(_ lang: AppLanguage) -> String {

@@ -113,12 +113,15 @@ final class FriendsService {
         let now = Timestamp(date: Date())
         let batch = db.batch()
 
+        // `requesterUid` markiert, wer die Anfrage ursprünglich gestellt hat —
+        // die Cloud Function schickt nur dem Anfragesteller die Annahme-Push.
         let myFriendRef = db.collection("users").document(me.id)
             .collection("friends").document(other.id)
         batch.setData([
             "username": other.username,
             "displayName": other.displayName as Any,
-            "since": now
+            "since": now,
+            "requesterUid": other.id
         ], forDocument: myFriendRef)
 
         let theirFriendRef = db.collection("users").document(other.id)
@@ -126,7 +129,8 @@ final class FriendsService {
         batch.setData([
             "username": me.username,
             "displayName": me.displayName as Any,
-            "since": now
+            "since": now,
+            "requesterUid": other.id
         ], forDocument: theirFriendRef)
 
         batch.deleteDocument(db.collection("users").document(me.id)

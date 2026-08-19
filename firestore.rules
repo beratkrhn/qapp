@@ -114,6 +114,9 @@ service cloud.firestore {
       // nudges auf `processedAt`.
       match /dailyNudgeCounts/{dayKey} {
         allow read: if isOwner(uid);
+        // Löschen für die Konto-Löschung im Client (Aufräumen der eigenen
+        // Subcollections); Schreiben bleibt der Cloud Function vorbehalten.
+        allow delete: if isOwner(uid);
       }
 
       // --- Nudges ("Anstupser") -----------------------------------------
@@ -124,7 +127,12 @@ service cloud.firestore {
       match /nudges/{nudgeId} {
         allow read, delete: if isOwner(uid);
         allow create: if isFriendOf(uid)
-          && request.resource.data.senderUid == request.auth.uid;
+          && request.resource.data.senderUid == request.auth.uid
+          && request.resource.data.title is string
+          && request.resource.data.title.size() <= 100
+          && request.resource.data.body is string
+          && request.resource.data.body.size() > 0
+          && request.resource.data.body.size() <= 300;
       }
     }
   }

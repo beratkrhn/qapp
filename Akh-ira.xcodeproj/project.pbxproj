@@ -717,6 +717,7 @@
 		EA00000100000000000A0009 /* PushTokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A0009 /* PushTokenService.swift */; };
 		EA00000100000000000A000A /* NudgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A000A /* NudgeService.swift */; };
 		EA00000100000000000A000B /* NudgePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A000B /* NudgePickerView.swift */; };
+		EA00000100000000000C0001 /* ReminderComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000C0001 /* ReminderComposerView.swift */; };
 		EA00000100000000000A000C /* NotificationPreferencesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000A000C /* NotificationPreferencesService.swift */; };
 		EA00000100000000000B0001 /* HifzEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000B0001 /* HifzEntry.swift */; };
 		EA00000100000000000B0002 /* HifzSurahFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000200000000000B0002 /* HifzSurahFallback.swift */; };
@@ -1493,6 +1494,7 @@
 		EA00000200000000000A0009 /* PushTokenService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PushTokenService.swift; path = DeenApp/Services/PushTokenService.swift; sourceTree = SOURCE_ROOT; };
 		EA00000200000000000A000A /* NudgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NudgeService.swift; path = DeenApp/Services/NudgeService.swift; sourceTree = SOURCE_ROOT; };
 		EA00000200000000000A000B /* NudgePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NudgePickerView.swift; path = DeenApp/Views/Friends/NudgePickerView.swift; sourceTree = SOURCE_ROOT; };
+		EA00000200000000000C0001 /* ReminderComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ReminderComposerView.swift; path = DeenApp/Views/Friends/ReminderComposerView.swift; sourceTree = SOURCE_ROOT; };
 		EA00000200000000000A000C /* NotificationPreferencesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationPreferencesService.swift; path = DeenApp/Services/NotificationPreferencesService.swift; sourceTree = SOURCE_ROOT; };
 		EA00000200000000000B0001 /* HifzEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HifzEntry.swift; path = DeenApp/Models/Hifz/HifzEntry.swift; sourceTree = SOURCE_ROOT; };
 		EA00000200000000000B0002 /* HifzSurahFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HifzSurahFallback.swift; path = DeenApp/Models/Hifz/HifzSurahFallback.swift; sourceTree = SOURCE_ROOT; };
@@ -2238,6 +2240,7 @@
 				EA00000200000000000A0009 /* PushTokenService.swift */,
 				EA00000200000000000A000A /* NudgeService.swift */,
 				EA00000200000000000A000B /* NudgePickerView.swift */,
+				EA00000200000000000C0001 /* ReminderComposerView.swift */,
 				EA00000200000000000A000C /* NotificationPreferencesService.swift */,
 				EA00000200000000000B0001 /* HifzEntry.swift */,
 				EA00000200000000000B0002 /* HifzSurahFallback.swift */,
@@ -3317,6 +3320,7 @@
 				EA00000100000000000A0009 /* PushTokenService.swift in Sources */,
 				EA00000100000000000A000A /* NudgeService.swift in Sources */,
 				EA00000100000000000A000B /* NudgePickerView.swift in Sources */,
+				EA00000100000000000C0001 /* ReminderComposerView.swift in Sources */,
 				EA00000100000000000A000C /* NotificationPreferencesService.swift in Sources */,
 				EA00000100000000000B0001 /* HifzEntry.swift in Sources */,
 				EA00000100000000000B0002 /* HifzSurahFallback.swift in Sources */,
