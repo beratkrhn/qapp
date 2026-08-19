@@ -108,8 +108,17 @@ final class AccountViewModel: ObservableObject {
     func accept(_ request: FriendRequest) async {
         guard let me = account else { return }
         await perform {
-            // We need the requester's profile for denormalised friend doc.
-            let other = try await AuthService.shared.loadAccount(uid: request.id)
+            // Das Profil des Anfragestellers ist vor der Freundschaft nicht
+            // lesbar (Rules); die denormalisierten Felder aus dem Request-Doc
+            // reichen für das Friend-Doc aus.
+            let other = UserAccount(
+                id: request.id,
+                username: request.username,
+                usernameLower: request.username.lowercased(),
+                email: "",
+                displayName: request.displayName,
+                createdAt: request.sentAt
+            )
             try await FriendsService.shared.acceptIncomingRequest(from: other, me: me)
         }
     }

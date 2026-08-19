@@ -84,6 +84,7 @@ async function fetchTokens(db, uid) {
  */
 async function pushToUser(db, uid, { title, body, data }) {
   const tokens = await fetchTokens(db, uid);
+  console.log(`pushToUser uid=${uid} tokens=${tokens.length}`);
   if (tokens.length === 0) return null;
 
   const response = await getMessaging().sendEachForMulticast({
@@ -101,6 +102,7 @@ async function pushToUser(db, uid, { title, body, data }) {
   response.responses.forEach((r, idx) => {
     if (!r.success) {
       const code = r.error && r.error.code;
+      console.log(`pushToUser uid=${uid} token#${idx} failed: ${code} ${r.error && r.error.message}`);
       if (
         code === "messaging/invalid-registration-token" ||
         code === "messaging/registration-token-not-registered"
@@ -111,6 +113,7 @@ async function pushToUser(db, uid, { title, body, data }) {
   });
   if (removals.length > 0) await Promise.allSettled(removals);
 
+  console.log(`pushToUser uid=${uid} success=${response.successCount}/${tokens.length}`);
   return response;
 }
 
