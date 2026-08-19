@@ -93,36 +93,79 @@ extension DitibFederalState {
     /// to the DITIB-supported cities within it.  District IDs are baked in where confirmed;
     /// all others are resolved via the Diyanet search endpoint the first time a user selects them.
     static let cityCatalogue: [String: [DitibHardcodedCity]] = {
-        func list(_ sid: String, _ entries: [(String, String)]) -> [DitibHardcodedCity] {
+        // Tuple form: (name, optional Diyanet district id).
+        // If the id is nil, the VM resolves it via the DITIB search endpoint on first
+        // selection — keeps the catalogue browsable for cities whose IDs we haven't
+        // baked in yet.
+        func list(_ sid: String, _ entries: [(String, String?)]) -> [DitibHardcodedCity] {
             entries
                 .map { DitibHardcodedCity(name: $0.0, stateId: sid, districtId: $0.1) }
-                .sorted { $0.name < $1.name }
+                .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        }
+        /// Overload for lists where every district id is known — saves callers
+        /// from wrapping every literal in `Optional<String>`.
+        func list(_ sid: String, _ entries: [(String, String)]) -> [DitibHardcodedCity] {
+            list(sid, entries.map { ($0.0, Optional.some($0.1)) })
         }
         return [
             // Baden-Württemberg
             "850": list("850", [
-                ("Aalen", "21169"), ("Baden-Baden", "10913"), ("Böblingen", "10572"),
-                ("Bruchsal", "10953"), ("Esslingen am Neckar", "11121"), ("Ettlingen", "9980"),
-                ("Freiburg im Breisgau", "11011"), ("Göppingen", "11044"), ("Heidelberg", "11033"),
-                ("Heilbronn", "11051"), ("Karlsruhe", "11014"), ("Konstanz", "11018"),
-                ("Lahr", "10173"), ("Lörrach", "10191"), ("Ludwigsburg", "11048"),
-                ("Mannheim", "11021"), ("Offenburg", "10557"), ("Pforzheim", "11119"),
-                ("Ravensburg", "11045"), ("Reutlingen", "11042"), ("Sindelfingen", "10558"),
-                ("Stuttgart", "11027"), ("Tübingen", "11043"), ("Ulm", "11028"),
-                ("Villingen-Schwenningen", "10327"), ("Waiblingen", "11041")
+                ("Aalen", "21169"), ("Achern", "10870"), ("Albstadt", "11086"),
+                ("Backnang", "10050"), ("Baden-Baden", "10913"), ("Bietigheim-Bissingen", "10852"),
+                ("Böblingen", "10572"), ("Bruchsal", "10953"), ("Buchen (Odenwald)", "10066"),
+                ("Bühl", "18961"), ("Calw", "11111"), ("Crailsheim", "10076"),
+                ("Donaueschingen", "10792"), ("Ehingen (Donau)", "10085"),
+                ("Emmendingen", "10993"), ("Eppingen", "10088"), ("Esslingen am Neckar", "11121"),
+                ("Ettlingen", "9980"), ("Filderstadt", "10093"), ("Freiburg im Breisgau", "11011"),
+                ("Friedrichshafen", "11046"), ("Gaggenau", "9994"),
+                ("Geislingen an der Steige", "10103"), ("Göppingen", "11044"),
+                ("Heidelberg", "11033"), ("Heidenheim an der Brenz", "18951"),
+                ("Heilbronn", "11051"), ("Herrenberg", "11080"), ("Karlsruhe", "11014"),
+                ("Kehl", "11123"), ("Kirchheim unter Teck", "10395"), ("Konstanz", "11018"),
+                ("Kornwestheim", "10402"), ("Lahr", "10173"), ("Leinfelden-Echterdingen", "10848"),
+                ("Leonberg", "10422"), ("Lörrach", "10191"), ("Ludwigsburg", "11048"),
+                ("Mannheim", "11021"), ("Mosbach", "10452"), ("Murrhardt", "10457"),
+                ("Nagold", "10458"), ("Nürtingen", "10550"), ("Offenburg", "10557"),
+                ("Öhringen", "10472"), ("Ostfildern", "10856"), ("Pforzheim", "11119"),
+                ("Rastatt", "10255"), ("Ravensburg", "11045"), ("Reutlingen", "11042"),
+                ("Rottenburg am Neckar", "11072"), ("Rottweil", "11053"),
+                ("Schorndorf", "10495"), ("Schwäbisch Gmünd", "11049"),
+                ("Schwäbisch Hall", "11050"), ("Schwetzingen", "10283"),
+                ("Sigmaringen", "11047"), ("Sindelfingen", "10558"),
+                ("Singen (Hohentwiel)", "10868"), ("Stuttgart", "11027"),
+                ("Tauberbischofsheim", "10864"), ("Tettnang", "10812"), ("Tübingen", "11043"),
+                ("Tuttlingen", "11083"), ("Überlingen", "10563"), ("Ulm", "11028"),
+                ("Vaihingen an der Enz", "10517"),
+                ("Villingen-Schwenningen", "10327"), ("Waiblingen", "11041"),
+                ("Waldshut-Tiengen", "11082"), ("Wangen im Allgäu", "10580"),
+                ("Weil am Rhein", "10341"), ("Weinheim", "10532"), ("Wertheim", "10536")
             ]),
             // Bayern
             "851": list("851", [
-                ("Ansbach", "11106"), ("Aschaffenburg", "10894"), ("Augsburg", "11036"),
-                ("Bamberg", "11067"), ("Bayreuth", "10584"), ("Coburg", "10075"),
-                ("Dachau", "10967"), ("Erlangen", "10561"), ("Freising", "10096"),
-                ("Fürth", "11081"), ("Gersthofen", "10105"), ("Günzburg", "10112"),
-                ("Ingolstadt", "11108"), ("Kaufbeuren", "10392"), ("Kempten (Allgäu)", "11104"),
-                ("Landsberg am Lech", "10406"), ("Landshut", "10407"), ("Memmingen", "10442"),
-                ("München", "11022"), ("Neu-Ulm", "10559"), ("Nürnberg", "11024"),
+                ("Aichach", "21174"), ("Amberg", "10890"), ("Ansbach", "11106"),
+                ("Aschaffenburg", "10894"), ("Augsburg", "11036"), ("Bamberg", "11067"),
+                ("Bayreuth", "10584"), ("Burghausen", "10070"), ("Coburg", "10075"),
+                ("Dachau", "10967"), ("Deggendorf", "10077"),
+                ("Dillingen an der Donau", "10859"), ("Dingolfing", "10080"),
+                ("Donauwörth", "11115"), ("Erding", "10818"), ("Erlangen", "10561"),
+                ("Freising", "10096"), ("Fürstenfeldbruck", "10819"), ("Fürth", "11081"),
+                ("Garmisch-Partenkirchen", "9997"), ("Geretsried", "21161"),
+                ("Germering", "10009"), ("Gersthofen", "10105"), ("Günzburg", "10112"),
+                ("Hof", "11085"), ("Ingolstadt", "11108"), ("Kaufbeuren", "10392"),
+                ("Kempten (Allgäu)", "11104"), ("Kulmbach", "10404"),
+                ("Landsberg am Lech", "10406"), ("Landshut", "10407"), ("Lichtenfels", "10424"),
+                ("Lindau (Bodensee)", "10582"), ("Marktredwitz", "10439"),
+                ("Memmingen", "10442"), ("Mindelheim", "10449"), ("Mühldorf am Inn", "21163"),
+                ("München", "11022"), ("Neu-Ulm", "10559"), ("Neuburg an der Donau", "10562"),
+                ("Neumarkt in der Oberpfalz", "10222"), ("Nürnberg", "11024"),
                 ("Passau", "11034"), ("Regensburg", "11025"), ("Rosenheim", "10486"),
-                ("Schweinfurt", "11107"), ("Straubing", "10508"),
-                ("Weiden in der Oberpfalz", "10529"), ("Würzburg", "11029")
+                ("Roth", "10270"), ("Schongau", "10494"), ("Schwabach", "10496"),
+                ("Schweinfurt", "11107"), ("Selb", "10501"), ("Starnberg", "10824"),
+                ("Straubing", "10508"), ("Sulzbach-Rosenberg", "10827"),
+                ("Traunstein", "33284"), ("Vilsbiburg", "10518"),
+                ("Waldkraiburg", "10523"), ("Wasserburg am Inn", "10527"),
+                ("Weiden in der Oberpfalz", "10529"), ("Weilheim in Oberbayern", "10530"),
+                ("Würzburg", "11029")
             ]),
             // Berlin
             "852": list("852", [
@@ -130,8 +173,16 @@ extension DitibFederalState {
             ]),
             // Brandenburg
             "853": list("853", [
-                ("Brandenburg an der Havel", "10064"), ("Cottbus", "10605"),
-                ("Frankfurt (Oder)", "10639")
+                ("Bernau bei Berlin", nil), ("Brandenburg an der Havel", "10064"),
+                ("Cottbus", "10605"), ("Eberswalde", "10083"),
+                ("Falkensee", nil), ("Forst (Lausitz)", nil),
+                ("Frankfurt (Oder)", "10639"), ("Fürstenwalde/Spree", nil),
+                ("Hennigsdorf", nil), ("Königs Wusterhausen", nil),
+                ("Lübbenau/Spreewald", nil), ("Luckenwalde", nil),
+                ("Neuruppin", nil), ("Oranienburg", nil),
+                ("Potsdam", nil), ("Schwedt/Oder", nil),
+                ("Senftenberg", nil), ("Spremberg", nil),
+                ("Strausberg", nil), ("Werder (Havel)", nil)
             ]),
             // Bremen
             "854": list("854", [
@@ -143,67 +194,188 @@ extension DitibFederalState {
             ]),
             // Hessen
             "856": list("856", [
-                ("Bad Homburg vor der Höhe", "10905"), ("Darmstadt", "11079"),
-                ("Frankfurt am Main", "11010"), ("Fulda", "11030"), ("Gießen", "11032"),
-                ("Hanau", "10040"), ("Kassel", "11015"), ("Marburg", "10578"),
-                ("Offenbach am Main", "10569"), ("Rüsselsheim am Main", "11074"),
+                ("Bad Hersfeld", nil), ("Bad Homburg vor der Höhe", "10905"),
+                ("Bad Nauheim", nil), ("Bad Vilbel", nil),
+                ("Bensheim", nil), ("Darmstadt", "11079"),
+                ("Dietzenbach", nil), ("Dreieich", nil),
+                ("Eschborn", nil), ("Frankfurt am Main", "11010"),
+                ("Friedberg (Hessen)", nil), ("Friedrichsdorf", nil),
+                ("Fulda", "11030"), ("Gelnhausen", nil),
+                ("Gießen", "11032"), ("Hanau", "10040"),
+                ("Hattersheim am Main", nil), ("Heppenheim (Bergstraße)", nil),
+                ("Hofheim am Taunus", nil), ("Kassel", "11015"),
+                ("Langen (Hessen)", nil), ("Limburg an der Lahn", nil),
+                ("Maintal", nil), ("Marburg", "10578"),
+                ("Mörfelden-Walldorf", nil), ("Neu-Isenburg", nil),
+                ("Oberursel (Taunus)", nil), ("Offenbach am Main", "10569"),
+                ("Rodgau", nil), ("Rüsselsheim am Main", "11074"),
+                ("Viernheim", nil), ("Wetzlar", nil),
                 ("Wiesbaden", "11056")
             ]),
             // Niedersachsen
             "857": list("857", [
-                ("Braunschweig", "16754"), ("Celle", "10074"), ("Delmenhorst", "10970"),
-                ("Göttingen", "11105"), ("Hannover", "11013"), ("Hildesheim", "11054"),
-                ("Lüneburg", "11101"), ("Oldenburg (Oldenburg)", "10555"),
-                ("Osnabrück", "11055"), ("Salzgitter", "11078"), ("Wolfsburg", "10543")
+                ("Achim", nil), ("Braunschweig", "16754"),
+                ("Buxtehude", nil), ("Celle", "10074"),
+                ("Cloppenburg", nil), ("Cuxhaven", nil),
+                ("Delmenhorst", "10970"), ("Emden", nil),
+                ("Garbsen", nil), ("Gifhorn", nil),
+                ("Goslar", nil), ("Göttingen", "11105"),
+                ("Hameln", nil), ("Hannover", "11013"),
+                ("Helmstedt", nil), ("Hildesheim", "11054"),
+                ("Langenhagen", nil), ("Lehrte", nil),
+                ("Lingen (Ems)", nil), ("Lüneburg", "11101"),
+                ("Melle", nil), ("Nordhorn", nil),
+                ("Oldenburg (Oldenburg)", "10555"), ("Osnabrück", "11055"),
+                ("Papenburg", nil), ("Peine", nil),
+                ("Salzgitter", "11078"), ("Stade", nil),
+                ("Stuhr", nil), ("Uelzen", nil),
+                ("Vechta", nil), ("Verden (Aller)", nil),
+                ("Wilhelmshaven", nil), ("Wolfenbüttel", nil),
+                ("Wolfsburg", "10543")
             ]),
             // Mecklenburg-Vorpommern
             "858": list("858", [
-                ("Greifswald", "10564"), ("Rostock", "10551"), ("Schwerin", "33265")
+                ("Anklam", nil), ("Bergen auf Rügen", nil),
+                ("Greifswald", "10564"), ("Güstrow", nil),
+                ("Neubrandenburg", nil), ("Parchim", nil),
+                ("Pasewalk", nil), ("Rostock", "10551"),
+                ("Schwerin", "33265"), ("Stralsund", nil),
+                ("Wismar", nil)
             ]),
             // Nordrhein-Westfalen
             "859": list("859", [
-                ("Aachen", "33305"), ("Bergheim", "10920"), ("Bielefeld", "11003"),
-                ("Bochum", "11126"), ("Bonn", "11004"), ("Bottrop", "10942"),
-                ("Dortmund", "11006"), ("Duisburg", "11007"), ("Düren", "11122"),
-                ("Düsseldorf", "11008"), ("Essen", "11009"), ("Gelsenkirchen", "11037"),
-                ("Gütersloh", "10026"), ("Hagen", "11077"), ("Hamm", "11127"),
-                ("Herne", "10565"), ("Iserlohn", "10149"), ("Krefeld", "11066"),
-                ("Köln", "11019"), ("Leverkusen", "10183"), ("Mönchengladbach", "11128"),
+                ("Aachen", "33305"), ("Ahaus", nil),
+                ("Ahlen", nil), ("Arnsberg", nil),
+                ("Bad Salzuflen", nil), ("Bergheim", "10920"),
+                ("Bergisch Gladbach", nil), ("Bielefeld", "11003"),
+                ("Bocholt", nil), ("Bochum", "11126"),
+                ("Bonn", "11004"), ("Borken", nil),
+                ("Bornheim", nil), ("Bottrop", "10942"),
+                ("Brühl", nil), ("Castrop-Rauxel", nil),
+                ("Coesfeld", nil), ("Detmold", nil),
+                ("Dinslaken", nil), ("Dormagen", nil),
+                ("Dortmund", "11006"), ("Duisburg", "11007"),
+                ("Düren", "11122"), ("Düsseldorf", "11008"),
+                ("Emmerich am Rhein", nil), ("Erftstadt", nil),
+                ("Erkelenz", nil), ("Erkrath", nil),
+                ("Essen", "11009"), ("Euskirchen", nil),
+                ("Gelsenkirchen", "11037"), ("Geldern", nil),
+                ("Gevelsberg", nil), ("Gladbeck", nil),
+                ("Greven", nil), ("Gummersbach", nil),
+                ("Gütersloh", "10026"), ("Hagen", "11077"),
+                ("Hamm", "11127"), ("Hattingen", nil),
+                ("Heinsberg", nil), ("Hennef (Sieg)", nil),
+                ("Herford", nil), ("Herne", "10565"),
+                ("Hilden", nil), ("Hückelhoven", nil),
+                ("Hürth", nil), ("Ibbenbüren", nil),
+                ("Iserlohn", "10149"), ("Kaarst", nil),
+                ("Kamen", nil), ("Kempen", nil),
+                ("Kerpen", nil), ("Kleve", nil),
+                ("Königswinter", nil), ("Köln", "11019"),
+                ("Krefeld", "11066"), ("Langenfeld (Rheinland)", nil),
+                ("Lemgo", nil), ("Leverkusen", "10183"),
+                ("Lippstadt", nil), ("Lüdenscheid", nil),
+                ("Marl", nil), ("Meerbusch", nil),
+                ("Menden (Sauerland)", nil), ("Meschede", nil),
+                ("Mettmann", nil), ("Minden", nil),
+                ("Moers", nil), ("Mönchengladbach", "11128"),
                 ("Mülheim an der Ruhr", "11062"), ("Münster", "11023"),
-                ("Neuss", "10575"), ("Oberhausen", "16705"), ("Paderborn", "11064"),
-                ("Recklinghausen", "10583"), ("Remscheid", "11076"), ("Siegen", "11102"),
-                ("Solingen", "10291"), ("Velbert", "10323"), ("Viersen", "10326"),
-                ("Wuppertal", "11031")
+                ("Nettetal", nil), ("Neuss", "10575"),
+                ("Oberhausen", "16705"), ("Olpe", nil),
+                ("Paderborn", "11064"), ("Pulheim", nil),
+                ("Ratingen", nil), ("Recklinghausen", "10583"),
+                ("Remscheid", "11076"), ("Rheine", nil),
+                ("Sankt Augustin", nil), ("Schwelm", nil),
+                ("Schwerte", nil), ("Selm", nil),
+                ("Siegen", "11102"), ("Soest", nil),
+                ("Solingen", "10291"), ("Stolberg (Rheinland)", nil),
+                ("Troisdorf", nil), ("Unna", nil),
+                ("Velbert", "10323"), ("Viersen", "10326"),
+                ("Voerde (Niederrhein)", nil), ("Werl", nil),
+                ("Wermelskirchen", nil), ("Wesel", nil),
+                ("Willich", nil), ("Witten", nil),
+                ("Wuppertal", "11031"), ("Würselen", nil)
             ]),
             // Rheinland-Pfalz
             "860": list("860", [
-                ("Bad Kreuznach", "10573"), ("Kaiserslautern", "10581"),
-                ("Koblenz", "11017"), ("Landau in der Pfalz", "10175"),
-                ("Ludwigshafen am Rhein", "11094"), ("Mainz", "11020"),
-                ("Neustadt an der Weinstraße", "10227"), ("Pirmasens", "10251"),
-                ("Trier", "11125"), ("Worms", "11088"), ("Zweibrücken", "10369")
+                ("Andernach", nil), ("Bad Dürkheim", nil),
+                ("Bad Kreuznach", "10573"), ("Bad Neuenahr-Ahrweiler", nil),
+                ("Bingen am Rhein", nil), ("Bitburg", nil),
+                ("Cochem", nil), ("Frankenthal (Pfalz)", nil),
+                ("Germersheim", nil), ("Idar-Oberstein", nil),
+                ("Ingelheim am Rhein", nil), ("Kaiserslautern", "10581"),
+                ("Koblenz", "11017"), ("Lahnstein", nil),
+                ("Landau in der Pfalz", "10175"), ("Ludwigshafen am Rhein", "11094"),
+                ("Mainz", "11020"), ("Mayen", nil),
+                ("Montabaur", nil), ("Neustadt an der Weinstraße", "10227"),
+                ("Neuwied", nil), ("Pirmasens", "10251"),
+                ("Speyer", nil), ("Trier", "11125"),
+                ("Wittlich", nil), ("Worms", "11088"),
+                ("Zweibrücken", "10369")
             ]),
             // Saarland
             "861": list("861", [
-                ("Homburg", "10137"), ("Merzig", "10206"), ("Neunkirchen", "10225"),
-                ("Saarbrücken", "11026"), ("Saarlouis", "11068"), ("St. Ingbert", "10298")
+                ("Homburg", "10137"), ("Lebach", nil),
+                ("Merzig", "10206"), ("Neunkirchen", "10225"),
+                ("Püttlingen", nil), ("Saarbrücken", "11026"),
+                ("Saarlouis", "11068"), ("St. Ingbert", "10298"),
+                ("Völklingen", nil)
             ]),
             // Thüringen
             "862": list("862", [
-                ("Erfurt", "10874"), ("Gera", "10008"), ("Jena", "10627"), ("Weimar", "11097")
+                ("Apolda", nil), ("Arnstadt", nil),
+                ("Eisenach", nil), ("Erfurt", "10874"),
+                ("Gera", "10008"), ("Gotha", nil),
+                ("Greiz", nil), ("Ilmenau", nil),
+                ("Jena", "10627"), ("Meiningen", nil),
+                ("Mühlhausen/Thüringen", nil), ("Nordhausen", nil),
+                ("Saalfeld/Saale", nil), ("Sömmerda", nil),
+                ("Sondershausen", nil), ("Sonneberg", nil),
+                ("Suhl", nil), ("Weimar", "11097")
             ]),
             // Sachsen
             "863": list("863", [
-                ("Chemnitz", "11099"), ("Dresden", "11035"), ("Leipzig", "11100"),
+                ("Annaberg-Buchholz", nil), ("Aue-Bad Schlema", nil),
+                ("Bautzen", nil), ("Chemnitz", "11099"),
+                ("Döbeln", nil), ("Dresden", "11035"),
+                ("Freiberg", nil), ("Freital", nil),
+                ("Glauchau", nil), ("Görlitz", nil),
+                ("Grimma", nil), ("Hoyerswerda", nil),
+                ("Kamenz", nil), ("Leipzig", "11100"),
+                ("Markkleeberg", nil), ("Meißen", nil),
+                ("Pirna", nil), ("Plauen", nil),
+                ("Radebeul", nil), ("Riesa", nil),
+                ("Werdau", nil), ("Zittau", nil),
                 ("Zwickau", "10547")
             ]),
             // Sachsen-Anhalt
             "864": list("864", [
-                ("Dessau-Roßlau", "10693"), ("Halle (Saale)", "11089"), ("Magdeburg", "10875")
+                ("Aschersleben", nil), ("Bernburg (Saale)", nil),
+                ("Bitterfeld-Wolfen", nil), ("Burg", nil),
+                ("Dessau-Roßlau", "10693"), ("Halberstadt", nil),
+                ("Halle (Saale)", "11089"), ("Köthen (Anhalt)", nil),
+                ("Lutherstadt Eisleben", nil), ("Lutherstadt Wittenberg", nil),
+                ("Magdeburg", "10875"), ("Merseburg", nil),
+                ("Naumburg (Saale)", nil), ("Quedlinburg", nil),
+                ("Sangerhausen", nil), ("Schönebeck (Elbe)", nil),
+                ("Stendal", nil), ("Wernigerode", nil),
+                ("Zeitz", nil)
             ]),
             // Schleswig-Holstein
             "865": list("865", [
-                ("Flensburg", "11118"), ("Kiel", "11016"), ("Lübeck", "11117")
+                ("Ahrensburg", nil), ("Bad Oldesloe", nil),
+                ("Bad Segeberg", nil), ("Eckernförde", nil),
+                ("Elmshorn", nil), ("Eutin", nil),
+                ("Flensburg", "11118"), ("Geesthacht", nil),
+                ("Glinde", nil), ("Heide", nil),
+                ("Husum", nil), ("Itzehoe", nil),
+                ("Kaltenkirchen", nil), ("Kiel", "11016"),
+                ("Lübeck", "11117"), ("Mölln", nil),
+                ("Neumünster", nil), ("Norderstedt", nil),
+                ("Pinneberg", nil), ("Plön", nil),
+                ("Quickborn", nil), ("Rendsburg", nil),
+                ("Schleswig", nil), ("Stockelsdorf", nil),
+                ("Wedel", nil)
             ]),
         ]
     }()

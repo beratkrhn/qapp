@@ -115,6 +115,24 @@ final class LocationSearchViewModel: ObservableObject {
         var updated = recentCities.filter { $0.id != city.id }
         updated.insert(city, at: 0)
         recentCities = Array(updated.prefix(Self.maxRecentCities))
+        persistRecents()
+    }
+
+    // MARK: - Recents removal
+
+    /// Entfernt einen Eintrag aus den zuletzt verwendeten Standorten.
+    func removeRecent(_ city: DitibCity) {
+        recentCities.removeAll { $0.id == city.id }
+        persistRecents()
+    }
+
+    /// Leert die komplette Recents-Liste.
+    func clearRecents() {
+        recentCities = []
+        persistRecents()
+    }
+
+    private func persistRecents() {
         if let data = try? JSONEncoder().encode(recentCities) {
             UserDefaults.standard.set(data, forKey: Keys.recentCities)
         }

@@ -84,31 +84,56 @@ struct CitySelectionView: View {
     private var cityListView: some View {
         let cities = locationVM.cities(for: state)
         return ScrollView {
-            VStack(spacing: 0) {
-                ForEach(Array(cities.enumerated()), id: \.element.id) { index, city in
-                    CityRowView(
-                        name: city.name,
-                        isSelected: appState.selectedDitibCity?.name == city.name &&
-                                    appState.selectedDitibCity?.stateId == city.stateId
-                    )
-                    .onTapGesture { handleSelection(city) }
-                    .disabled(locationVM.isConfirmingCity)
+            VStack(spacing: 12) {
+                searchHintBanner
 
-                    if index < cities.count - 1 {
-                        Divider()
-                            .overlay(Theme.textSecondary.opacity(0.12))
-                            .padding(.leading, 52)
+                VStack(spacing: 0) {
+                    ForEach(Array(cities.enumerated()), id: \.element.id) { index, city in
+                        CityRowView(
+                            name: city.name,
+                            isSelected: appState.selectedDitibCity?.name == city.name &&
+                                        appState.selectedDitibCity?.stateId == city.stateId
+                        )
+                        .onTapGesture { handleSelection(city) }
+                        .disabled(locationVM.isConfirmingCity)
+
+                        if index < cities.count - 1 {
+                            Divider()
+                                .overlay(Theme.textSecondary.opacity(0.12))
+                                .padding(.leading, 52)
+                        }
                     }
                 }
+                .background(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Theme.cardBackground)
+                )
+                .shadow(color: Theme.shadowColor, radius: Theme.shadowRadius, x: 0, y: Theme.shadowY)
             }
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Theme.cardBackground)
-            )
-            .shadow(color: Theme.shadowColor, radius: Theme.shadowRadius, x: 0, y: Theme.shadowY)
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
         }
+    }
+
+    /// Hinweis-Banner: erklärt, dass die Suchleiste oben alle DITIB-Städte findet,
+    /// falls die gewünschte Stadt nicht in der vorgepflegten Liste auftaucht.
+    private var searchHintBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass")
+                .font(.caption.weight(.semibold))
+                .foregroundColor(Theme.accent)
+            Text(L10n.citySearchHint(appState.appLanguage))
+                .font(.caption)
+                .foregroundColor(Theme.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Theme.accent.opacity(0.08))
+        )
     }
 
     // MARK: - Search results

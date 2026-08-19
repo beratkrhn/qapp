@@ -18,6 +18,8 @@ struct StateSelectionView: View {
     @EnvironmentObject var prayerTimeManager: PrayerTimeManager
     @Environment(\.dismiss) private var dismiss
 
+    @State private var isEditingRecents = false
+
     // MARK: - Body
 
     var body: some View {
@@ -37,24 +39,58 @@ struct StateSelectionView: View {
         .navigationTitle("Standort wählen")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Theme.cardBackground, for: .navigationBar)
+        .onChange(of: locationVM.recentCities.isEmpty) { _, empty in
+            if empty { isEditingRecents = false }
+        }
     }
 
     // MARK: - Recents Section
 
     private var recentsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionHeader("Zuletzt verwendet", icon: "clock.arrow.circlepath")
+            HStack {
+                sectionHeader("Zuletzt verwendet", icon: "clock.arrow.circlepath")
+                Spacer()
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isEditingRecents.toggle()
+                    }
+                } label: {
+                    Text(isEditingRecents
+                         ? L10n.commonDone(appState.appLanguage)
+                         : L10n.commonEdit(appState.appLanguage))
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(Theme.accent)
+                }
+                .buttonStyle(.plain)
+            }
 
             VStack(spacing: 0) {
                 ForEach(Array(locationVM.recentCities.enumerated()), id: \.element.id) { index, city in
                     RecentCityRowView(
                         city: city,
-                        isSelected: appState.selectedDitibCity?.id == city.id
+                        isSelected: appState.selectedDitibCity?.id == city.id,
+                        isEditing: isEditingRecents,
+                        onDelete: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                locationVM.removeRecent(city)
+                            }
+                        }
                     )
+                    .contentShape(Rectangle())
                     .onTapGesture {
+                        guard !isEditingRecents else { return }
                         locationVM.confirmCity(city, appState: appState, prayerTimeManager: prayerTimeManager)
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         dismiss()
+                    }
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            locationVM.removeRecent(city)
+                        } label: {
+                            Label(L10n.commonRemove(appState.appLanguage), systemImage: "trash")
+                        }
                     }
 
                     if index < locationVM.recentCities.count - 1 {
@@ -112,13 +148,26 @@ struct StateSelectionView: View {
 private struct RecentCityRowView: View {
     let city: DitibCity
     let isSelected: Bool
+    let isEditing: Bool
+    let onDelete: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "clock")
-                .font(.system(size: 13))
-                .foregroundColor(Theme.textSecondary.opacity(0.6))
+            if isEditing {
+                Button(action: onDelete) {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.system(size: 18))
+                        .foregroundColor(Theme.destructive)
+                }
+                .buttonStyle(.plain)
                 .frame(width: 24)
+                .transition(.opacity.combined(with: .scale))
+            } else {
+                Image(systemName: "clock")
+                    .font(.system(size: 13))
+                    .foregroundColor(Theme.textSecondary.opacity(0.6))
+                    .frame(width: 24)
+            }
 
             Text(city.name)
                 .font(.body)
@@ -126,7 +175,11 @@ private struct RecentCityRowView: View {
 
             Spacer()
 
-            if isSelected {
+            if isEditing {
+                Image(systemName: "xmark")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Theme.textSecondary.opacity(0.5))
+            } else if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(Theme.accent)
             }
