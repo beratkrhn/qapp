@@ -3,8 +3,8 @@
  *
  * sendNudge — fired when a client writes a new nudge document at
  *   users/{recipientUid}/nudges/{nudgeId}
- * The function validates the sender is a friend, applies the recipient's
- * daily cap, and delivers an FCM push to every registered iOS token.
+ * The function validates the sender is a friend, applies the fixed daily cap
+ * (MAX_NUDGES_PER_DAY), and delivers an FCM push to every registered iOS token.
  *
  * sendFriendRequestPush — fired when a friend request lands at
  *   users/{recipientUid}/incomingRequests/{fromUid}
@@ -25,12 +25,19 @@ const { getMessaging } = require("firebase-admin/messaging");
 initializeApp();
 setGlobalOptions({ region: "europe-west3", maxInstances: 10 });
 
+// Hartes Tageslimit für eingehende Anstupser. Bewusst NICHT konfigurierbar:
+// weder Client noch Firestore-Dokument dürfen diesen Wert beeinflussen.
+const MAX_NUDGES_PER_DAY = 5;
+
+// Tagesschlüssel in der App-Zeitzone (nicht UTC) — sonst rutschen Anstupser
+// zwischen 00:00 und 02:00 Ortszeit noch in den Zähler des Vortags.
 function todayKey() {
-  const d = new Date();
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Berlin",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
 }
 
 // --- Localised copy for system pushes (friend requests / accepts). ---------
@@ -163,7 +170,8 @@ exports.sendNudge = onDocumentCreated(
       return;
     }
 
-    // 2) Recipient preferences. Defaults: receive=true, cap=3/day.
+    // 2) Recipient preferences. Only the on/off toggle is configurable —
+    //    das Tageslimit ist bewusst fest verdrahtet (MAX_NUDGES_PER_DAY).
     const prefsSnap = await db
       .doc(`users/${recipientUid}/notificationPreferences/main`)
       .get();
@@ -172,10 +180,7 @@ exports.sendNudge = onDocumentCreated(
       await finish("rejected", "recipient_disabled");
       return;
     }
-    const cap =
-      typeof prefs.maxNudgesPerDay === "number" && prefs.maxNudgesPerDay > 0
-        ? prefs.maxNudgesPerDay
-        : 3;
+    const cap = MAX_NUDGES_PER_DAY;
 
     // 3) Registered tokens — checked BEFORE the daily-count gate so that
     //    undeliverable nudges don't consume the recipient's quota.

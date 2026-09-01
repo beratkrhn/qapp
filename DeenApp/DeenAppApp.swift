@@ -13,6 +13,7 @@ import FirebaseCore
 @main
 struct DeenAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var prayerTimeManager = PrayerTimeManager()
     @StateObject private var appState = AppState()
     @StateObject private var locationAutoUpdater = LocationAutoUpdater()
@@ -51,6 +52,13 @@ struct DeenAppApp: App {
                 if accountVM.isSignedIn {
                     PushTokenService.shared.requestAuthorizationIfNeeded()
                 }
+            }
+            .onChange(of: scenePhase) { _, phase in
+                // Bei jedem Vordergrund-Wechsel das FCM-Token nachziehen —
+                // sonst fehlt es in Firestore, wenn Firebase beim Start kein
+                // neues Token ausstellt (siehe PushTokenService.syncToken).
+                guard phase == .active, accountVM.isSignedIn else { return }
+                PushTokenService.shared.syncToken()
             }
             .onReceive(NotificationCenter.default.publisher(for: .didTapFriendPush)) { _ in
                 appState.selectedTab = .friends

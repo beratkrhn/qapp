@@ -1309,6 +1309,36 @@ enum L10n {
         case .turkish: return "Gönderme başarısız"
         }
     }
+    /// Der Empfänger hat kein Gerät für Pushes registriert (Push-Berechtigung
+    /// verweigert oder App seit dem Login nie im Vordergrund gehabt).
+    static func nudgeFailedNoDevice(_ lang: AppLanguage, name: String) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "\(name) hat auf keinem Gerät Benachrichtigungen für Akh-ira erlaubt — der Anstupser konnte nicht zugestellt werden."
+        case .english: return "\(name) hasn't allowed notifications for Akh-ira on any device — the nudge could not be delivered."
+        case .turkish: return "\(name) hiçbir cihazda Akh-ira bildirimlerine izin vermemiş — dürtü iletilemedi."
+        }
+    }
+    static func nudgeFailedDisabled(_ lang: AppLanguage, name: String) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "\(name) empfängt zurzeit keine Anstupser."
+        case .english: return "\(name) is currently not receiving nudges."
+        case .turkish: return "\(name) şu anda dürtü almıyor."
+        }
+    }
+    static func nudgeFailedCapReached(_ lang: AppLanguage, name: String, max: Int) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "\(name) hat heute schon \(max) Erinnerungen bekommen — morgen wieder."
+        case .english: return "\(name) has already received \(max) reminders today — try again tomorrow."
+        case .turkish: return "\(name) bugün zaten \(max) hatırlatma aldı — yarın tekrar dene."
+        }
+    }
+    static func nudgeFailedNotFriend(_ lang: AppLanguage, name: String) -> String {
+        switch lang {
+        case .german, .germanArabic, .germanTurkish: return "Ihr seid nicht mehr befreundet — \(name) kann keine Anstupser von dir empfangen."
+        case .english: return "You're no longer friends — \(name) can't receive nudges from you."
+        case .turkish: return "Artık arkadaş değilsiniz — \(name) senden dürtü alamaz."
+        }
+    }
     static func nudgeMsgPrayer(_ lang: AppLanguage, prayerName: String) -> String {
         switch lang {
         case .german, .germanArabic, .germanTurkish: return "Hast du schon \(prayerName) gebetet?"
@@ -1361,11 +1391,11 @@ enum L10n {
         case .turkish: return "Günlük maks. dürtü"
         }
     }
-    static func nudgesMaxPerDayHint(_ lang: AppLanguage) -> String {
+    static func nudgesMaxPerDayHint(_ lang: AppLanguage, max: Int) -> String {
         switch lang {
-        case .german, .germanArabic, .germanTurkish: return "Begrenzt, wie viele Erinnerungen dich pro Tag erreichen."
-        case .english: return "Caps how many reminders reach you each day."
-        case .turkish: return "Günde sana ulaşacak hatırlatma sayısını sınırlar."
+        case .german, .germanArabic, .germanTurkish: return "Dich erreichen höchstens \(max) Erinnerungen pro Tag. Dieser Wert steht fest und lässt sich nicht ändern."
+        case .english: return "At most \(max) reminders reach you per day. This limit is fixed and cannot be changed."
+        case .turkish: return "Günde en fazla \(max) hatırlatma sana ulaşır. Bu sınır sabittir ve değiştirilemez."
         }
     }
 

@@ -653,7 +653,8 @@ struct SettingsView: View {
                                         .foregroundColor(Theme.accent)
                                 }
 
-                                Text(L10n.nudgesMaxPerDayHint(appState.appLanguage))
+                                Text(L10n.nudgesMaxPerDayHint(appState.appLanguage,
+                                                              max: AppState.maxNudgesPerDay))
                                     .font(.subheadline)
                                     .foregroundColor(Theme.textSecondary)
                                     .fixedSize(horizontal: false, vertical: true)
@@ -667,16 +668,16 @@ struct SettingsView: View {
 
                                 if appState.nudgesReceiveEnabled {
                                     Divider().overlay(Theme.textSecondary.opacity(0.2))
-                                    Stepper(value: $appState.maxNudgesPerDay, in: 1...20) {
-                                        HStack {
-                                            Text(L10n.nudgesMaxPerDay(appState.appLanguage))
-                                                .font(.subheadline)
-                                                .foregroundColor(Theme.textPrimary)
-                                            Spacer()
-                                            Text("\(appState.maxNudgesPerDay)")
-                                                .font(.subheadline.weight(.semibold).monospacedDigit())
-                                                .foregroundColor(Theme.accent)
-                                        }
+                                    // Fester Wert — das Limit setzt die Cloud
+                                    // Function durch und ist nicht einstellbar.
+                                    HStack {
+                                        Text(L10n.nudgesMaxPerDay(appState.appLanguage))
+                                            .font(.subheadline)
+                                            .foregroundColor(Theme.textPrimary)
+                                        Spacer()
+                                        Text("\(AppState.maxNudgesPerDay)")
+                                            .font(.subheadline.weight(.semibold).monospacedDigit())
+                                            .foregroundColor(Theme.accent)
                                     }
                                 }
                             }

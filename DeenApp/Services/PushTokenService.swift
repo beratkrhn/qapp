@@ -46,8 +46,31 @@ final class PushTokenService: NSObject {
                 // Kaltstart).
                 if account != nil {
                     self?.requestAuthorizationIfNeeded()
+                    self?.syncToken()
                 }
             }
+    }
+
+    /// Holt das aktuelle FCM-Token aktiv ab und schreibt es nach Firestore.
+    ///
+    /// Der `MessagingDelegate` feuert nur, wenn Firebase ein NEUES Token
+    /// ausstellt. Liegt beim Start bereits ein gültiges Token im Cache (oder
+    /// kommt der Callback, bevor der Delegate gesetzt ist), bleibt
+    /// `cachedFCMToken` sonst leer und der Nutzer steht ohne Token in
+    /// Firestore — die Cloud Function verwirft dann jeden Anstupser mit
+    /// `no_tokens`. Deshalb bei Login und bei jedem Vordergrund-Wechsel
+    /// explizit nachfassen.
+    func syncToken() {
+        Messaging.messaging().token { [weak self] token, _ in
+            guard let token else { return }
+            Task { @MainActor in
+                guard let self else { return }
+                self.cachedFCMToken = token
+                if let uid = AuthService.shared.currentUid {
+                    self.write(token: token, uid: uid)
+                }
+            }
+        }
     }
 
     /// Fragt — falls noch nicht geschehen — die Push-Berechtigung an und
@@ -79,6 +102,9 @@ final class PushTokenService: NSObject {
     /// Wird vom AppDelegate-Adapter weitergereicht.
     func setAPNsToken(_ deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
+        // Erst mit gesetztem APNs-Token liefert FCM auf echten Geräten ein
+        // zustellbares Registrierungs-Token.
+        syncToken()
     }
 
     /// Entfernt das FCM-Token dieses Geräts aus dem aktuell angemeldeten

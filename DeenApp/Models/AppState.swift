@@ -61,7 +61,6 @@ private enum UserDefaultsKeys {
     static let homeCity = "dailydee.homeCity_v1"
     static let khatmaModeEnabled = "dailydee.khatmaModeEnabled"
     static let nudgesReceiveEnabled = "dailydee.nudgesReceiveEnabled"
-    static let maxNudgesPerDay = "dailydee.maxNudgesPerDay"
 }
 
 final class AppState: ObservableObject {
@@ -131,12 +130,10 @@ final class AppState: ObservableObject {
             mirrorNudgePreferences()
         }
     }
-    @Published var maxNudgesPerDay: Int {
-        didSet {
-            UserDefaults.standard.set(maxNudgesPerDay, forKey: UserDefaultsKeys.maxNudgesPerDay)
-            mirrorNudgePreferences()
-        }
-    }
+    /// Fest verdrahtetes Tageslimit für eingehende Anstupser. Der Wert wird
+    /// serverseitig in der Cloud Function (`MAX_NUDGES_PER_DAY`) durchgesetzt
+    /// und ist hier nur die Anzeige dazu — bewusst nicht einstellbar.
+    static let maxNudgesPerDay = 5
 
     /// Spiegelt die aktuelle Nudge-Empfangs-Einstellung nach Firestore, wenn
     /// der Nutzer eingeloggt ist (damit die Cloud Function sie auswerten kann).
@@ -145,7 +142,6 @@ final class AppState: ObservableObject {
         Task { @MainActor in
             NotificationPreferencesService.shared.publish(
                 receive: nudgesReceiveEnabled,
-                maxPerDay: maxNudgesPerDay,
                 uid: uid
             )
         }
@@ -196,14 +192,15 @@ final class AppState: ObservableObject {
         // Khatma mode: defaults to false; user opts in from QuranView toolbar.
         self.khatmaModeEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.khatmaModeEnabled)
 
-        // Nudges: receiving defaults to on, cap defaults to 3 per day.
+        // Nudges: receiving defaults to on; das Tageslimit ist fest.
         if UserDefaults.standard.object(forKey: UserDefaultsKeys.nudgesReceiveEnabled) != nil {
             self.nudgesReceiveEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.nudgesReceiveEnabled)
         } else {
             self.nudgesReceiveEnabled = true
         }
-        let storedCap = UserDefaults.standard.integer(forKey: UserDefaultsKeys.maxNudgesPerDay)
-        self.maxNudgesPerDay = storedCap > 0 ? storedCap : 3
+        // Alt-Einstellung eines frei wählbaren Limits ist entfernt — das
+        // Limit ist jetzt fest (AppState.maxNudgesPerDay).
+        UserDefaults.standard.removeObject(forKey: "dailydee.maxNudgesPerDay")
 
         // Heimatstadt: optional, only set once the user picks one.
         if let data = UserDefaults.standard.data(forKey: UserDefaultsKeys.homeCity),

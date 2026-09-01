@@ -200,19 +200,25 @@ struct ReminderComposerView: View {
         customFocused = false
         let lang = appState.appLanguage
         let recipientUid = recipient.id
+        let recipientName = recipient.visibleName
         Task {
             do {
-                try await NudgeService.shared.send(
+                // `send` wartet auf das Ergebnis der Cloud Function — erst
+                // danach steht fest, ob die Push wirklich rausging.
+                let delivery = try await NudgeService.shared.send(
                     toRecipientUid: recipientUid,
                     sender: me,
                     title: "Akh-ira",
                     body: message,
                     goalType: nil
                 )
-                resultMessage = L10n.nudgeSent(lang)
-                isError = false
-                try? await Task.sleep(nanoseconds: 700_000_000)
-                dismiss()
+                let result = delivery.message(language: lang, recipientName: recipientName)
+                resultMessage = result.text
+                isError = result.isError
+                if !result.isError {
+                    try? await Task.sleep(nanoseconds: 700_000_000)
+                    dismiss()
+                }
             } catch {
                 resultMessage = L10n.nudgeFailed(lang)
                 isError = true
